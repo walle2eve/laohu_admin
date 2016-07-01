@@ -140,25 +140,25 @@
         <div id="page-wrapper">
 		
 						
-			
+
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header">充值记录</h3>
+
 					<form action="<?php echo U('Admin/Deposit/index');?>">
 						<div class="row">
-							
+
 							<?php if($login_user['user_role'] == 100110 ): ?><div class="col-md-2">
 									<div class="form-group input-group">
 										<a href="javascript:void(0);" class="btn btn-outline btn-primary" data-add-trigger><b>+</b> 添加</a>
-									</div><?php endif; ?>
+									</div>
 								</div>
 								<div class="col-md-2">
 									<select name="operator_id"  class="form-control">
 									<option value="">请选择平台</option>
 									<?php if(is_array($user_roles)): $i = 0; $__LIST__ = $user_roles;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option value="<?php echo ($key); ?>" <?php if(($param['operator_id']) == $key): ?>selected="selected"<?php endif; ?>><?php echo ($vo); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
 									</select>
-								</div>
-							</if>
+								</div><?php endif; ?>
 								<div class="col-md-3">
 									<div class="form-group input-group">
 										<span class="add-on input-group-addon">
@@ -179,9 +179,8 @@
 										&nbsp;&nbsp;&nbsp;
 										<input type="submit" name="submitbtn" class="btn btn-primary" value="导出excel"/>
 									</div>
-								</div>
-							
-                        </div>
+								</div>	
+            </div>
 					</form>
                 </div>
                 <!-- /.col-lg-12 -->
@@ -203,23 +202,23 @@
                                             <th>日期（DATE）</th>
                                             <th>平台</th>
                                             <th>充值金额</th>
-											<th>折扣</th>
-											<th>获得游戏币</th>
-											<th>充值状态</th>
-											<th>游戏币总计</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-									<?php if(is_array($list)): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><tr>
-                                            <td><?php echo ($vo["sn"]); ?></td>
-                                            <td><?php echo ($vo["create_time"]); ?></td>
-											<td><?php echo ($vo["user_name"]); ?></td>
-                                            <td><?php echo ($vo["amount"]); ?></td>
-                                            <td><?php echo ($vo["discount"]); ?>%</td>
-											<td><?php echo ($vo["gold"]); ?></td>
-											<td><?php if($vo['status'] == 1): ?><font color="#5cb85c">完成</span><else><?php if($vo['status'] == 0): ?><font color="#f0ad4e">进行中</span><else><font color="#d9534f">失败</span><?php endif; endif; ?></td>
-											<td><?php echo ($vo["total_gold"]); ?></td>
-                                        </tr><?php endforeach; endif; else: echo "" ;endif; ?>	
+																						<th>折扣</th>
+																						<th>获得游戏币</th>
+																						<th>充值状态</th>
+																						<th>游戏币总计</th>
+											                  </tr>
+											              </thead>
+											          		<tbody>
+																				<?php if(is_array($list)): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><tr>
+											                                            <td><?php echo ($vo["sn"]); ?></td>
+											                                            <td><?php echo ($vo["create_time"]); ?></td>
+																						<td><?php echo ($vo["user_name"]); ?></td>
+											                                            <td><?php echo ($vo["amount"]); ?></td>
+											                                            <td><?php echo ($vo["discount"]); ?>%</td>
+																						<td><?php echo ($vo["gold"]); ?></td>
+																						<td><?php if($vo['status'] == 1): ?><font color="#5cb85c">完成</span><else><?php if($vo['status'] == 0): ?><font color="#f0ad4e">进行中</span><else><font color="#d9534f">失败</span><?php endif; endif; ?></td>
+																						<td><?php echo ($vo["total_gold"]); ?></td>
+											                                        </tr><?php endforeach; endif; else: echo "" ;endif; ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -232,11 +231,11 @@
                 <!-- /.col-lg-6 -->
             </div>
             <!-- /.row -->
-			<div class="row">
+				<div class="row">
                 <div class="col-lg-12">
-					<?php echo ($page); ?>
+									<?php echo ($page); ?>
+								</div>
 				</div>
-			</div>
 			<?php if($login_user['user_role'] == 100110 ): ?><!---->
 			<div id="add-order-modal" class="modal fade" tabindex="-1" role="dialog">
 			  <form class="add-form">
@@ -278,7 +277,7 @@
 							<input type="text" name="gold" id="gold" class="form-control" value="0" readonly>
 						  </div>
 						</div>
-						
+
 						<div class="form-group">
 						  <label class="col-sm-3 control-label">备注(选填)：</label>
 						  <div class="col-sm-6">
@@ -313,40 +312,40 @@
 							e.preventDefault();
 							$('#add-order-modal').modal('show');
 						});
-						
+
 						$('select[name=operator_id]').change(function(){
-						
+
 							var op_id = $(this).val();
-							
+
 							$('#discount').val('0' + '%');
-							
+
 							$('#gold').val(0);
-							
+
 							if(op_id == ''){
 								return false;
 							}
-							
+
 							$.post('<?php echo U('Admin/Deposit/get_operator_discount');?>', {operator_id:op_id}, function(res){
-							
+
 								if(res.status){
-								
+
 									var discount = parseFloat(res.discount);
 									var amount = parseInt($('#amount').val());
-																		
+
 									if(amount > 0){
 										var gold = amount + (amount * (discount / 100));
 										$('#gold').val(gold);
 									}
-									
+
 									discount = res.discount + '%';
 									$('#discount').val(discount);
-									
+
 								}else{
-								
+
 									$.showError(res.msg);
-									
+
 								}
-								
+
 							});
 						});
 						$('input[name=amount]').blur(function(){
@@ -370,7 +369,7 @@
 					  $('.add-form').on('submit', function(e){
 						e.preventDefault();
 						var $form = $(this);
-						
+
 						var $operator_id = $('#operator_id').val();
 						var $amount = $('input[name="amount"]', $form).val();
 						var $discount = $('input[name="discount"]', $form).val();
@@ -379,13 +378,13 @@
 
 						var $message = $('[data-error-box]', $form);
 						var $button = $('.submit-button', $form);
-						
+
 						// 验证
 						if( !$operator_id || $operator_id == '' || $operator_id == null){
 						  showMessage($message, '请选择平台');
 						  return false;
 						}
-						
+
 						if( !$amount || $amount <= 0 ){
 						  showMessage($message, '请输入要充值的金额，不能小于等于0');
 						  return false;
@@ -402,7 +401,7 @@
 						}
 						var data = $(this).serialize();
 						$button.button('loading');
-						$.post('<?php echo U('Admin/Deposit/add');?>', data, function(res){			  
+						$.post('<?php echo U('Admin/Deposit/add');?>', data, function(res){
 						  if(res.status){
 							$.ShowAlert(res.msg);
 							setTimeout(function(){
