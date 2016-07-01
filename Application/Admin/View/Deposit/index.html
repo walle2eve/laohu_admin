@@ -1,8 +1,9 @@
 			<layout name="_layout/base" />
-			
+
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header">充值记录</h3>
+
 					<form action="{:U('Admin/Deposit/index')}">
 						<div class="row">
 							
@@ -10,7 +11,7 @@
 								<div class="col-md-2">
 									<div class="form-group input-group">
 										<a href="javascript:void(0);" class="btn btn-outline btn-primary" data-add-trigger><b>+</b> 添加</a>
-									</div></if>
+									</div>
 								</div>
 								<div class="col-md-2">
 									<select name="operator_id"  class="form-control">
@@ -65,25 +66,25 @@
                                             <th>日期（DATE）</th>
                                             <th>平台</th>
                                             <th>充值金额</th>
-											<th>折扣</th>
-											<th>获得游戏币</th>
-											<th>充值状态</th>
-											<th>游戏币总计</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-									<volist name="list" id="vo">
-                                        <tr>
-                                            <td>{$vo.sn}</td>
-                                            <td>{$vo.create_time}</td>
-											<td>{$vo.user_name}</td>
-                                            <td>{$vo.amount}</td>
-                                            <td>{$vo.discount}%</td>
-											<td>{$vo.gold}</td>
-											<td><if condition="$vo['status'] eq 1"><font color="#5cb85c">完成</span><else><if condition="$vo['status'] eq 0"><font color="#f0ad4e">进行中</span><else><font color="#d9534f">失败</span></if></if></td>
-											<td>{$vo.total_gold}</td>
-                                        </tr>
-									</volist>	
+																						<th>折扣</th>
+																						<th>获得游戏币</th>
+																						<th>充值状态</th>
+																						<th>游戏币总计</th>
+											                  </tr>
+											              </thead>
+											          		<tbody>
+																				<volist name="list" id="vo">
+											                                        <tr>
+											                                            <td>{$vo.sn}</td>
+											                                            <td>{$vo.create_time}</td>
+																						<td>{$vo.user_name}</td>
+											                                            <td>{$vo.amount}</td>
+											                                            <td>{$vo.discount}%</td>
+																						<td>{$vo.gold}</td>
+																						<td><if condition="$vo['status'] eq 1"><font color="#5cb85c">完成</span><else><if condition="$vo['status'] eq 0"><font color="#f0ad4e">进行中</span><else><font color="#d9534f">失败</span></if></if></td>
+																						<td>{$vo.total_gold}</td>
+											                                        </tr>
+																				</volist>
                                     </tbody>
                                 </table>
                             </div>
@@ -96,11 +97,11 @@
                 <!-- /.col-lg-6 -->
             </div>
             <!-- /.row -->
-			<div class="row">
+				<div class="row">
                 <div class="col-lg-12">
-					{$page}
+									{$page}
+								</div>
 				</div>
-			</div>
 			<if condition="$login_user['user_role'] eq 100110 ">
 			<!--{// 添加充值记录}-->
 			<div id="add-order-modal" class="modal fade" tabindex="-1" role="dialog">
@@ -145,7 +146,7 @@
 							<input type="text" name="gold" id="gold" class="form-control" value="0" readonly>
 						  </div>
 						</div>
-						
+
 						<div class="form-group">
 						  <label class="col-sm-3 control-label">备注(选填)：</label>
 						  <div class="col-sm-6">
@@ -182,40 +183,40 @@
 							e.preventDefault();
 							$('#add-order-modal').modal('show');
 						});
-						
+
 						$('select[name=operator_id]').change(function(){
-						
+
 							var op_id = $(this).val();
-							
+
 							$('#discount').val('0' + '%');
-							
+
 							$('#gold').val(0);
-							
+
 							if(op_id == ''){
 								return false;
 							}
-							
+
 							$.post('{:U('Admin/Deposit/get_operator_discount')}', {operator_id:op_id}, function(res){
-							
+
 								if(res.status){
-								
+
 									var discount = parseFloat(res.discount);
 									var amount = parseInt($('#amount').val());
-																		
+
 									if(amount > 0){
 										var gold = amount + (amount * (discount / 100));
 										$('#gold').val(gold);
 									}
-									
+
 									discount = res.discount + '%';
 									$('#discount').val(discount);
-									
+
 								}else{
-								
+
 									$.showError(res.msg);
-									
+
 								}
-								
+
 							});
 						});
 						$('input[name=amount]').blur(function(){
@@ -241,7 +242,7 @@
 					  $('.add-form').on('submit', function(e){
 						e.preventDefault();
 						var $form = $(this);
-						
+
 						var $operator_id = $('#operator_id').val();
 						var $amount = $('input[name="amount"]', $form).val();
 						var $discount = $('input[name="discount"]', $form).val();
@@ -250,13 +251,13 @@
 
 						var $message = $('[data-error-box]', $form);
 						var $button = $('.submit-button', $form);
-						
+
 						// 验证
 						if( !$operator_id || $operator_id == '' || $operator_id == null){
 						  showMessage($message, '请选择平台');
 						  return false;
 						}
-						
+
 						if( !$amount || $amount <= 0 ){
 						  showMessage($message, '请输入要充值的金额，不能小于等于0');
 						  return false;
@@ -273,7 +274,7 @@
 						}
 						var data = $(this).serialize();
 						$button.button('loading');
-						$.post('{:U('Admin/Deposit/add')}', data, function(res){			  
+						$.post('{:U('Admin/Deposit/add')}', data, function(res){
 						  if(res.status){
 							$.ShowAlert(res.msg);
 							setTimeout(function(){
