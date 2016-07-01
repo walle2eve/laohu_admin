@@ -1,20 +1,20 @@
 			<layout name="_layout/base" />
-			
+
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header">用户充值提现记录</h3>
 						<div class="row">
 							<form action="{:U('Admin/User/money')}">
+								<if condition="$login_user['user_role'] eq 100110 ">
 								<div class="col-md-3">
-									<if condition="$login_user['user_role'] eq 100110 ">
 									<select name="operator_id"  class="form-control">
 									<option value="">请选择平台</option>
 									<volist name="user_roles" id="vo">
 									<option value="{$key}" <eq name="param['operator_id']" value="$key">selected="selected"</eq>>{$vo}</option>
 									</volist>
 									</select>
-									</if>
 								</div>
+								</if>
 								<div class="col-md-3">
 									<select name="order_by"  class="form-control">
 										<option value="diposit" <eq name="param['order_by']" value="diposit">selected="selected"</eq>>转入最多</option>
