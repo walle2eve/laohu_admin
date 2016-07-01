@@ -3,8 +3,9 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header">充值记录</h3>
+					<form action="{:U('Admin/Deposit/index')}">
 						<div class="row">
-							<form action="{:U('Admin/Deposit/index')}">
+							
 							<if condition="$login_user['user_role'] eq 100110 ">
 								<div class="col-md-2">
 									<div class="form-group input-group">
@@ -41,8 +42,9 @@
 										<input type="submit" name="submitbtn" class="btn btn-primary" value="导出excel"/>
 									</div>
 								</div>
-							</form>
+							
                         </div>
+					</form>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
