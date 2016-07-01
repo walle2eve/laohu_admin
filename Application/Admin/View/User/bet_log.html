@@ -1,21 +1,20 @@
 			<layout name="_layout/base" />
-			
+
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header">用户游戏记录</h3>
 						<div class="row">
 							<form action="{:U('Admin/User/bet_log')}">
+								<if condition="$login_user['user_role'] eq 100110 ">
 								<div class="col-md-2">
-									
-									<if condition="$login_user['user_role'] eq 100110 ">
 									<select name="operator_id"  class="form-control">
 									<option value="">请选择平台</option>
 									<volist name="user_roles" id="vo">
 									<option value="{$key}" <eq name="param['operator_id']" value="$key">selected="selected"</eq>>{$vo}</option>
 									</volist>
 									</select>
-									</if>
 								</div>
+								</if>
 								<div class="col-md-3">
 									<div class="form-group input-group">
 										<span class="add-on input-group-addon">
@@ -80,10 +79,10 @@
 											<td>{$vo.account_id}</td>
                                             <td>{$vo.theme_id}</td>
 											<td>
-												<div class="dropdown">  
+												<div class="dropdown">
 												  <a id="drop{$vo.id}" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown" style="text-decoration:none;">
 														查看
-												  </a>  
+												  </a>
 												  <div class="dropdown-menu" role="menu" aria-labelledby="drop{$vo.id}">
 													<div class="dropdown-icons">
 														<volist name="vo['icons']" id="icons">
@@ -101,11 +100,11 @@
 															<volist name="icons2" id="icon2">
 																<img src="__PUBLIC__/game_icon/{$icon2}" width="40" height="40" /> &nbsp;
 															</volist>
-															
+
 														</volist>
 													</div>
 													</if>
-												  </div>  
+												  </div>
 												</div>
 											</td>
                                             <td>{$vo.bet}</td>
@@ -113,7 +112,7 @@
 											<td>{$vo.line}</td>
 											<td>{$vo.win}</td>
                                         </tr>
-									</volist>	
+									</volist>
                                     </tbody>
                                 </table>
                             </div>
@@ -137,9 +136,9 @@
 			<!-- Page-Level Demo Scripts - Tables - Use for reference -->
 			<script>
 			$(document).ready(function() {
-			
+
 				//$('.dropdown-toggle').dropdown('toggle');
-				
+
 				$('input[name=date-range-picker]').daterangepicker({
 					format: 'YYYY-MM-DD',
 					startDate: '{$param.begin_time|date='Y-m-d',###}',

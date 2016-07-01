@@ -1,20 +1,20 @@
 			<layout name="_layout/base" />
-			
+
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header">提现记录</h3>
 						<div class="row">
 							<form action="{:U('Admin/Withdraw/index')}">
+								<if condition="$login_user['user_role'] eq 100110 ">
 								<div class="col-md-2">
-									<if condition="$login_user['user_role'] eq 100110 ">
 									<select name="operator_id"  class="form-control">
 									<option value="">请选择平台</option>
 									<volist name="user_roles" id="vo">
 									<option value="{$key}" <eq name="param['operator_id']" value="$key">selected="selected"</eq>>{$vo}</option>
 									</volist>
 									</select>
-									</if>
 								</div>
+								</if>
 								<div class="col-md-3">
 									<div class="form-group input-group">
 										<span class="add-on input-group-addon">
@@ -76,7 +76,7 @@
 											<td>{$vo.bet}</td>
 											<td>{$vo.line}</td>
                                         </tr>
-									</volist>	
+									</volist>
                                     </tbody>
                                 </table>
                             </div>
