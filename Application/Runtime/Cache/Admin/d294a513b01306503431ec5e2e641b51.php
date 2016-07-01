@@ -140,18 +140,18 @@
         <div id="page-wrapper">
 		
 						
-			
+
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header">用户充值提现记录</h3>
 						<div class="row">
 							<form action="<?php echo U('Admin/User/money');?>">
-								<div class="col-md-3">
-									<?php if($login_user['user_role'] == 100110 ): ?><select name="operator_id"  class="form-control">
+								<?php if($login_user['user_role'] == 100110 ): ?><div class="col-md-3">
+									<select name="operator_id"  class="form-control">
 									<option value="">请选择平台</option>
 									<?php if(is_array($user_roles)): $i = 0; $__LIST__ = $user_roles;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option value="<?php echo ($key); ?>" <?php if(($param['operator_id']) == $key): ?>selected="selected"<?php endif; ?>><?php echo ($vo); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
-									</select><?php endif; ?>
-								</div>
+									</select>
+								</div><?php endif; ?>
 								<div class="col-md-3">
 									<select name="order_by"  class="form-control">
 										<option value="diposit" <?php if(($param['order_by']) == "diposit"): ?>selected="selected"<?php endif; ?>>转入最多</option>

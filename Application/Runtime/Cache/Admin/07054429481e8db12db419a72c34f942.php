@@ -140,19 +140,18 @@
         <div id="page-wrapper">
 		
 						
-			
+
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header">用户游戏记录</h3>
 						<div class="row">
 							<form action="<?php echo U('Admin/User/bet_log');?>">
-								<div class="col-md-2">
-									
-									<?php if($login_user['user_role'] == 100110 ): ?><select name="operator_id"  class="form-control">
+								<?php if($login_user['user_role'] == 100110 ): ?><div class="col-md-2">
+									<select name="operator_id"  class="form-control">
 									<option value="">请选择平台</option>
 									<?php if(is_array($user_roles)): $i = 0; $__LIST__ = $user_roles;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option value="<?php echo ($key); ?>" <?php if(($param['operator_id']) == $key): ?>selected="selected"<?php endif; ?>><?php echo ($vo); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
-									</select><?php endif; ?>
-								</div>
+									</select>
+								</div><?php endif; ?>
 								<div class="col-md-3">
 									<div class="form-group input-group">
 										<span class="add-on input-group-addon">
@@ -216,10 +215,10 @@
 											<td><?php echo ($vo["account_id"]); ?></td>
                                             <td><?php echo ($vo["theme_id"]); ?></td>
 											<td>
-												<div class="dropdown">  
+												<div class="dropdown">
 												  <a id="drop<?php echo ($vo["id"]); ?>" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown" style="text-decoration:none;">
 														查看
-												  </a>  
+												  </a>
 												  <div class="dropdown-menu" role="menu" aria-labelledby="drop<?php echo ($vo["id"]); ?>">
 													<div class="dropdown-icons">
 														<?php if(is_array($vo['icons'])): $i = 0; $__LIST__ = $vo['icons'];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$icons): $mod = ($i % 2 );++$i; if(is_array($icons)): $i = 0; $__LIST__ = $icons;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$icon): $mod = ($i % 2 );++$i;?><img src="/Public/game_icon/<?php echo ($icon); ?>" width="50" height="50"><?php endforeach; endif; else: echo "" ;endif; ?>
@@ -230,14 +229,14 @@
 														<!--  {中奖线数显示}  -->
 														<?php if(is_array($vo['win_line_icons'])): $i = 0; $__LIST__ = $vo['win_line_icons'];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$icons2): $mod = ($i % 2 );++$i; if(is_array($icons2)): $i = 0; $__LIST__ = $icons2;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$icon2): $mod = ($i % 2 );++$i;?><img src="/Public/game_icon/<?php echo ($icon2); ?>" width="40" height="40" /> &nbsp;<?php endforeach; endif; else: echo "" ;endif; endforeach; endif; else: echo "" ;endif; ?>
 													</div><?php endif; ?>
-												  </div>  
+												  </div>
 												</div>
 											</td>
                                             <td><?php echo ($vo["bet"]); ?></td>
 											<td><?php echo ($vo["total_bet"]); ?></td>
 											<td><?php echo ($vo["line"]); ?></td>
 											<td><?php echo ($vo["win"]); ?></td>
-                                        </tr><?php endforeach; endif; else: echo "" ;endif; ?>	
+                                        </tr><?php endforeach; endif; else: echo "" ;endif; ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -261,9 +260,9 @@
 			<!-- Page-Level Demo Scripts - Tables - Use for reference -->
 			<script>
 			$(document).ready(function() {
-			
+
 				//$('.dropdown-toggle').dropdown('toggle');
-				
+
 				$('input[name=date-range-picker]').daterangepicker({
 					format: 'YYYY-MM-DD',
 					startDate: '<?php echo (date('Y-m-d',$param["begin_time"])); ?>',

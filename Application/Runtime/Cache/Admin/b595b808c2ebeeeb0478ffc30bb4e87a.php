@@ -140,7 +140,7 @@
         <div id="page-wrapper">
 		
 			            
-			
+
 			<div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">总览</h1>
@@ -163,7 +163,7 @@
                                             <th>运营商</th>
                                             <th>总充值额</th>
                                             <th>充值折扣</th>
-                                            <th>充值金币数</th>
+                                            <th>充值后所得游戏金币数量</th>
                                         </tr>
                                     </thead>
 									<tbody>
@@ -192,8 +192,8 @@
                 <!-- /.col-lg-6 -->
             </div>
             <!-- /.row -->
-			
-			
+
+
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
@@ -246,6 +246,7 @@
                 <!-- /.col-lg-6 -->
             </div>
             <!-- /.row -->
+
 			
         </div>
         <!-- /#page-wrapper -->

@@ -140,18 +140,18 @@
         <div id="page-wrapper">
 		
 						
-			
+
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header">提现记录</h3>
 						<div class="row">
 							<form action="<?php echo U('Admin/Withdraw/index');?>">
-								<div class="col-md-2">
-									<?php if($login_user['user_role'] == 100110 ): ?><select name="operator_id"  class="form-control">
+								<?php if($login_user['user_role'] == 100110 ): ?><div class="col-md-2">
+									<select name="operator_id"  class="form-control">
 									<option value="">请选择平台</option>
 									<?php if(is_array($user_roles)): $i = 0; $__LIST__ = $user_roles;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option value="<?php echo ($key); ?>" <?php if(($param['operator_id']) == $key): ?>selected="selected"<?php endif; ?>><?php echo ($vo); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
-									</select><?php endif; ?>
-								</div>
+									</select>
+								</div><?php endif; ?>
 								<div class="col-md-3">
 									<div class="form-group input-group">
 										<span class="add-on input-group-addon">
@@ -211,7 +211,7 @@
                                             <td><?php if($vo['status'] == 1): ?><font color="#5cb85c">完成</span><else><?php if($vo['status'] == 0): ?><font color="#f0ad4e">进行中</span><else><font color="#d9534f">失败</span><?php endif; endif; ?></td>
 											<td><?php echo ($vo["bet"]); ?></td>
 											<td><?php echo ($vo["line"]); ?></td>
-                                        </tr><?php endforeach; endif; else: echo "" ;endif; ?>	
+                                        </tr><?php endforeach; endif; else: echo "" ;endif; ?>
                                     </tbody>
                                 </table>
                             </div>
