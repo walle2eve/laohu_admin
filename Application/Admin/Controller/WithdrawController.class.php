@@ -11,13 +11,13 @@ class WithdrawController extends BaseController
 		parent::_initialize();
 	}
     public function index(){
-		
+
 		$param = I('get.');
-		
+
 		if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
 			$param['operator_id'] = $this->uid;
 		}
-		
+
 		// 开始时间
 		if(!$param['date-range-picker']){
 			$param['begin_time'] = date('Y-m-d',strtotime('-1 Month'));
@@ -28,9 +28,10 @@ class WithdrawController extends BaseController
 
 		$this->assign('param',$param);
 
-		$result = D('UserOrderInfo')->get_withdrawal_list($param['operator_id'],$param['begin_time'],$param['end_time'],$param['keyword']);
-		
+
+
 		if(I('submitbtn') == '导出excel'){
+			$result = D('UserOrderInfo')->get_withdrawal_list($param['operator_id'],$param['begin_time'],$param['end_time'],$param['keyword'],'',true);
 			$file_name = '提现记录信息导出';
 			$excel_title = array(
 				array('width' => 20,'val' => '流水号'),
@@ -44,15 +45,16 @@ class WithdrawController extends BaseController
 			);
 			$excel_data = array();
 			$begin_row = 1;
-			
+
 			if(!empty($result['list'])) export_excel($excel_title,$result['list'],$file_name,$begin_row);
 		}
-		
+		$result = D('UserOrderInfo')->get_withdrawal_list($param['operator_id'],$param['begin_time'],$param['end_time'],$param['keyword']);
+
 		$this->assign('list',$result['list']);
-		
+
 		$this->assign('page',$result['page']);
-		
+
         $this->display();
-		
+
     }
 }
