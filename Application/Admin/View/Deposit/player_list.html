@@ -62,7 +62,7 @@
                                             <th>转入金额</th>
 																						<th>转入获得游戏币数量</th>
 																						<th>转入进度</th>
-																						<th>游戏币总计</th>
+																						<th>游戏币余额</th>
 											                  </tr>
 											              </thead>
 											          		<tbody>
@@ -75,7 +75,7 @@
 											                      <td>{$vo.amount}</td>
 											                      <td>{$vo.gold}</td>
 																						<td><if condition="$vo['status'] eq 1"><font color="#5cb85c">完成</span><else><if condition="$vo['status'] eq 0"><font color="#f0ad4e">进行中</span><else><font color="#d9534f">失败</span></if></if></td>
-																						<td>{$vo.total_gold}</td>
+																						<td>{$vo.balance_gold}</td>
 											                      </tr>
 																				</volist>
                                     </tbody>

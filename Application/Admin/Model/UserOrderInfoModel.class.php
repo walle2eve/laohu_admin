@@ -68,7 +68,7 @@ class UserOrderInfoModel extends Model
 
 		$list = $this
 				->alias('uoi')
-				->field('uoi.sn,uoi.create_time,suser.user_name,ui.account_id,uoi.amount,uoi.status,"",""')
+				->field('uoi.sn,uoi.create_time,suser.user_name,ui.account_id,uoi.amount,uoi.status,uoi.gold,uoi.balance_gold')
 				->join('LEFT JOIN t_sys_user suser ON suser.uid = uoi.operator_id')
 				->join('LEFT JOIN t_user_info ui ON ui.user_id = uoi.player_id')
 				->where($where)
@@ -123,7 +123,7 @@ class UserOrderInfoModel extends Model
 		}
 		$list = $this
 				->alias('uoi')
-				->field('uoi.sn,uoi.create_time,suser.user_name,ui.account_id,uoi.amount,uoi.amount as gold,uoi.status,"",""')
+				->field('uoi.sn,uoi.create_time,suser.user_name,ui.account_id,uoi.amount,uoi.amount as gold,uoi.status,uoi.gold,uoi.balance_gold')
 				->join('LEFT JOIN t_sys_user suser ON suser.uid = uoi.operator_id')
 				->join('LEFT JOIN t_user_info ui ON ui.user_id = uoi.player_id')
 				->where($where)
