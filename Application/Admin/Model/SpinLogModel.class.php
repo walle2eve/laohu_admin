@@ -121,7 +121,7 @@ class SpinLogModel extends Model
 			$line_icons = array();
 			// 中奖线图标
 			if($row['line'] > 0){
-				if($row['id'] == 25598)print_r($json_data);
+				///if($row['id'] == 25598)print_r($json_data);
 				foreach($json_data as $key=>$line_row){
 					$t_k = $key%$rows;
 					list($win_line,,,) = explode(':',$line_row);
