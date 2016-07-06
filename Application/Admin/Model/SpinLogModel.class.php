@@ -121,17 +121,16 @@ class SpinLogModel extends Model
 			$line_icons = array();
 			// 中奖线图标
 			if($row['line'] > 0){
-				///if($row['id'] == 25598)print_r($json_data);
 				foreach($json_data as $key=>$line_row){
 					$t_k = $key%$rows;
-					list($win_line,,,) = explode(':',$line_row);
+					list($win_line,,,,,) = explode(':',$line_row);
 					$icon = get_win_line_icon($win_line);
 					$line_icons[$t_k][] = $icon;
 				}
 			}
 			
 			$row['win_line_icons'] = $line_icons;
-			//print_r($row);exit();
+			///print_r($row);exit();
 		}
 		return array('list'=>$list,'page'=>$page->show());
 	}

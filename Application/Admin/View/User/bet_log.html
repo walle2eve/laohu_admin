@@ -73,6 +73,7 @@
 											<th>投入</th>
 											<th>中奖线数</th>
 											<th>中奖金额</th>
+											<th>FREE</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -104,7 +105,6 @@
 															<volist name="icons2" id="icon2">
 																<img src="__PUBLIC__/game_icon/{$icon2}" width="40" height="40" /> &nbsp;
 															</volist>
-
 														</volist>
 													</div>
 													</if>
@@ -115,6 +115,7 @@
 											<td>{$vo.total_bet}</td>
 											<td>{$vo.line}</td>
 											<td>{$vo.win}</td>
+											<td><if condition="$vo['reason'] eq 4">YES<else/>NO</if></td>
                                         </tr>
 									</volist>
                                     </tbody>
