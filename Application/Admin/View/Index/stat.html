@@ -1,8 +1,8 @@
 			<layout name="_layout/base" />
-			
+
             <div class="row">
                 <div class="col-lg-12">
-                    <h3 class="page-header">充值统计</h3>
+                    <h3 class="page-header">资金统计</h3>
 						<div class="row"><form method="post" action="{:U('Admin/Index/stat')}" id="stat_form">
                             <div class="col-md-2"><form>
 								<div class="form-group input-group">
@@ -27,7 +27,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            充值统计
+                            资金统计
                         </div>
 
                         <!-- /.panel-heading -->
@@ -53,7 +53,7 @@
                                             <td>{$vo|default='0.00'}</td>
 											</volist>
                                             <td>{:number_format($vo_total, 2, '.', '')}</td>
-                                        </tr>							
+                                        </tr>
                                     </tbody>
                                 </table>
 								</if>
@@ -78,7 +78,7 @@
 											</volist>
                                             <td>{:number_format($vo_total, 2, '.', '')}</td>
                                         </tr>
-									</volist>									
+									</volist>
                                     </tbody>
                                 </table>
                             </div>
@@ -91,12 +91,10 @@
                 <!-- /.col-lg-6 -->
             </div>
             <!-- /.row -->
-			<!-- 
+			<!--
 			<div class="row">
                 <div class="col-lg-12">
 					{$page}
 				</div>
 			</div>
 			-->
-			
-			

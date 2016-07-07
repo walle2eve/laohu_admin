@@ -1,7 +1,7 @@
 			<layout name="_layout/base" />
             <div class="row">
                 <div class="col-lg-12">
-                    <h3 class="page-header">用户管理</h3>
+                    <h3 class="page-header">运营商管理</h3>
 						<div class="row">
                             <div class="col-md-4"><button type="button" class="btn btn-outline btn-primary" data-add-trigger><b>+</b> 创建新用户</button></div>
 							<div class="col-md-4"></div>
@@ -64,7 +64,7 @@
 												</if>
 											</td>
                                         </tr>
-									</volist>									
+									</volist>
                                     </tbody>
                                 </table>
                             </div>
@@ -82,7 +82,7 @@
 					{$page}
 				</div>
 			</div>
-			
+
 			<script type="text/tpl" id="resetPwdTpl">
 				新密码: <input type="text" id="newPwd" length="20">
 				确认新密码: <input type="text" id="reNewPwd" length="20">
@@ -205,10 +205,10 @@
 			query.val = $(this).attr('status');
 			query.key = tr.attr('key');
 			obj.removeClass('fa-check fa-lock text-success').addClass('fa-spinner fa-spin');
-			
+
 			$.post('{:U('Admin/Operator/set_status')}', query, function(result){
 				if(result.status){
-					
+
 					if(query.val == 1){
 						obj.removeClass('text-success fa-spinner fa-spin').addClass('fa-lock').attr('status',-1);
 					}else{
@@ -231,15 +231,15 @@
 		  $('.add-form').on('submit', function(e){
 			e.preventDefault();
 			var $form = $(this);
-			
+
 			var $userrole = $('input[name="user_role"]:checked',$form).val();
 			var $loginname = $('input[name="login_name"]', $form).val();
 			var $loginpwd = $('input[name="login_pwd"]', $form).val();
 			var $username = $('input[name="user_name"]', $form).val();
-			
+
 			var $message = $('[data-error-box]', $form);
 			var $button = $('.submit-button', $form);
-			
+
 			// 验证
 			//console.log($userrole);
 			if( !$userrole ){
@@ -275,7 +275,7 @@
 			***/
 			var data = $(this).serialize();
 			$button.button('loading');
-			$.post('{:U('Admin/Operator/add_user')}', data, function(res){			  
+			$.post('{:U('Admin/Operator/add_user')}', data, function(res){
 			  if(res.status){
 				$.ShowAlert(res.msg);
 				setTimeout(function(){
@@ -300,7 +300,7 @@
 		function resetPwd(id) {
 			$.ShowConfirm($("#resetPwdTpl").html(), function(){
 				var newPwd = $("#newPwd").val().trim();
-				var reNewPwd = $("#reNewPwd").val().trim(); 
+				var reNewPwd = $("#reNewPwd").val().trim();
 				//if(newPwd == '' || reNewPwd == ''){
 				if( !newPwd || newPwd.length < 6 || newPwd.length > 16 ){
 					$.showError("请输入6~16位重置后的密码!");
