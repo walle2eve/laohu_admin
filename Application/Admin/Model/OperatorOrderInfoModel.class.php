@@ -53,7 +53,6 @@ class OperatorOrderInfoModel extends Model{
 		}
 
 
-
 		$list = $this
 				->alias('t')
 				->field('t.sn,t.create_time,suser.user_name,t.amount,t.discount,t.gold,t.status,t.total_gold')
