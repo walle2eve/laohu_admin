@@ -76,9 +76,9 @@ class DepositController extends BaseController
 		$param = I('post.');
 
 		$operator_id = $param['operator_id'];
-		$amount = $param['amount'];
+		$amount = floatval($param['amount']);
 		$discount = intval($param['discount']);
-		$gold = $param['gold'];
+		$gold = floatval($param['gold']);
 
 		if(!$operator_id){
 			$result['status'] = false;
@@ -88,7 +88,7 @@ class DepositController extends BaseController
 		}
 		if($amount <= 0){
 			$result['status'] = false;
-			$result['msg'] = '请填写大于0的充值金额';
+			$result['msg'] = '请填写大于0的充值金币数';
 			$this->ajaxReturn($result);
 			exit();
 		}
@@ -100,14 +100,14 @@ class DepositController extends BaseController
 		}
 		if($gold <= 0){
 			$result['status'] = false;
-			$result['msg'] = '请填写大于0的充值金额';
+			$result['msg'] = '请填写大于0的充值金币数';
 			$this->ajaxReturn($result);
 			exit();
 		}
 
-		$deposit_gold = $amount + ($amount * ($discount / 100));
+		$amount = round($gold - ($gold * ($discount / 100)),2);
 
-		$return = D('OperatorOrderInfo')->add_deposit($operator_id,$amount,$discount,$deposit_gold);
+		$return = D('OperatorOrderInfo')->add_deposit($operator_id,$amount,$discount,$gold);
 
 		if($return['status'] === true){
 			$this->ajaxReturn($result);
@@ -182,7 +182,7 @@ class DepositController extends BaseController
 
 			if(!empty($result['list'])) export_excel($excel_title,$result['list'],$file_name,$begin_row);
 		}
-		
+
 		$result = D('UserOrderInfo')->get_deposit_list($param['operator_id'],$param['begin_time'],$param['end_time'],$param['deposit_sn']);
 		$this->assign('list',$result['list']);
 

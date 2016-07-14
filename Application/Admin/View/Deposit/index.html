@@ -42,7 +42,7 @@
 										&nbsp;&nbsp;&nbsp;
 										<input type="submit" name="submitbtn" class="btn btn-primary" value="导出excel"/>
 									</div>
-								</div>	
+								</div>
             </div>
 					</form>
                 </div>
@@ -134,15 +134,15 @@
 						  </div>
 						</div>
 						<div class="form-group">
-						  <label class="col-sm-3 control-label">充值金额：</label>
+						  <label class="col-sm-3 control-label">充值金币数：</label>
 						  <div class="col-sm-6">
-							<input type="text" name="amount" id="amount" class="form-control" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="请输入充值金额">
+							<input type="text" name="gold" id="gold" class="form-control" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="请输入要充值的金币数">
 						  </div>
 						</div>
 						<div class="form-group">
-						  <label class="col-sm-3 control-label">游戏币：</label>
+						  <label class="col-sm-3 control-label">金额：</label>
 						  <div class="col-sm-6">
-							<input type="text" name="gold" id="gold" class="form-control" value="0" readonly>
+							<input type="text" name="amount" id="amount" class="form-control" value="0" readonly>
 						  </div>
 						</div>
 
@@ -189,7 +189,7 @@
 
 							$('#discount').val('0' + '%');
 
-							$('#gold').val(0);
+							$('#amount').val(0);
 
 							if(op_id == ''){
 								return false;
@@ -200,11 +200,12 @@
 								if(res.status){
 
 									var discount = parseFloat(res.discount);
-									var amount = parseInt($('#amount').val());
+									var gold = parseFloat($('#gold').val());
 
-									if(amount > 0){
-										var gold = amount + (amount * (discount / 100));
-										$('#gold').val(gold);
+									if(gold > 0){
+										var amount = gold - (gold * (discount / 100));
+										amount = Digit.round(amount,2);
+										$('#amount').val(amount);
 									}
 
 									discount = res.discount + '%';
@@ -218,13 +219,14 @@
 
 							});
 						});
-						$('input[name=amount]').blur(function(){
-							var amount = parseFloat($(this).val());
+						$('input[name=gold]').blur(function(){
+							var gold = parseFloat($(this).val());
 							var discount = parseFloat($('#discount').val());
 							console.log(discount);
-							if(amount >= 0 && discount != NaN){
-								var gold = amount + (amount * (discount / 100));
-								$('#gold').val(gold);
+							if(gold >= 0 && discount != NaN){
+								var amount = gold - (gold * (discount / 100));
+								amount = Digit.round(amount,2);
+								$('#amount').val(amount);
 							}
 						});
 						</if>
@@ -295,5 +297,12 @@
 					html.push('<strong>' + msg + '</strong>');
 					html.push('</div>');
 					$target.html( html.join('') );
+				};
+				var Digit = {};
+				Digit.round = function(digit, length) {
+				    length = length ? parseInt(length) : 0;
+				    if (length <= 0) return Math.round(digit);
+				    digit = Math.round(digit * Math.pow(10, length)) / Math.pow(10, length);
+				    return digit;
 				};
 			</script>
