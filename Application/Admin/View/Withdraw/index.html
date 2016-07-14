@@ -57,11 +57,12 @@
                                             <th>流水号</th>
                                             <th>日期（DATE）</th>
                                             <th>提现平台</th>
+																						<th>运营商订单号</th>
                                             <th>用户名</th>
-											<th>提现游戏币数量</th>
-											<th>提现进度</th>
-											<th>提现反充游戏币</th>
-											<th>游戏币余额</th>
+																						<th>提现游戏币数量</th>
+																						<th>提现进度</th>
+																						<th>提现反充游戏币</th>
+																						<th>游戏币余额</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -70,6 +71,7 @@
                                             <td>{$vo.sn}</td>
                                             <td>{$vo.create_time}</td>
 																						<td>{$vo.user_name}</td>
+																						<td>{$vo.operator_sn}</td>
 																						<td>{$vo.account_id}</td>
                                             <td>{$vo.amount}</td>
                                             <td><if condition="$vo['status'] eq 1"><font color="#5cb85c">完成</span><else><if condition="$vo['status'] eq 0"><font color="#f0ad4e">进行中</span><else><font color="#d9534f">失败</span></if></if></td>

@@ -37,6 +37,7 @@ class WithdrawController extends BaseController
 				array('width' => 20,'val' => '流水号'),
 				array('width' => 20,'val' => '日期'),
 				array('width' => 20,'val' => '提现平台'),
+				array('width' => 20,'val' => '运营商订单号'),
 				array('width' => 20,'val' => '用户名'),
 				array('width' => 20,'val' => '提现游戏币数量'),
 				array('width' => 20,'val' => '提现进度'),

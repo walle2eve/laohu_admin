@@ -42,7 +42,7 @@ class UserOrderInfoModel extends Model
 		}
 
 		if($keyword != ''){
-			$where .=  " AND (uoi.sn LIKE '%". $keyword ."%' OR ui.account_id LIKE '%" . $keyword . "%') ";
+			$where .=  " AND (uoi.sn LIKE '%". $keyword ."%' OR ui.account_id LIKE '%" . $keyword . "%'  OR uoi.operator_sn LIKE '%" . $keyword . "%') ";
 		}
 
 		$order_by = in_array($order_by,array('create_time','amount')) ? $order_by . ' DESC ' : 'create_time DESC';
@@ -68,7 +68,7 @@ class UserOrderInfoModel extends Model
 
 		$list = $this
 				->alias('uoi')
-				->field('uoi.sn,uoi.create_time,suser.user_name,ui.account_id,uoi.amount,uoi.status,uoi.gold,uoi.balance_gold')
+				->field('uoi.sn,uoi.create_time,suser.user_name,uoi.operator_sn,ui.account_id,uoi.amount,uoi.status,uoi.gold,uoi.balance_gold')
 				->join('LEFT JOIN t_sys_user suser ON suser.uid = uoi.operator_id')
 				->join('LEFT JOIN t_user_info ui ON ui.user_id = uoi.player_id')
 				->where($where)
@@ -99,7 +99,7 @@ class UserOrderInfoModel extends Model
 		}
 
 		if($keyword != ''){
-			$where .=  " AND (uoi.sn LIKE '%". $keyword ."%' OR ui.account_id LIKE '%" . $keyword . "%') ";
+			$where .=  " AND (uoi.sn LIKE '%". $keyword ."%' OR ui.account_id LIKE '%" . $keyword . "%'  OR uoi.operator_sn LIKE '%" . $keyword . "%') ";
 		}
 
 		$order_by = in_array($order_by,array('create_time','amount')) ? $order_by . ' DESC ' : 'create_time DESC';
@@ -123,7 +123,7 @@ class UserOrderInfoModel extends Model
 		}
 		$list = $this
 				->alias('uoi')
-				->field('uoi.sn,uoi.create_time,suser.user_name,ui.account_id,uoi.amount,uoi.amount as gold,uoi.status,uoi.gold,uoi.balance_gold')
+				->field('uoi.sn,uoi.create_time,suser.user_name,uoi.operator_sn,ui.account_id,uoi.amount,uoi.amount as gold,uoi.status,uoi.gold,uoi.balance_gold')
 				->join('LEFT JOIN t_sys_user suser ON suser.uid = uoi.operator_id')
 				->join('LEFT JOIN t_user_info ui ON ui.user_id = uoi.player_id')
 				->where($where)
