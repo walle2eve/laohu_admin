@@ -169,9 +169,9 @@ class DepositController extends BaseController
 			$file_name = '充值记录信息导出';
 			$excel_title = array(
 				array('width' => 20,'val' => '流水号'),
+				array('width' => 20,'val' => '运营商订单号'),
 				array('width' => 20,'val' => '日期'),
 				array('width' => 20,'val' => '转入运营商'),
-				array('width' => 20,'val' => '运营商订单号'),
 				array('width' => 20,'val' => '玩家用户名'),
 				array('width' => 20,'val' => '转入金额'),
 				array('width' => 20,'val' => '转入获得游戏币数量'),

@@ -56,9 +56,9 @@
                                     <thead>
                                         <tr>
                                             <th>流水号</th>
+																						<th>运营商订单号</th>
                                             <th>日期（DATE）</th>
                                             <th>转入运营商</th>
-																						<th>运营商订单号</th>
 																						<th>玩家用户名</th>
                                             <th>转入金额</th>
 																						<th>转入获得游戏币数量</th>
@@ -70,9 +70,9 @@
 																				<volist name="list" id="vo">
 											                      <tr>
 											                      <td>{$vo.sn}</td>
+																						<td>{$vo.operator_sn}</td>
 											                      <td>{$vo.create_time}</td>
 																						<td>{$vo.user_name}</td>
-																						<td>{$vo.operator_sn}</td>
 																						<td>{$vo.account_id}</td>
 											                      <td>{$vo.amount}</td>
 											                      <td>{$vo.gold}</td>
