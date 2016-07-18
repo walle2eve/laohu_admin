@@ -22,7 +22,7 @@
 											<i class="glyphicon glyphicon-calendar fa fa-calendar">
 											</i>
 										</span>
-										<input class="form-control" type="text" readonly name="date-range-picker" id="id-date-range-picker-1" value="{$param.begin_time} - {$param.end_time}"/>
+										<input class="form-control" type="text" readonly name="date_range_picker" id="id-date-range-picker-1" value="{$param.begin_time} - {$param.end_time}"/>
 									</div>
 								</div>
 								<div class="col-md-2">
@@ -106,7 +106,7 @@
 			<!-- Page-Level Demo Scripts - Tables - Use for reference -->
 			<script>
 				$(document).ready(function() {
-						$('input[name=date-range-picker]').daterangepicker({
+						$('input[name=date_range_picker]').daterangepicker({
 							format: 'YYYY-MM-DD',
 							startDate: '{$param.begin_time}',
 							endDate: '{$param.end_time}',

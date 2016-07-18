@@ -20,11 +20,15 @@ class DepositController extends BaseController
 		}
 
 		// 开始时间
-		if(!$param['date-range-picker']){
+		if(!$param['date_range_picker']){
 			$param['begin_time'] = date('Y-m-d',strtotime('-1 month'));
 			$param['end_time'] = date('Y-m-d');
 		}else{
-			list($param['begin_time'],$param['end_time']) = explode(' - ',$param['date-range-picker']);
+
+			list($param['begin_time'],$param['end_time']) = explode(' - ',$param['date_range_picker']);
+
+			if(!strtotime($param['end_time']))list($param['begin_time'],$param['end_time']) = explode('+-+',$param['date_range_picker']);
+
 		}
 
 		$this->assign('param',$param);
@@ -154,11 +158,15 @@ class DepositController extends BaseController
 		}
 
 		// 开始时间
-		if(!$param['date-range-picker']){
+		if(!$param['date_range_picker']){
 			$param['begin_time'] = date('Y-m-d',strtotime('-1 month'));
 			$param['end_time'] = date('Y-m-d');
 		}else{
-			list($param['begin_time'],$param['end_time']) = explode(' - ',$param['date-range-picker']);
+
+			list($param['begin_time'],$param['end_time']) = explode(' - ',$param['date_range_picker']);
+
+			if(!strtotime($param['end_time']))list($param['begin_time'],$param['end_time']) = explode('+-+',$param['date_range_picker']);
+
 		}
 		$this->assign('param',$param);
 
