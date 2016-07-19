@@ -135,6 +135,7 @@ class OperatorController extends BaseController
 			$this->ajaxReturn($result);
 			exit();
 		}
+		A('Public')->clear_cache();
 		$this->ajaxReturn($result);
 	}
 	//删除用户
@@ -170,6 +171,7 @@ class OperatorController extends BaseController
 			$this->ajaxReturn($result);
 			exit();
 		}
+		A('Public')->clear_cache();
 		$this->ajaxReturn($result);
 	}
 }
