@@ -1,0 +1,29 @@
+                    <ul class="nav" id="side-menu">
+						<volist name="menu_list" id="vo">
+                        <li>
+							<if condition="$vo['son']">
+							<a href="<eq name="vo['func_url']" value="">#<else/>{:U($vo['func_url'])}</eq>" <if condition="strpos($vo['func_url'],CONTROLLER_NAME) AND strpos($vo['func_url'],ACTION_NAME)">class="active"</if>><i class="{$vo.icon}"></i> {$vo.func_name}<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+								  <volist name="vo['son']" id="voSecond">
+									<if condition="$voSecond['son']">
+										<a href="<eq name="voSecond['func_url']" value="">#<else/>{:U($voSecond['func_url'])}</eq>"  <if condition="strpos($voSecond['func_url'],CONTROLLER_NAME) AND strpos($voSecond['func_url'],ACTION_NAME)">class="active"</if>>{$voSecond.func_name} <span class="fa arrow"></span></a>
+										<ul class="nav nav-third-level">
+											<volist name="voSecond['son']" id="voThird">
+											<li>
+												<a href="<eq name="voThird['func_url']" value="">#<else/>{:U($voThird['func_url'])}</eq>"  <if condition="strpos($voThird['func_url'],CONTROLLER_NAME) AND strpos($voThird['func_url'],ACTION_NAME)">class="active"</if>> {$voThird.func_name}</a>
+											</li>
+											</volist>
+										</ul>
+									<else/>
+										<a href="<eq name="voSecond['func_url']" value="">#<else/>{:U($voSecond['func_url'])}</eq>"  <if condition="strpos($voSecond['func_url'],CONTROLLER_NAME) AND strpos($voSecond['func_url'],ACTION_NAME)">class="active"</if>> {$voSecond.func_name}</a>
+									</if>
+								  </volist>
+                                </li>
+                            </ul>
+							<else/>
+							<a href="<eq name="vo['func_url']" value="">#<else/>{:U($vo['func_url'])}</eq>"  <if condition="strpos($vo['func_url'],CONTROLLER_NAME) AND strpos($vo['func_url'],ACTION_NAME)">class="active"</if>><i class="{$vo.icon}"></i> {$vo.func_name}</a>
+							</if>
+                        </li>
+						</volist>
+                    </ul>

@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Admin\Model;
 use Think\Model;
 
@@ -6,16 +6,16 @@ class SpinLogModel extends Model
 {
     protected $connection = 'DB_LAOHU_LOG_CONFIG';
 	//protected $trueTableName;
-	protected $tablePrefix = ''; 
-	/**	
+	protected $tablePrefix = '';
+	/***
 	public function __construct($table_name){
 		parent::__construct($table_name);
 		$this->trueTableName = $table_name;
 	}
-	
+
 	// 获取游戏记录
 	public function bet_log($operator_id,$begin_time,$end_time,$order_by='win DESC',$account_id='',$tables=array()){
-		
+
 		$where = ' 1=1 ';
 		if($operator_id != ''){
 			$where .= " AND operator_id = " . $operator_id . " ";
@@ -25,32 +25,32 @@ class SpinLogModel extends Model
 		if($account_id != ''){
 			$where .= " AND account_id LIKE '%" . $account_id . "%' ";
 		}
-		
+
 		if(empty($tables)){
 			return array('list'=>array(),'page'=>'暂无符合条件的记录');
 		}
-		
+
 		//
 		$count_sqls = array();
 		$sqls = array();
-		
+
 		foreach($tables as $table){
 			$count_sqls[] = " SELECT COUNT(*) AS tp_num FROM  " . $table . " WHERE " . $where;
 			$sqls[] = " SELECT * FROM  " . $table;
 		}
-		
+
 		$count_table = "(". implode(' UNION ALL ',$count_sqls) .")";
-		
+
 		$table = "(". implode(' UNION ALL ',$sqls) .")";
-		
+
 		$count = $this->table($count_table)->alias('t')->sum('tp_num');
-		
+
 		$page = page($count);
-		
+
 		$list = $this->table($table)->alias('t')->where($where)->order($order_by)->limit($page->firstRow.','.$page->listRows)->select();
-		
+
 		// echo $this->getlastsql();exit();
-		
+
 		foreach($list as &$row){
 			// 格式化附加参数
 			$json_data = (array)json_decode($row['param']);
@@ -69,17 +69,17 @@ class SpinLogModel extends Model
 		if($account_id != ''){
 			$where .= " AND account_id LIKE '%" . $account_id . "%' ";
 		}
-		
+
 		$count = $this->where($where)->count();
-		
+
 		$page = page($count);
-		
+
 		$order_by = $order_by . ',createTime DESC';
-		
+
 		$list = $this->alias('t')->field('t.*,suser.user_name')->join('LEFT JOIN laohu.t_sys_user suser ON suser.uid = t.operator_id')->where($where)->order($order_by)->limit($page->firstRow.','.$page->listRows)->select();
-		
+
 		//echo $this->getlastsql();
-		
+
 		foreach($list as &$row){
 			// 格式化附加参数
 			$json_data = (array)json_decode($row['param']);
@@ -92,16 +92,16 @@ class SpinLogModel extends Model
 			$wheel = rtrim($wheel, "]");
 			$wheel = ltrim($wheel, "[");
 			$wheel = explode(',',$wheel);
-			
+
 			$icons = array();
-			
+
 			// 排列规则
 			if($row['theme_id'] == 1005){
 				$rows = 5;
 			}else{
 				$rows = 3;
 			}
-			
+
 			$wheel = trim_array($wheel);
 			// 矩阵图标
 			foreach($wheel as $key=>$val){
@@ -117,7 +117,7 @@ class SpinLogModel extends Model
 				}
 			}
 			$row['icons'] = $icons;
-			
+
 			$line_icons = array();
 			// 中奖线图标
 			if($row['line'] > 0){
@@ -128,7 +128,7 @@ class SpinLogModel extends Model
 					$line_icons[$t_k][] = $icon;
 				}
 			}
-			
+
 			$row['win_line_icons'] = $line_icons;
 			///print_r($row);exit();
 		}

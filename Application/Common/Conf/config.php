@@ -24,14 +24,14 @@ return array(
     'APP_DOMAIN_SUFFIX'      => '', // 域名后缀 如果是com.cn net.cn 之类的后缀必须设置
     'ACTION_SUFFIX'          => '', // 操作方法后缀
     'MULTI_MODULE'           => true, // 是否允许多模块 如果为false 则必须设置 DEFAULT_MODULE
-	
-	'MODULE_ALLOW_LIST'   	 => array('v1','Admin'),
+
+	'MODULE_ALLOW_LIST'   	 => array('v1','Admin','Player'),
     'MODULE_DENY_LIST'       => array('Common', 'Runtime'),
-	
+
     'CONTROLLER_LEVEL'       => 1,
     'APP_AUTOLOAD_LAYER'     => 'Controller,Model', // 自动加载的应用类库层 关闭APP_USE_NAMESPACE后有效
     'APP_AUTOLOAD_PATH'      => '', // 自动加载的路径 关闭APP_USE_NAMESPACE后有效
-	
+
     /* Cookie设置 */
     'COOKIE_EXPIRE'          => 0, // Cookie有效期
     'COOKIE_DOMAIN'          => '', // Cookie有效域名
@@ -45,7 +45,7 @@ return array(
     'DEFAULT_C_LAYER'        => 'Controller', // 默认的控制器层名称
     'DEFAULT_V_LAYER'        => 'View', // 默认的视图层名称
     'DEFAULT_LANG'           => 'zh-cn', // 默认语言
-    'DEFAULT_THEME'          => '', // 默认模板主题名称	
+    'DEFAULT_THEME'          => '', // 默认模板主题名称
     'DEFAULT_MODULE'         => 'Admin', // 默认模块
     'DEFAULT_CONTROLLER'     => 'Index', // 默认控制器名称
     'DEFAULT_ACTION'         => 'index', // 默认操作名称
@@ -54,7 +54,7 @@ return array(
     'DEFAULT_AJAX_RETURN'    => 'JSON', // 默认AJAX 数据返回格式,可选JSON XML ...
     'DEFAULT_JSONP_HANDLER'  => 'jsonpReturn', // 默认JSONP格式返回的处理方法
     'DEFAULT_FILTER'         => 'strip_tags,htmlspecialchars', // 默认参数过滤方法 用于I函数...
-	
+
     /* 数据库设置 */
     'DB_TYPE'                => 'mysql', // 数据库类型
     'DB_HOST'                => '13.75.121.157', // 服务器地址
@@ -71,7 +71,7 @@ return array(
     'DB_RW_SEPARATE'         => false, // 数据库读写是否分离 主从式有效
     'DB_MASTER_NUM'          => 1, // 读写分离后 主服务器数量
     'DB_SLAVE_NO'            => '', // 指定从服务器序号
-	
+
 	// log库连接信息
 	'DB_LAOHU_LOG_CONFIG' => array(
 		'db_type'  => 'mysql',
@@ -177,9 +177,9 @@ return array(
     'CHECK_APP_DIR'          => true, // 是否检查应用目录是否创建
     'FILE_UPLOAD_TYPE'       => 'Local', // 文件上传方式
     'DATA_CRYPT_TYPE'        => 'Think', // 数据加密方式
-	
+
 	//每页显示数量
 	'LIST_ROWS'				 => 20,
-	
+
 
 );
