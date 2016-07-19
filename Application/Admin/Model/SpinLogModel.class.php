@@ -96,12 +96,7 @@ class SpinLogModel extends Model
 			$icons = array();
 
 			// 排列规则
-      list($rows,$columns) = explode($row['game_sort']);
-			//if($row['theme_id'] == 1005){
-			//	$rows = 5;
-			//}else{
-			//	$rows = 3;
-			//}
+      list($rows,$columns) = explode(',',$row['game_sort']);
 
 			$wheel = trim_array($wheel);
 			// 矩阵图标
@@ -117,6 +112,7 @@ class SpinLogModel extends Model
 					$icons[$t_k][] = $icon;
 				}
 			}
+      //print_r($icons);exit();
 			$row['icons'] = $icons;
 
 			$line_icons = array();
