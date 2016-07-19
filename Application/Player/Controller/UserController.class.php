@@ -15,9 +15,20 @@ class UserController extends BaseController
     {
 		$param = I('get.');
 
-		if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
-			$param['operator_id'] = $this->uid;
-		}
+		//if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
+		//	$param['operator_id'] = $this->uid;
+		//}
+		$param['operator_id'] = '10017';
+
+		if(!$param['account_id'] || !$param['access_key'])exit('登录信息错误!');
+		// 验证玩家登陆信息
+		$player_info = D('UserInfo')->field('account_id,uniquekey,status')->where("account_id = '%s'",array($param['account_id']))->find();
+
+		if(!$player_info)exit('找不到指定的玩家信息');
+
+		if($param['access_key'] != md5($param['account_id'] . $player_info['uniquekey'])) exit('access_key错误,无法确认玩家信息!');
+
+		if($player_info['status'] != 1) exit('玩家账号已冻结!');
 
 		// 测试开始时间
 		$param['min_date'] = date('Y-m-d',strtotime('-30 day'));//C('PLAYER_SPIN_BEGIN_DATE');
@@ -43,13 +54,14 @@ class UserController extends BaseController
 		}
 
 		// 排序
-		$orderbys = array('win','bet','total_bet');
+		$orderbys = array('win','bet','total_bet','log_time');
 
-		$param['order_by'] = !in_array($param['order_by'],$orderbys) ? 'win' : $param['order_by'];
+		$param['order_by'] = !in_array($param['order_by'],$orderbys) ? 'log_time' : $param['order_by'];
 
 		$this->assign('param',$param);
 
 		$param['order_by'] = $param['order_by'] . ' DESC ';
+
 
 		// 调取数据
 		$result = D('SpinLog')->bet_log($param['operator_id'],$param['begin_time'],$param['end_time'],$param['order_by'],$param['account_id'],$tables);

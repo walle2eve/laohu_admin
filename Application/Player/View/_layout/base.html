@@ -27,7 +27,7 @@
     <link href="__PUBLIC__/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 	<link href="__PUBLIC__/plugins/spinner/dist/bootstrap-spinner.css" rel="stylesheet" type="text/css"/>
 	<link href="__PUBLIC__/plugins/jbox/jBox.css" rel="stylesheet" type="text/css"/>
-	
+
 	<link rel="stylesheet" href="__PUBLIC__/plugins/daterangepicker/daterangepicker-bs3.css" />
 
     <style>
@@ -39,7 +39,7 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-	
+
     <!-- jQuery -->
     <script src="__PUBLIC__/bower_components/jquery/dist/jquery.min.js"></script>
 
@@ -57,95 +57,15 @@
 	-->
     <script src="__PUBLIC__/plugins/jbox/jBox.js" type="text/javascript"></script>
     <script src="__PUBLIC__/js/base.js" type="text/javascript"></script>
-	
+
     <!-- Custom Theme JavaScript -->
     <script src="__PUBLIC__/dist/js/sb-admin-2.js"></script>
-	
-	
+
 </head>
-
 <body>
-
     <div id="wrapper">
-
-        <!-- Navigation -->
-        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="{:U('Admin/Index/index')}">{:C('WEB_TITLE')}</a>
-            </div>
-            <!-- /.navbar-header -->
-
-            <ul class="nav navbar-top-links navbar-right">
-                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)" id="clear_cache">
-                        <i class="fa fa-refresh fa-fw"></i>  更新缓存
-                    </a>
-                    <!-- /.dropdown-user -->
-                </li>
-                <!-- /.dropdown -->
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> 个人信息</a>
-                        </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> 设置</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="javascript:void(0);" id="logout"><i class="fa fa-sign-out fa-fw"></i> 退出系统</a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-user -->
-                </li>
-                <!-- /.dropdown -->
-            </ul>
-            <!-- /.navbar-top-links -->
-
-            <div class="navbar-default sidebar" role="navigation">
-                <div class="sidebar-nav navbar-collapse">
-				
-					<include file="_layout/menu" />
-					
-                </div>
-                <!-- /.sidebar-collapse -->
-            </div>
-            <!-- /.navbar-static-side -->
-        </nav>
-
-        <div id="page-wrapper">
-		
 			{__CONTENT__}
-			
-        </div>
-        <!-- /#page-wrapper -->
-
     </div>
     <!-- /#wrapper -->
-
-
-	<script type="text/javascript">
-	$(function(){
-		$('#logout').click(function(){
-			//console.log('logout');
-			 $.get('{:U('Admin/Public/logout')}',function(){
-				location.reload();
-			 });
-		});
-		$('#clear_cache').click(function(){
-			 $.get('{:U('Admin/Public/clear_cache')}',function(){
-				$.ShowAlert('更新缓存完毕');
-			 });
-		});
-	})
-
-	</script>
 </body>
-
 </html>
