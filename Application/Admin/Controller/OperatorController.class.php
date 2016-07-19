@@ -67,7 +67,7 @@ class OperatorController extends BaseController
 			}
 
 			A('Public')->clear_cache();
-			$this->commit();
+			D('SysUser')->commit();
 			$this->ajaxReturn($result);
 			exit();
 		}
