@@ -23,11 +23,13 @@ class UserInfoModel extends Model{
 
 		$orderby = in_array($orderby,array('deposit','withdraw','bet','win','gold')) ? $orderby . '  DESC ' : ' deposit DESC ';
 
+		$today_table = 'spin_log_' . date('Y_m_d');
+
 		$list = $this->alias('ui')
 			->field('su.user_name,ui.account_id,ui.gold,
 			SUM(CASE uoi.order_type WHEN 210100 THEN uoi.amount ELSE 0  END) deposit,
-			(SELECT SUM(total_bet) FROM laohu_log.spin_stat WHERE user_id = ui.user_id) bet,
-			(SELECT SUM(total_win) FROM laohu_log.spin_stat WHERE user_id = ui.user_id) win,
+			((SELECT SUM(total_bet) FROM laohu_log.spin_stat WHERE user_id = ui.user_id) + (SELECT SUM(total_bet) FROM laohu_log.`' . $today_table . '` WHERE user_id = ui.user_id)) bet,
+			((SELECT SUM(total_win) FROM laohu_log.spin_stat WHERE user_id = ui.user_id) + (SELECT SUM(win) FROM laohu_log.`' . $today_table . '` WHERE user_id = ui.user_id)) win,
 			SUM(case uoi.order_type WHEN 210200 THEN uoi.amount ELSE 0  END) withdraw')
 			->join('LEFT JOIN t_sys_user su ON su.uid = ui.operator_id')
 			->join('LEFT JOIN t_user_order_info uoi ON uoi.player_id = ui.user_id And uoi.`status` = 1')
