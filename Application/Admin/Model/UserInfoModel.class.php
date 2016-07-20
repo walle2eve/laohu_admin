@@ -26,7 +26,7 @@ class UserInfoModel extends Model{
 		$today_table = 'spin_log_' . date('Y_m_d');
 
 		$list = $this->alias('ui')
-			->field('su.user_name,ui.account_id,ui.gold,
+			->field('su.user_name,ui.account_id,ui.gold,ui.vip_level,
 			SUM(CASE uoi.order_type WHEN 210100 THEN uoi.amount ELSE 0  END) deposit,
 			((SELECT SUM(total_bet) FROM laohu_log.spin_stat WHERE user_id = ui.user_id) + (SELECT SUM(total_bet) FROM laohu_log.`' . $today_table . '` WHERE user_id = ui.user_id)) bet,
 			((SELECT SUM(total_win) FROM laohu_log.spin_stat WHERE user_id = ui.user_id) + (SELECT SUM(win) FROM laohu_log.`' . $today_table . '` WHERE user_id = ui.user_id)) win,

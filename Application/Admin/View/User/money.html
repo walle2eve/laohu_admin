@@ -54,6 +54,7 @@
                                         <tr>
                                             <if condition="$login_user['user_role'] eq 100110 "><th>平台</th></if>
                                             <th>用户名</th>
+																						<th>VIP等级</th>
                                             <th>转入</th>
                                             <th>消耗</th>
 											<th>赢取</th>
@@ -66,6 +67,7 @@
                                         <tr>
                                             <if condition="$login_user['user_role'] eq 100110 "><td>{$vo.user_name}</td></if>
                                             <td>{$vo.account_id}</td>
+																						<td>{$vo.vip_level}</td>
                                             <td>{$vo.deposit|default='0.00'}</td>
                                             <td>{$vo.bet|default='0.00'}</td>
 																						<td>{$vo.win|default='0.00'}</td>
