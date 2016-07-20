@@ -27,13 +27,11 @@ class SpinLogModel extends Model
 
        $list = $this->alias('t')->field('t.*,suser.user_name')->join('LEFT JOIN laohu.t_sys_user suser ON suser.uid = t.operator_id')->where($where)->order($order_by)->limit($page->firstRow.','.$page->listRows)->select();
 
-       //echo $this->getlastsql();
-
        foreach($list as &$row){
          // 格式化附加参数
          $json_data = (array)json_decode($row['param']);
          $row['line'] = count($json_data);
-
+         /***
          // 矩阵 图标
          $wheel = $row['wheel'];
          $wheel = rtrim($wheel, "]");
@@ -43,26 +41,23 @@ class SpinLogModel extends Model
          $icons = array();
 
          // 排列规则
-         if($row['theme_id'] == 1005){
-           $rows = 5;
-         }else{
-           $rows = 3;
-         }
+         list($rows,$columns) = explode(',',$row['game_sort']);
 
-         $wheel = trim_array($wheel);
-         // 矩阵图标
-         foreach($wheel as $key=>$val){
-           $t_k = $key%$rows;
-           $icon = get_game_icon($row['theme_id'],$val);
-           if($rows == 5){
-             // 5行3列只显示中间一行
-             if(in_array($t_k,array(2))){
-               $icons[$t_k][] = $icon;
-             }
-           }else{
-             $icons[$t_k][] = $icon;
-           }
-         }
+   			$wheel = trim_array($wheel);
+   			// 矩阵图标
+   			foreach($wheel as $key=>$val){
+   				$t_k = $key%$rows;
+   				$icon = get_game_icon($row['theme_id'],$val);
+   				if($rows == 5){
+   					// 5行3列只显示中间一行
+   					if(in_array($t_k,array(2))){
+   						$icons[$t_k][] = $icon;
+   					}
+   				}else{
+   					$icons[$t_k][] = $icon;
+   				}
+   			}
+
          $row['icons'] = $icons;
 
          $line_icons = array();
@@ -78,6 +73,7 @@ class SpinLogModel extends Model
 
          $row['win_line_icons'] = $line_icons;
          ///print_r($row);exit();
+         **/
        }
        return array('list'=>$list,'page'=>$page->show());
      }

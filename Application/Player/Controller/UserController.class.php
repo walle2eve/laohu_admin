@@ -5,6 +5,7 @@ use Think\Controller;
 
 use Admin\Model\SysDictModel;
 
+
 class UserController extends BaseController
 {
 	public function _initialize(){
@@ -38,11 +39,8 @@ class UserController extends BaseController
 			$param['begin_time'] = $param['min_date'];
 			$param['end_time'] = $param['max_date'];
 		}else{
-
 			list($param['begin_time'],$param['end_time']) = explode(' - ',$param['date_range_picker']);
-
 			if(!strtotime($param['end_time']))list($param['begin_time'],$param['end_time']) = explode('+-+',$param['date_range_picker']);
-
 		}
 
 		if(!$param['begin_time'] || strtotime($param['begin_time']) < strtotime("-30 day")){
