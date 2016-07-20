@@ -39,7 +39,7 @@ class Page
      * @param array $listRows  每页显示记录数
      * @param array $parameter  分页跳转的参数
      */
-    public function __construct($totalRows, $listRows = 20, $parameter = array())
+    public function __construct($totalRows, $listRows = 20, $parameter = array(),$rollPage = 0)
     {
         C('VAR_PAGE') && $this->p = C('VAR_PAGE'); //设置分页参数名称
         /* 基础设置 */
@@ -49,6 +49,9 @@ class Page
         $this->nowPage   = empty($_GET[$this->p]) ? 1 : intval($_GET[$this->p]);
         $this->nowPage   = $this->nowPage > 0 ? $this->nowPage : 1;
         $this->firstRow  = $this->listRows * ($this->nowPage - 1);
+
+        $this->rollPage  = $rollPage > 0 ? $rollPage : $this->rollPage;
+        
     }
 
     /**

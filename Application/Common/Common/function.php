@@ -7,9 +7,9 @@
 	 * @param $level		菜单层级 1,2,3
 	 * @return array
 	 */
-	function page($count,$row=0){
+	function page($count,$row=0,$rollPage=0){
 		if(!$row)$row = C('LIST_ROWS');
-		$Page = new \Think\Page($count,$row);
+		$Page = new \Think\Page($count,$row,array(),$rollPage);
 		$Page->setConfig('theme',"<ul class='pagination'><li><a> %HEADER%  %NOW_PAGE%/%TOTAL_PAGE% 页</a></li><li>%FIRST%</li><li>%UP_PAGE%</li><li>%LINK_PAGE%</li><li>%DOWN_PAGE%</li><li>%END%</li></ul>");
 		return $Page;// 分页显示输出
 	}
@@ -29,9 +29,9 @@
 	function get_pwd($pwd,$salt){
 		return md5(md5($pwd) . $salt);
 	}
-	
+
 	/**
-	*  订单号 
+	*  订单号
 	*/
 	function get_sn(){
 		$year_code = array('A','B','C','D','E','F','G','H','I','J');

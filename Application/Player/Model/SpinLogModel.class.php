@@ -21,7 +21,7 @@ class SpinLogModel extends Model
 
        $count = $this->where($where)->count();
 
-       $page = page($count);
+       $page = page($count,0,5);
 
        $order_by = $order_by . ',createTime DESC';
 
@@ -33,9 +33,7 @@ class SpinLogModel extends Model
          // 格式化附加参数
          $json_data = (array)json_decode($row['param']);
          $row['line'] = count($json_data);
-         ///echo $row['param'];
-         ///echo "<br />";
-         ///print_r($json_data);exit();
+
          // 矩阵 图标
          $wheel = $row['wheel'];
          $wheel = rtrim($wheel, "]");
