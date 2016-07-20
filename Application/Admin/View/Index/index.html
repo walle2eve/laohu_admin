@@ -23,25 +23,29 @@
                                             <th>总充值额</th>
                                             <th>充值折扣</th>
                                             <th>充值后所得游戏金币数量</th>
+                                            <th>剩余游戏币数量</th>
                                         </tr>
                                     </thead>
 									<tbody>
 									<volist name="operator_info" id="vo">
 										<php>
 											$total_money = $total_money + $vo['deposit_money'];
-											$total_gold = $total_gold + $vo['deposit_gold'];
+											$total_deposit_gold = $total_deposit_gold + $vo['deposit_gold'];
+                      $total_gold = $total_gold + $vo['gold'];
 										</php>
                                         <tr>
                                             <td>{$vo.user_name}</td>
                                             <td>{$vo.deposit_money}</td>
 											<td>{$vo.discount}%</td>
                                             <td>{$vo.deposit_gold}</td>
+                                            <td>{$vo.gold}</td>
                                         </tr>
 									</volist>
                                         <tr>
                                             <td>总计</td>
                                             <td>{$total_money}</td>
 											<td></td>
+                                            <td>{$total_deposit_gold}</td>
                                             <td>{$total_gold}</td>
                                         </tr>
                                     </tbody>
