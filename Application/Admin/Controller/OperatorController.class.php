@@ -10,7 +10,7 @@ class OperatorController extends BaseController
 	public function _initialize(){
 		parent::_initialize();
 	}
-    public function manage(){
+  public function manage(){
 		$param = I('get.');
 		$list = D('SysUser')->get_list($param);
 		$this->assign('list',$list['list']);

@@ -89,4 +89,45 @@ class UserController extends BaseController
 		$this->assign('page',$result['page']);
 		$this->display();
 	}
+	//设置vip等级
+	public function set_vip_level(){
+		$result = array(
+			'status' => false,
+			'msg' => '设置VIP等级失败!'
+		);
+		if(IS_AJAX && IS_POST){
+			$user_id = I('post.id',0);
+			$vip_level = I('post.vip_level',0);
+
+			if(!in_array($vip_level,array(1,2,3,4))){
+				$result['msg'] = '您选择的vip等级错误!!';
+				$this->ajaxReturn($result);
+				exit();
+			}
+
+			$user_info = D('UserInfo')->where('user_id  = %d',array($user_id))->find();
+
+			if(empty($user_info)){
+				$result['msg'] = '找不到该玩家信息!';
+				$this->ajaxReturn($result);
+				exit();
+			}
+
+			if($user_info['vip_level'] == $vip_level){
+				$result['msg'] = '玩家VIP等级无变化!';
+				$this->ajaxReturn($result);
+				exit();
+			}
+			$return = D('UserInfo')->where('user_id = %d',array($user_id))->setField('vip_level',intval($vip_level));
+
+			if($return === false){
+			}else{
+				$result = array(
+					'status' => true,
+					'msg' => '设置VIP等级成功!'
+				);
+			}
+		}
+		$this->ajaxReturn($result);
+	}
 }

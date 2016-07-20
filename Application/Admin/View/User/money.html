@@ -57,9 +57,9 @@
 																						<th>VIP等级</th>
                                             <th>转入</th>
                                             <th>消耗</th>
-											<th>赢取</th>
-											<th>提取</th>
-											<th>剩余</th>
+																						<th>赢取</th>
+																						<th>提取</th>
+																						<th>剩余</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -67,7 +67,7 @@
                                         <tr>
                                             <if condition="$login_user['user_role'] eq 100110 "><td>{$vo.user_name}</td></if>
                                             <td>{$vo.account_id}</td>
-																						<td>{$vo.vip_level}</td>
+																						<td>{$vo.vip_level}&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-id="{$vo.user_id}" class="set_vip_level">修改</a></td>
                                             <td>{$vo.deposit|default='0.00'}</td>
                                             <td>{$vo.bet|default='0.00'}</td>
 																						<td>{$vo.win|default='0.00'}</td>
@@ -93,6 +93,15 @@
 				</div>
 			</div>
 
+			<script type="text/tpl" id="setVipLevelTpl">
+			vip等级: <select name="vip_level" id="vip_level">
+							<option value="1">vip 1</option>
+							<option value="2">vip 2</option>
+							<option value="3">vip 3</option>
+							<option value="4">vip 4</option>
+							</select>
+			</script>
+
 
 			<!-- Metis Menu Plugin JavaScript -->
 			<script src="__PUBLIC__/bower_components/metisMenu/dist/metisMenu.min.js"></script>
@@ -107,5 +116,23 @@
 				$('#dataTables-example').DataTable({
 						responsive: true
 				});
+				$('.set_vip_level').click(function(){
+					var obj = $(this);
+					var id = obj.data('id');
+					set_vip_level(id);
+				});
 			});
+			function set_vip_level(id) {
+				$.ShowConfirm($("#setVipLevelTpl").html(), function(){
+					var vip_level = $("#vip_level").val().trim();
+					if(vip_level == '' || vip_level == 0){
+						$.ShowAlert("请选择vip等级");
+						return ;
+					}
+					$.post("{:U('Admin/User/set_vip_level')}",{"id":id,"vip_level":vip_level},function(res){
+						$.ShowAlert(res.msg);
+						if(res.status == true) window.location.reload();
+					},'json')
+				},function(){},260,'设置玩家VIP等级');
+			}
 			</script>
