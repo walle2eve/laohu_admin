@@ -10,6 +10,7 @@ class UserController extends BaseController
 {
 	public function _initialize(){
 		parent::_initialize();
+		header("Content-type: text/html; charset=utf-8");
 	}
 	// 游戏记录
     public function bet_log()
