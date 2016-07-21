@@ -1,13 +1,13 @@
-<?php 
+<?php
 namespace Admin\Model;
 use Think\Model;
 
 class SysUserModel extends Model
 {
-    protected $fields = array(	
-								'uid', 
-								'user_name', 
-								'user_role', 
+    protected $fields = array(
+								'uid',
+								'user_name',
+								'user_role',
 								'login_name',
 								'login_pwd',
 								'input_time',
@@ -22,16 +22,16 @@ class SysUserModel extends Model
 								'last_login_ip',
 								'login_count'
 							);
-							
+
     protected $pk     = 'uid';
-	
+
 	protected $_validate = array(
 		array('user_role','require','用户类别必须'),
 		array('login_name','','登录名称已经存在',0,'unique',1), // 在新增的时候验证login_name字段是否唯一
-		array('login_pwd','require','登录密码必须'), 
-		array('user_name','require','平台名称必须'), 
+		array('login_pwd','require','登录密码必须'),
+		array('user_name','require','平台名称必须'),
 	);
-	
+
 	public function get_login($login_name){
 		return $this->where("login_name = '%s'",array($login_name))->find();
 	}
@@ -51,11 +51,11 @@ class SysUserModel extends Model
 		if(isset($param['keyword']) && trim($param['keyword']) != ''){
 			$where .= " AND (su.user_name LIKE '%".$param['keyword']."%' OR su.login_name LIKE '%".$param['keyword']."%') ";
 		}
-		
+
 		$count = $this->alias('su')->join('LEFT JOIN __SYS_DICT__ sd ON sd.dict_id = su.user_role')->where($where)->count();
-		
+
 		$page = page($count);
-		
+
 		$list = $this->alias('su')
 					->join('LEFT JOIN __SYS_DICT__ sd ON sd.dict_id = su.user_role')
 					->where($where)
@@ -64,15 +64,15 @@ class SysUserModel extends Model
 					->select();
 		return array('list'=>$list,'page'=>$page->show());
 	}
-	
+
 	//获取运营商信息
 	public function get_operator(){
-		
+
 		// 根据当前登录用户类别判断显示
 		$login_user = session('login_user');
-		
+
 		$where = ' status = 1 ';
-		
+
 		switch($login_user['user_role']){
 			case SysDictModel::USER_ROLE_ADMIN :
 				$where .= ' AND user_role IN (' . SysDictModel::USER_ROLE_OPERATOR .',' . SysDictModel::USER_ROLE_AGENT . ') ';
@@ -88,11 +88,10 @@ class SysUserModel extends Model
 		///   echo $where;
 		return $this->where($where)->select();
 	}
-	
+
 	// 获取用户消费统计信息
 	public function get_user_bet_stat(){
 		$operator_info = $this->get_operator();
-		
 		foreach($operator_info as &$row){
 			// 用户数
 			$row['player_count'] = D('UserInfo')->get_player_nums($row['uid']);
@@ -105,7 +104,7 @@ class SysUserModel extends Model
 			// 用户赢取额
 			$row['player_win'] = D('SpinStat')->get_win_sum($row['uid']);
 		}
-		
+
 		return $operator_info;
 	}
 }

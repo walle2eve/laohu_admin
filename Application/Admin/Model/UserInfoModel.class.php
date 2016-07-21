@@ -28,8 +28,8 @@ class UserInfoModel extends Model{
 		$list = $this->alias('ui')
 			->field('su.user_name,ui.account_id,ui.gold,ui.vip_level,ui.user_id,ui.create_time,
 			SUM(CASE uoi.order_type WHEN 210100 THEN uoi.amount ELSE 0  END) deposit,
-			((SELECT SUM(total_bet) FROM laohu_log.spin_stat WHERE user_id = ui.user_id) + (SELECT SUM(total_bet) FROM laohu_log.`' . $today_table . '` WHERE user_id = ui.user_id)) bet,
-			((SELECT SUM(total_win) FROM laohu_log.spin_stat WHERE user_id = ui.user_id) + (SELECT SUM(win) FROM laohu_log.`' . $today_table . '` WHERE user_id = ui.user_id)) win,
+			((SELECT IFNULL(SUM(total_bet),0) FROM laohu_log.spin_stat WHERE user_id = ui.user_id) + (SELECT IFNULL(SUM(total_bet),0) FROM laohu_log.`' . $today_table . '` WHERE user_id = ui.user_id)) bet,
+			((SELECT IFNULL(SUM(total_win),0) FROM laohu_log.spin_stat WHERE user_id = ui.user_id) + (SELECT IFNULL(SUM(win),0) FROM laohu_log.`' . $today_table . '` WHERE user_id = ui.user_id)) win,
 			SUM(case uoi.order_type WHEN 210200 THEN uoi.amount ELSE 0  END) withdraw')
 			->join('LEFT JOIN t_sys_user su ON su.uid = ui.operator_id')
 			->join('LEFT JOIN t_user_order_info uoi ON uoi.player_id = ui.user_id And uoi.`status` = 1')
@@ -39,7 +39,6 @@ class UserInfoModel extends Model{
 			->order($orderby . ', create_time DESC')
 			->limit($page->firstRow.','.$page->listRows)
 			->select();
-			//echo $this->getlastsql();
 		return array(
 			'list' => $list,
 			'page' => $page->show(),
