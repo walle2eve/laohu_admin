@@ -36,7 +36,7 @@
                                         <tr>
                                             <td>{$vo.user_name}</td>
                                             <td>{$vo.deposit_money}</td>
-											<td>{$vo.discount}%</td>
+											                      <td>{$vo.discount}%</td>
                                             <td>{$vo.deposit_gold}</td>
                                             <td>{$vo.gold}</td>
                                         </tr>
@@ -90,7 +90,7 @@
 										$player_withdraw = $player_withdraw + $vo['player_withdraw'];
 										$player_bet = $player_bet + $vo['player_bet'];
 										$player_win = $player_win + $vo['player_win'];
-										$total_gold = $total_gold + $vo['gold'];
+										$total_gold2 = $total_gold2 + $vo['gold'];
 									</php>
                                         <tr>
                                             <td>{$vo.user_name}</td>
@@ -109,7 +109,7 @@
                                             <td>{$player_bet}</td>
                                             <td>{$player_win}</td>
 											<td>{$player_withdraw}</td>
-											<td>{$total_gold}</td>
+											<td>{$total_gold2}</td>
                                         </tr>
                                     </tbody>
                                 </table>

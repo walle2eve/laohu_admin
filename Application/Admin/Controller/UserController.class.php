@@ -5,13 +5,15 @@ use Think\Controller;
 
 use Admin\Model\SysDictModel;
 
+use Admin\Model\SysLogModel;
+
 class UserController extends BaseController
 {
 	public function _initialize(){
 		parent::_initialize();
 	}
 	// 游戏记录
-    public function bet_log()
+  public function bet_log()
     {
 		$param = I('get.');
 
@@ -118,14 +120,21 @@ class UserController extends BaseController
 				$this->ajaxReturn($result);
 				exit();
 			}
+
 			$return = D('UserInfo')->where('user_id = %d',array($user_id))->setField('vip_level',intval($vip_level));
 
 			if($return === false){
 			}else{
+
 				$result = array(
 					'status' => true,
 					'msg' => '设置VIP等级成功!'
 				);
+
+				$content = get_log_content(SysLogModel::SET_VIP_LEVEL,array('vip_level'=>$vip_level));
+				$log_result = D('SysLog')->add_log(SysLogModel::ADMIN_DO_LOG,$content,SysLogModel::SET_VIP_LEVEL,$user_info['operator_id'],$user_info['user_id'],$reason);
+				echo M()->getlastsql();
+				exit();
 			}
 		}
 		$this->ajaxReturn($result);

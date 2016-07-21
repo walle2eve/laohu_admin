@@ -1,4 +1,18 @@
 <?php
+	// 获取错误信息
+	function get_err_msg($err_code){
+		$param = 'API_ERR_MSG_' . $err_code;
+		return L($param);
+	}
+	// 获取日志内容
+	function get_log_content($log_code,$replace_arr = array()){
+		$param = 'LOG_CONTENT_' . $log_code;
+		if(!empty($replace_arr))
+			return L($param,$replace_arr);
+		else
+			return L($param);
+	}
+
 	// menu level
 	function get_en_nums($num){
 		$en_nums = array(
@@ -15,9 +29,9 @@
 	 * @return array
 	 */
     function get_user_func($user_role,$up_id=0,$level=0){
-		
+
 		$level = $level + 1;
-		
+
 		$menu_list = D('SysFunc')->get_user_func($user_role,$up_id);
 		foreach($menu_list as $key=>$row){
 			$menu_list[$key]['level'] = get_en_nums($level);
@@ -31,15 +45,15 @@
 	// 获取游戏图标文件
 	function get_game_icon($themd_id,$icon_id){
 		if($icon_id == 0){
-			return '/Icon_' . $icon_id . '.png'; 
+			return '/Icon_' . $icon_id . '.png';
 		}else{
-			return '/' . $themd_id . '/' . $themd_id . '_' . $icon_id . '.png'; 
+			return '/' . $themd_id . '/' . $themd_id . '_' . $icon_id . '.png';
 		}
-		
+
 	}
 	// 获取中奖线 图标文件
 	function get_win_line_icon($line){
-			return '/win_line_icon/' . $line . '.png'; 		
+			return '/win_line_icon/' . $line . '.png';
 	}
 	// 去除数组中的某一个值
 	function array_remove_value(&$arr, $var){
@@ -62,37 +76,37 @@
 			return trim($Input);
 		return array_map('trim_array', $Input);
 	}
-	
+
 	/**
 	 * 导出excel
 	 */
 	function export_excel($title = array(),$content = array(),$file_name = '导出Excel',$begin_row = 1,$objPHPExcel = false, $return = false){
-		
+
 		if(!$objPHPExcel){
 			Vendor('PHPExcel');
 			$objPHPExcel = new \PHPExcel();
 
-			
+
 			//缓存
 			$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_in_memory_serialized;
 			PHPExcel_Settings::setCacheStorageMethod($cacheMethod);
 		}
-		
-		$objActSheet = $objPHPExcel->getActiveSheet();	
-		$objActSheet->setTitle($file_name);  
-			
-		
+
+		$objActSheet = $objPHPExcel->getActiveSheet();
+		$objActSheet->setTitle($file_name);
+
+
 		// 输出表头
 		if(is_array($title) && !empty($title)){
 			foreach($title as $key=>$row){
 				$column = \PHPExcel_Cell::stringFromColumnIndex($key);
 				$objActSheet->getColumnDimension($column)->setWidth($row['width']);
-				$objActSheet->setCellValueExplicit( $column . $begin_row, $row['val'],  PHPExcel_Cell_DataType::TYPE_STRING); 
+				$objActSheet->setCellValueExplicit( $column . $begin_row, $row['val'],  PHPExcel_Cell_DataType::TYPE_STRING);
 			}
 			$begin_row = $begin_row + 1;
 		}
-		
-		
+
+
 		// 输出内容
 		if(is_array($content) && !empty($content)){
 			foreach($content as $key=>$row){
@@ -108,15 +122,15 @@
 				$begin_row ++;
 			}
 		}
-		
+
 		/*****************************************************************************/
 		if($return  ===  false){
-			
+
 			$ua = $_SERVER["HTTP_USER_AGENT"];
 
 			$encoded_filename = urlencode($file_name);
 			$encoded_filename = str_replace("+", "%20", $encoded_filename);
-			
+
 			header('Content-Type: application/octet-stream');
 			header('Content-Type: application/vnd.ms-excel');
 			header('Cache-Control: max-age=0');
