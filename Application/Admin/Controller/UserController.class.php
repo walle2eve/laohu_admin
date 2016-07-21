@@ -41,7 +41,7 @@ class UserController extends BaseController
 			$param['end_time'] = time();
 		}else{
 			$param['begin_time'] = strtotime(date('Y-m-d 00:00:00',strtotime($param['begin_time'])));
-			$param['end_time'] = strtotime($param['end_time']) ? (strtotime(date('Y-m-d 00:00:00',strtotime($param['end_time'])))) : strtotime(date('Y-m-d 00:00:00'));
+			$param['end_time'] = strtotime($param['end_time']) ? (strtotime(date('Y-m-d 23:59:59',strtotime($param['end_time'])))) : strtotime(date('Y-m-d 23:59:59'));
 		}
 
 		// 排序
