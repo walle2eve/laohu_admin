@@ -44,7 +44,7 @@
                                         <tr>
                                             <td>总计</td>
                                             <td>{$total_money}</td>
-											<td></td>
+											                      <td></td>
                                             <td>{$total_deposit_gold}</td>
                                             <td>{$total_gold}</td>
                                         </tr>
@@ -78,9 +78,9 @@
                                             <th>用户数总计</th>
                                             <th>转入总计</th>
                                             <th>消费总计</th>
-											<th>赢取总计</th>
-											<th>提现总计</th>
-											<th>当前剩余总计</th>
+                      											<th>赢取总计</th>
+                      											<th>提现总计</th>
+                      											<th>当前剩余总计</th>
                                         </tr>
                                     </thead>
 									<volist name="operator_info" id="vo">
@@ -90,7 +90,7 @@
 										$player_withdraw = $player_withdraw + $vo['player_withdraw'];
 										$player_bet = $player_bet + $vo['player_bet'];
 										$player_win = $player_win + $vo['player_win'];
-										$total_gold2 = $total_gold2 + $vo['gold'];
+										$player_balance = $player_balance + $vo['player_balance'];
 									</php>
                                         <tr>
                                             <td>{$vo.user_name}</td>
@@ -99,7 +99,7 @@
                                             <td>{$vo.player_bet|default='0.00'}</td>
 											<td>{$vo.player_win|default='0.00'}</td>
 											<td>{$vo.player_withdraw|default='0.00'}</td>
-											<td>{$vo.gold|default='0.00'}</td>
+											<td>{$vo.player_balance|default='0.00'}</td>
                                         </tr>
 									</volist>
                                         <tr>
@@ -109,7 +109,7 @@
                                             <td>{$player_bet}</td>
                                             <td>{$player_win}</td>
 											<td>{$player_withdraw}</td>
-											<td>{$total_gold2}</td>
+											<td>{$player_balance}</td>
                                         </tr>
                                     </tbody>
                                 </table>

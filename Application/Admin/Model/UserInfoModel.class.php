@@ -8,6 +8,10 @@ class UserInfoModel extends Model{
 	public function get_player_nums($operator_id){
 		return $this->where('status = 1 AND operator_id = %d',array($operator_id))->count();
 	}
+	// 平台玩家总剩余金币数
+	public function get_player_balance($operator_id){
+		return $this->where('operator_id = %d',array($operator_id))->sum('gold');
+	}
 	// 用户信息列表
 	public function get_userinfo_list($operator_id = 0,$account_id = '',$orderby = 'deposit'){
 

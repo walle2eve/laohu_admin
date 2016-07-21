@@ -103,6 +103,8 @@ class SysUserModel extends Model
 			$row['player_bet'] = D('SpinStat')->get_bet_sum($row['uid']);
 			// 用户赢取额
 			$row['player_win'] = D('SpinStat')->get_win_sum($row['uid']);
+      // 平台玩家总剩余金币数
+      $row['player_balance'] = D('UserInfo')->get_player_balance($row['uid']);
 		}
 
 		return $operator_info;
