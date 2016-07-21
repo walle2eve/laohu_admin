@@ -25,7 +25,7 @@ return array(
     'ACTION_SUFFIX'          => '', // 操作方法后缀
     'MULTI_MODULE'           => true, // 是否允许多模块 如果为false 则必须设置 DEFAULT_MODULE
 
-	  'MODULE_ALLOW_LIST'   	 => array('v1','Admin','Player'),
+	'MODULE_ALLOW_LIST'   	 => array('Admin','Player'),
     'MODULE_DENY_LIST'       => array('Common', 'Runtime'),
 
     'CONTROLLER_LEVEL'       => 1,
@@ -45,9 +45,9 @@ return array(
     'DEFAULT_C_LAYER'        => 'Controller', // 默认的控制器层名称
     'DEFAULT_V_LAYER'        => 'View', // 默认的视图层名称
 
-    'LANG_SWITCH_ON'          => true,        //开启多语言支持开关
-    'DEFAULT_LANG'            => 'zh-cn',    // 默认语言
-    'LANG_AUTO_DETECT'        => true,    // 自动侦测语言
+    //'LANG_SWITCH_ON'          => true,        //开启多语言支持开关
+    'DEFAULT_LANG'           => 'zh-cn',    // 默认语言
+    //'LANG_AUTO_DETECT'        => true,    // 自动侦测语言
     
     'DEFAULT_THEME'          => '', // 默认模板主题名称
     'DEFAULT_MODULE'         => 'Admin', // 默认模块
@@ -185,5 +185,8 @@ return array(
 	//每页显示数量
 	'LIST_ROWS'				 => 20,
 
-
+	//语言包
+	'LANG_SWITCH_ON'		 => true,
+	'LANG_LIST'        		 => 'zh-cn', // 允许切换的语言列表 用逗号分隔
+	'VAR_LANGUAGE'     		 => 'l', // 默认语言切换变量
 );

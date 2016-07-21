@@ -13,7 +13,7 @@ class UserController extends BaseController
 		parent::_initialize();
 	}
 	// 游戏记录
-  public function bet_log()
+	public function bet_log()
     {
 		$param = I('get.');
 
@@ -133,8 +133,7 @@ class UserController extends BaseController
 
 				$content = get_log_content(SysLogModel::SET_VIP_LEVEL,array('vip_level'=>$vip_level));
 				$log_result = D('SysLog')->add_log(SysLogModel::ADMIN_DO_LOG,$content,SysLogModel::SET_VIP_LEVEL,$user_info['operator_id'],$user_info['user_id'],$reason);
-				echo M()->getlastsql();
-				exit();
+
 			}
 		}
 		$this->ajaxReturn($result);
