@@ -84,9 +84,7 @@ class SpinLogModel extends Model
 			// 格式化附加参数
 			$json_data = (array)json_decode($row['param']);
 			$row['line'] = count($json_data);
-			///echo $row['param'];
-			///echo "<br />";
-			///print_r($json_data);exit();
+
 			// 矩阵 图标
 			$wheel = $row['wheel'];
 			$wheel = rtrim($wheel, "]");
@@ -116,6 +114,15 @@ class SpinLogModel extends Model
 			$row['icons'] = $icons;
 
 			$line_icons = array();
+
+      if(in_array($row['theme_id'],array('1004'))){
+        $line = 9;
+      }elseif(in_array($row['theme_id'],array('1005'))){
+        $line = 1;
+      }else{
+        $line = 20;
+      }
+
 			// 中奖线图标
 			if($row['line'] > 0){
 				foreach($json_data as $key=>$line_row){

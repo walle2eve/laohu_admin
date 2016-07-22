@@ -109,6 +109,7 @@
                         <th>时间</th>
                         <th>用户名</th>
                         <th>游戏主题</th>
+												<th>矩阵</th>
 												<th>倍率</th>
 												<th>投入</th>
 												<th>中奖线数</th>
@@ -122,6 +123,34 @@
                       <td><php>$createtime = ceil($vo['createtime']/1000);</php>{$createtime|date='Y-m-d H:i:s',###}</td>
 											<td>{$vo.account_id}</td>
                       <td>{$vo.theme_name}</td>
+											<td>
+												<div class="dropdown">
+												  <a id="drop{$vo.id}" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown" style="text-decoration:none;">
+														查看
+												  </a>
+												  <div class="dropdown-menu" role="menu" aria-labelledby="drop{$vo.id}">
+													<div class="dropdown-icons">
+														<volist name="vo['icons']" id="icons">
+															<volist name="icons" id="icon">
+																<img src="__PUBLIC__/game_icon{$icon}" width="50" height="50" />
+															</volist>
+															<br />
+														</volist>
+													</div>
+													<if condition=" $vo['line'] gt 0">
+													<div class="dropdown-win-line-icons">
+														<strong>中奖线数</strong>
+														<!--  {中奖线数显示}  -->
+														<volist name="vo['win_line_icons']" id="icons2">
+															<volist name="icons2" id="icon2">
+																<img src="__PUBLIC__/game_icon{$icon2}" width="50" height="30" />
+															</volist>
+														</volist>
+													</div>
+													</if>
+												  </div>
+												</div>
+											</td>
                       <td>{$vo.bet}</td>
 											<td>{$vo.total_bet}</td>
 											<td>{$vo.line}</td>
