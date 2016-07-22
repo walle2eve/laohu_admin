@@ -21,7 +21,7 @@ class SpinLogModel extends Model
 
    		$count = $this->where($where)->count();
 
-   		$page = page($count);
+   		$page = page($count,0,5);
 
    		$order_by = $order_by . ',createTime DESC';
 
