@@ -138,4 +138,19 @@ class UserController extends BaseController
 		}
 		$this->ajaxReturn($result);
 	}
+	// 玩家登入记录
+	public function login_log(){
+		$param = I('get.');
+
+		if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
+			$param['operator_id'] = $this->uid;
+		}
+
+		$result = D('UserInfo')->get_userinfo_list($param['operator_id'],$param['account_id'],$param['order_by']);
+
+		$this->assign('param',$param);
+		$this->assign('list',$result['list']);
+		$this->assign('page',$result['page']);
+		$this->display();
+	}
 }
