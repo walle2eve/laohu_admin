@@ -1,5 +1,5 @@
 			<layout name="_layout/base" />
-
+			<!--
 			<style>table .header-fixed {
 			    position: fixed;
 			    top: 0px;
@@ -16,9 +16,9 @@
 			    /* IE6-9 */
 
 			    filter: progid: DXImageTransform.Microsoft.gradient(enabled=false);
-			}</style>
+			}</style>-->
 					<script type="text/javascript">
-
+					/***
 					!(function() {
 					    (function($) {
 					        return $.fn.fixedHeader = function(options) {
@@ -75,7 +75,10 @@
 					                    return ww.push($(h).width());
 					                });
 					                $.each(ww, function(i, w) {
+					                	console.log(w);
 										w = w + 24;
+										console.log(w);
+										console.log('\n');
 					                    return o.find("thead.header > tr > th:eq(" + i + "), thead.header-copy > tr > th:eq(" + i + ")").css({
 					                        width: w
 					                    });
@@ -91,7 +94,7 @@
 					    })(jQuery);
 
 					}).call(this);
-
+					
 					$(document).ready(function() {
 
 					    // add 20 more rows to the table
@@ -103,9 +106,25 @@
 					    // make the header fixed on scroll
 					    $('.table-fixed-header').fixedHeader();
 					});
+					**/
+					$(document).ready(function (){
+						$('#mytable').DataTable( {
+							bJQueryUI : true,
+							bFilter : false,
+							bInfo : false,
+							bPaginate : false,
+							bLengthChange : false,
+
+							bSort : false,
+							bSortClasses : false,
+							//iDisplayLength : 20,
+						    fixedHeader: true,
+						});
+					});
+
 					</script>
             <div class="container">
-								<h3>游戏记录</h3>
+								<!--<h3>游戏记录</h3>-->
                   <table id="mytable" class="table table-bordered table-striped table-fixed-header">
                     <thead class="header">
                       <tr>
