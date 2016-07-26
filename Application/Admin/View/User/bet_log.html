@@ -25,7 +25,7 @@
 											<i class="glyphicon glyphicon-calendar fa fa-calendar">
 											</i>
 										</span>
-										<input class="form-control" type="text" readonly name="date_range_picker" id="id-date-range-picker-1" value="{$param.begin_time|date='Y-m-d',###} - {$param.end_time|date='Y-m-d',###}"/>
+										<input class="form-control" type="text" readonly name="start_date" id="start_date" value="{$param.start_date}"/>
 									</div>
 								</div>
 								<div class="col-md-2">
@@ -137,22 +137,12 @@
 			</div>
 
 			<script src="__PUBLIC__/plugins/daterangepicker/moment.min.js"></script>
-			<script src="__PUBLIC__/plugins/daterangepicker/daterangepicker.js"></script>
+			<script src="__PUBLIC__/plugins/datepicker/bootstrap-datepicker.js"></script>
 			<!-- Page-Level Demo Scripts - Tables - Use for reference -->
 			<script>
 			$(document).ready(function() {
 
-				//$('.dropdown-toggle').dropdown('toggle');
-
-				$('input[name=date_range_picker]').daterangepicker({
-					format: 'YYYY-MM-DD',
-					startDate: '{$param.begin_time|date='Y-m-d',###}',
-					endDate: '{$param.end_time|date='Y-m-d',###}',
-					minDate: '{$param.min_date}',
-					maxDate: '{$param.max_date}',
-				}).prev().on('click', function(){
-					$(this).next().focus();
-				});
+				$('#sandbox-container input').datepicker({});
 
 			});
 			</script>

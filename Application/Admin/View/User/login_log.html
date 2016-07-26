@@ -1,37 +1,23 @@
 			<layout name="_layout/base" />
-
+			<link href="__PUBLIC__/plugins/datepicker/datepicker3.css" rel="stylesheet">
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header">玩家登入记录</h3>
 						<div class="row">
-							<form action="{:U('Admin/User/money')}">
-								<if condition="$login_user['user_role'] eq 100110 ">
-								<div class="col-md-3">
-									<select name="operator_id"  class="form-control">
-									<option value="">请选择平台</option>
-									<volist name="user_roles" id="vo">
-									<option value="{$key}" <eq name="param['operator_id']" value="$key">selected="selected"</eq>>{$vo}</option>
-									</volist>
-									</select>
-								</div>
-								</if>
-								<div class="col-md-3">
-									<select name="order_by"  class="form-control">
-										<option value="diposit" <eq name="param['order_by']" value="diposit">selected="selected"</eq>>转入最多</option>
-										<option value="bet" <eq name="param['order_by']" value="bet">selected="selected"</eq>>消耗最多</option>
-										<option value="win" <eq name="param['order_by']" value="win">selected="selected"</eq>>赢取最多</option>
-										<option value="withdraw" <eq name="param['order_by']" value="withdraw">selected="selected"</eq>>提取最多</option>
-										<option value="gold" <eq name="param['order_by']" value="gold">selected="selected"</eq>>剩余最多</option>
-									</select>
-								</div>
+							<form action="{:U('Admin/User/login_log')}">
 								<div class="col-md-3">
 									<div class="form-group input-group">
-										<input type="text" class="form-control" name="account_id" value="{$param.account_id}" placeholder="输入用户名进行检索..." />
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+										</span>
+										<input class="form-control" type="text" readonly name="start_date" id="start_date" value="{$param.start_date}"/>
 									</div>
 								</div>
 								<div class="col-md-3">
 									<div class="form-group input-group">
-										<input type="submit" class="btn btn-primary" value="检索"/>
+										<input type="submit" name="submitbtn" class="btn btn-primary" value="检索"/>
+										&nbsp;&nbsp;&nbsp;
+										<input type="submit" name="submitbtn" class="btn btn-primary" value="导出excel"/>
 									</div>
 								</div>
 							</form>
@@ -52,29 +38,49 @@
                                 <table class="table table-striped table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <if condition="$login_user['user_role'] eq 100110 "><th>平台</th></if>
-                                            <th>用户名</th>
-																						<th>VIP等级</th>
-                                            <th>转入</th>
-                                            <th>消耗</th>
-																						<th>赢取</th>
-																						<th>提取</th>
-																						<th>剩余</th>
+                                            <th>运营商</th>
+                                            <th>累计登录用户数</th>
+											<th>次日</th>
+                                            <th>3日</th>
+											<th>7日</th>
+											<th>15日</th>
+											<th>30日</th>
+											<th>3个月</th>
                                         </tr>
                                     </thead>
                                     <tbody>
 									<volist name="list" id="vo">
+										<php>
+											$total_login_cout = $total_login_cout + $vo['login_count'];
+											$total_day_2_num = $total_day_2_num + $vo['day_2_num'];
+                                            $total_day_3_num = $total_day_3_num + $vo['day_3_num'];
+											$total_day_7_num = $total_day_7_num + $vo['day_7_num'];
+											$total_day_15_num = $total_day_15_num + $vo['day_15_num'];
+                                            $total_day_30_num = $total_day_30_num + $vo['day_30_num'];
+                                            $total_day_90_num = $total_day_90_num + $vo['day_90_num'];
+										</php>
                                         <tr>
-                                            <if condition="$login_user['user_role'] eq 100110 "><td>{$vo.user_name}</td></if>
-                                            <td>{$vo.account_id}</td>
-																						<td>{$vo.vip_level}&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-id="{$vo.user_id}" class="set_vip_level">修改</a></td>
-                                            <td>{$vo.deposit|default='0.00'}</td>
-                                            <td>{$vo.bet|default='0.00'}</td>
-																						<td>{$vo.win|default='0.00'}</td>
-																						<td>{$vo.withdraw|default='0.00'}</td>
-																						<td>{$vo.gold|default='0.00'}</td>
+                                            <if condition="$login_user['user_role'] eq 100110 "></if>
+                                            <td>{$vo.user_name}</td>
+                                            <td>{$vo.login_count}</td>
+											<td>{$vo.day_2_num}</td>
+                                            <td>{$vo.day_3_num}</td>
+                                            <td>{$vo.day_7_num}</td>
+											<td>{$vo.day_15_num}</td>
+											<td>{$vo.day_30_num}</td>
+											<td>{$vo.day_30_num}</td>
                                         </tr>
 									</volist>
+									<tr>
+                                            <td>总计</td>
+                                            <td>{$total_login_cout}</td>
+											<td>{$total_day_2_num}</td>
+                                            <td>{$total_day_3_num}</td>
+                                            <td>{$total_day_7_num}</td>
+											<td>{$total_day_15_num}</td>
+											<td>{$total_day_30_num}</td>
+											<td>{$total_day_90_num}</td>
+									</tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -87,52 +93,18 @@
                 <!-- /.col-lg-6 -->
             </div>
             <!-- /.row -->
-			<div class="row">
-                <div class="col-lg-12">
-					{$page}
-				</div>
-			</div>
-
-			<script type="text/tpl" id="setVipLevelTpl">
-			vip等级: <select name="vip_level" id="vip_level">
-							<option value="1">vip 1</option>
-							<option value="2">vip 2</option>
-							<option value="3">vip 3</option>
-							<option value="4">vip 4</option>
-							</select>
-			</script>
-
-
-			<!-- Metis Menu Plugin JavaScript -->
-			<script src="__PUBLIC__/bower_components/metisMenu/dist/metisMenu.min.js"></script>
-
-			<!-- DataTables JavaScript -->
-			<script src="__PUBLIC__/bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
-			<script src="__PUBLIC__/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
-
+			<script src="__PUBLIC__/plugins/daterangepicker/moment.min.js"></script>
+			<script src="__PUBLIC__/plugins/datepicker/bootstrap-datepicker.js"></script>
 			<!-- Page-Level Demo Scripts - Tables - Use for reference -->
 			<script>
 			$(document).ready(function() {
-				$('#dataTables-example').DataTable({
-						responsive: true
+
+				$('input[name=start_date]').datepicker({
+				    format: 'yyyy-mm-dd',
+				    endDate: '-1d'
 				});
-				$('.set_vip_level').click(function(){
-					var obj = $(this);
-					var id = obj.data('id');
-					set_vip_level(id);
-				});
+
 			});
-			function set_vip_level(id) {
-				$.ShowConfirm($("#setVipLevelTpl").html(), function(){
-					var vip_level = $("#vip_level").val().trim();
-					if(vip_level == '' || vip_level == 0){
-						$.ShowAlert("请选择vip等级");
-						return ;
-					}
-					$.post("{:U('Admin/User/set_vip_level')}",{"id":id,"vip_level":vip_level},function(res){
-						$.ShowAlert(res.msg);
-						if(res.status == true) window.location.reload();
-					},'json')
-				},function(){},260,'设置玩家VIP等级');
-			}
 			</script>
+
+

@@ -109,4 +109,22 @@ class SysUserModel extends Model
 
 		return $operator_info;
 	}
+
+	// 获取玩家登录统计信息
+	public function get_user_login_stat($start_date = ''){
+
+		$data = array();
+
+		$operator_info = $this->get_operator();
+		foreach($operator_info as $key=>$row){
+			// 玩家连续登录天数信息
+			$player_login_count = D('LoginLogStat')->get_login_stat_by_operator($row['uid'],$start_date);
+			// /echo M()->getlastsql();exit();
+			$data[$key]['user_name'] = $row['user_name'];
+			$data[$key] = array_merge($data[$key],$player_login_count);
+			//$data[$key]['login_count'] = $player_login_count['login_count'];
+		}
+
+		return $data;
+	}
 }

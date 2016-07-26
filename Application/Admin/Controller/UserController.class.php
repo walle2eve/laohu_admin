@@ -146,11 +146,28 @@ class UserController extends BaseController
 			$param['operator_id'] = $this->uid;
 		}
 
-		$result = D('UserInfo')->get_userinfo_list($param['operator_id'],$param['account_id'],$param['order_by']);
+		$result = D('SysUser')->get_user_login_stat($param['start_date'],$param['start_date']);
+
+		if(I('submitbtn') == '导出excel'){
+			$file_name = '玩家登入记录导出';
+			$excel_title = array(
+				array('width' => 20,'val' => '运营商'),
+				array('width' => 20,'val' => '累计登录用户数'),
+				array('width' => 20,'val' => '次日'),
+				array('width' => 20,'val' => '3日'),
+				array('width' => 20,'val' => '7日'),
+				array('width' => 20,'val' => '15日'),
+				array('width' => 20,'val' => '30日'),
+				array('width' => 20,'val' => '3个月'),
+			);
+			$excel_data = array();
+			$begin_row = 1;
+
+			if(!empty($result)) export_excel($excel_title,$result,$file_name,$begin_row);
+		}
 
 		$this->assign('param',$param);
-		$this->assign('list',$result['list']);
-		$this->assign('page',$result['page']);
+		$this->assign('list',$result);
 		$this->display();
 	}
 }
