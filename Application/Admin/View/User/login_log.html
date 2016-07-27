@@ -62,13 +62,13 @@
                                         <tr>
                                             <if condition="$login_user['user_role'] eq 100110 "></if>
                                             <td>{$vo.user_name}</td>
-                                            <td>{$vo.login_count}</td>
-											<td>{$vo.day_2_num}</td>
-                                            <td>{$vo.day_3_num}</td>
-                                            <td>{$vo.day_7_num}</td>
-											<td>{$vo.day_15_num}</td>
-											<td>{$vo.day_30_num}</td>
-											<td>{$vo.day_30_num}</td>
+                                            <td>{$vo.login_count|default='0'}</td>
+											<td>{$vo.day_2_num|default='0'}</td>
+                                            <td>{$vo.day_3_num|default='0'}</td>
+                                            <td>{$vo.day_7_num|default='0'}</td>
+											<td>{$vo.day_15_num|default='0'}</td>
+											<td>{$vo.day_30_num|default='0'}</td>
+											<td>{$vo.day_30_num|default='0'}</td>
                                         </tr>
 									</volist>
 									<tr>
