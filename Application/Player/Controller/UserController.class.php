@@ -17,10 +17,8 @@ class UserController extends BaseController
     {
 		$param = I('get.');
 
-		//if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
-		//	$param['operator_id'] = $this->uid;
-		//}
-		$param['operator_id'] = '10017';
+
+		$param['operator_id'] = '';
 
 		if(!$param['account_id'] || !$param['access_key'])exit('登录信息错误!');
 		// 验证玩家登陆信息

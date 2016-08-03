@@ -1,5 +1,14 @@
 			<layout name="_layout/base" />
-
+            <style>
+            /*模拟对角线*/
+            .out{
+               border-top:5em #D6D3D6 solid;/*上边框宽度等于表格第一行行高*/
+               border-left:148px #BDBABD solid;/*左边框宽度等于表格第一行第一格宽度*/
+               position:relative;/*让里面的两个子容器绝对定位*/
+            }
+            b{font-style:normal;display:block;position:absolute;top:-3em;left:-135px;width:60px;}
+            em{font-style:normal;display:block;position:absolute;top:-61px;left:-58px;width:60px;}
+            </style>
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header">游戏主题统计</h3>
@@ -39,13 +48,17 @@
                                             $colspan = $operator_count + 1;
                                         </php>
                                         <tr>
-                                            <th width="10%"></th>
+                                            <th width="10%" rowspan="2">
+                                                <!--<div class="out">
+                                                    <b>内容及标准</b>
+                                                    <em>考核对象</em>
+                                                </div>-->
+                                            </th>
 											<volist name="theme_info" id="vo">
                                             <th colspan="{$colspan}">{$vo.theme_name}</th>
 											</volist>
                                         </tr>
                                         <tr>
-                                            <th></th>
                                             <volist name="theme_info" id="vo">
                                                 <volist name="operator_info" id="oinfo">
                                                 <th>{$oinfo.user_name}</th>
