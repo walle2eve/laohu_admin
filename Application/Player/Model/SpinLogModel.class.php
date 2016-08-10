@@ -10,20 +10,25 @@ class SpinLogModel extends Model
      // 获取游戏记录
      public function bet_log($operator_id,$begin_time,$end_time,$order_by='win DESC',$account_id=''){
    		$where = ' 1=1 ';
-   		if($operator_id != ''){
-   			$where .= " AND operator_id = " . $operator_id . " ";
-   		}
+
    		// 数据表中存储的是java类型的时间戳，包含毫秒，需要转换
    		$where .= ' AND (createTime BETWEEN ' . ($begin_time * 1000) . ' AND ' . ($end_time * 1000 + 999) . ') ';
-   		if($account_id != ''){
-   			$where .= " AND account_id LIKE '%" . $account_id . "%' ";
-   		}
+		if($operator_id != ''){
+			$where .= " AND operator_id = " . $operator_id . " ";
+		}else{
+			$where .= " AND operator_id <> 0 ";
+		}
+		if($account_id != ''){
+			$where .= " AND account_id = '" . $account_id . "' ";
+		}else{
+			$where .= " AND account_id <> '' ";
+		}
 
    		$count = $this->where($where)->count();
 
    		$page = page($count,0,5);
 
-   		$order_by = $order_by . ',createTime DESC';
+   		$order_by = $order_by . '';
 
    		$list = $this->alias('t')->field('t.*,suser.user_name')->join('LEFT JOIN laohu.t_sys_user suser ON suser.uid = t.operator_id')->where($where)->order($order_by)->limit($page->firstRow.','.$page->listRows)->select();
 

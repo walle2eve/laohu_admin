@@ -17,8 +17,7 @@ class UserController extends BaseController
     {
 		$param = I('get.');
 
-
-		$param['operator_id'] = '';
+		$param['operator_id'] = 10022;
 
 		if(!$param['account_id'] || !$param['access_key'])exit('登录信息错误!');
 		// 验证玩家登陆信息
@@ -51,9 +50,9 @@ class UserController extends BaseController
 		}
 
 		// 排序
-		$orderbys = array('win','bet','total_bet','log_time');
+		$orderbys = array('win','bet','total_bet');
 
-		$param['order_by'] = !in_array($param['order_by'],$orderbys) ? 'log_time' : $param['order_by'];
+		$param['order_by'] = !in_array($param['order_by'],$orderbys) ? 'id' : $param['order_by'];
 
 		$this->assign('param',$param);
 
