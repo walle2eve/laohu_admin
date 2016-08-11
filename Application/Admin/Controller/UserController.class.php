@@ -52,25 +52,11 @@ class UserController extends BaseController
 		$this->assign('param',$param);
 
 		$param['order_by'] = $param['order_by'] . ' DESC ';
-
-		// 调取数据
-		/**
-		$table_name_prefix = 'spin_log_';
-
-		$table_name = $table_name_prefix . date('Y_m_d',$param['begin_time']);
-
-		$model = new \Admin\Model\SpinLogModel($table_name);
-
-		for($i = $param['begin_time']; $i <= $param['end_time']; $i+=86400){
-			$table_name = $table_name_prefix . date('Y_m_d',$i);
-			$tables[] = $table_name;
-		}
-
-		$result = $model->bet_log($param['operator_id'],$param['begin_time'],$param['end_time'],$param['order_by'],$param['account_id'],$tables);
-		//print_r($result);
-		**/
-
-		$result = D('SpinLog')->bet_log($param['operator_id'],$param['begin_time'],$param['end_time'],$param['order_by'],$param['account_id'],$tables);
+		
+		if($param['operator_id']) 
+			$result = D('SpinLog')->bet_log($param['operator_id'],$param['begin_time'],$param['end_time'],$param['order_by'],$param['account_id']);
+		else
+			$result = array('list'=>array(),'page'=> '');
 
 		$this->assign('list',$result['list']);
 		$this->assign('page',$result['page']);

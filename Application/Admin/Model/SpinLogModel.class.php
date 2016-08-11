@@ -60,6 +60,7 @@ class SpinLogModel extends Model
 	}**/
 	// 获取游戏记录
 	public function bet_log($operator_id,$begin_time,$end_time,$order_by='win DESC',$account_id=''){
+		
 		$where = ' 1=1 ';
 
 		// 数据表中存储的是java类型的时间戳，包含毫秒，需要转换
