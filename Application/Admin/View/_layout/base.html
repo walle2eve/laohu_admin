@@ -10,6 +10,9 @@
     <title>{:C('WEB_SITE')}</title>
     <!-- Bootstrap Core CSS -->
     <link href="__PUBLIC__/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <if condition="ACTION_NAME eq 'edit' AND CONTROLLER_NAME eq 'Theme'">
+    <link href="__PUBLIC__/plugins/bootstrap-treeview-master/dist/bootstrap-treeview.min.css" rel="stylesheet">
+    </if>
 
     <!-- MetisMenu CSS -->
     <link href="__PUBLIC__/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
@@ -60,7 +63,6 @@
 	
     <!-- Custom Theme JavaScript -->
     <script src="__PUBLIC__/dist/js/sb-admin-2.js"></script>
-	
 	
 </head>
 

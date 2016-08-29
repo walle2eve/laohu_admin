@@ -1,0 +1,130 @@
+					<if condition="$page_error neq ''">
+					<script>	
+						$.showError('{$page_error}',300,function(){
+							$('#edit-theme-conf').modal('hide');
+						});
+					</script>
+					</if>
+
+					<div class="modal-header">
+					  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					  <h4 class="modal-title">
+						<span class="fa fa-gamepad fa-fw"></span>
+						<span>编辑配置</span>
+					  </h4>
+					</div>
+					<div class="modal-body">
+					  <div class="form-horizontal">
+						<div class="form-group">
+						  <div class="col-sm-offset-3 col-sm-6">
+							<button class="btn btn-primary submit-button" data-loading-text="创建中，请稍等...">确认</button>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-warning">取消</button>
+						  </div>
+						</div>
+
+						<div class="tree well">
+						    <ul><volist name="theme_conf_field" id="val">
+						    <if condition="$val.field_type eq 'string'">
+						        <li><div class="col-sm-12">
+						            	<label class="col-sm-3 control-label"><span><i class="icon-folder-open"></i> {$key} </span></label>
+						            	<div class="col-sm-6"><input type="text" name="{$key}"  <if condition="$key eq 'themeid'">readonly</if> value="<if condition="$key eq 'themeid'">{$result.id}<else/><if condition="$key eq 'themeName'">{$result.name}<else/>{$result['theme_info'].$key}</if></if>" class="form-control"/></div>
+						            </div>
+						        </li>
+						    <else/>
+						        <li>
+						        	<php>
+						            	$field_key = $key;
+						            </php>
+						            <span><i class="icon-folder-open"></i> {$key} </span> <a href="javascript:void(0);" class="add_field" data="{$key}" count="{:count($result['theme_info'][$field_key])}">添加</a>
+						            <ul>
+						            <if condition="!empty($result['theme_info'][$key])">
+
+						            	<volist name="result['theme_info'][$field_key]" id="fields">
+						            	<php>
+						            		$arr_key = $key;
+						            	</php>
+						                <li>
+						                	<span><i class="icon-minus-sign"></i> {$i}</span> <a href="javascript:void(0);" class="del_field" data="{$field_key}">删除</a> 
+ 											<ul><volist name="fields" id="vo">
+ 												<li>
+							                        <div class="col-sm-12">
+										            	<label class="col-sm-6 control-label"><span><i class="icon-folder-open"></i> {$key} </span></label>
+										            	<div class="col-sm-6"><input type="text" value="{$vo}" name="{$field_key}[{$arr_key}][{$key}]" class="form-control"/></div>
+										            </div>
+										        </li></volist>
+										    </ul>        
+						                </li>
+						                </volist>
+						            </if>
+						            </ul>
+						        </li>
+						    </if>
+								</volist>
+						    </ul>
+						</div>
+
+
+
+						<div class="form-group">
+						  <div class="col-sm-offset-3 col-sm-6">
+							<button class="btn btn-primary submit-button" data-loading-text="创建中，请稍等...">确认</button>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-warning">取消</button>
+						  </div>
+						</div>
+						<!-- 错误提示 -->
+						<div class="form-group">
+						  <div class="col-sm-offset-3 col-sm-6" data-error-box>{$error}</div>
+						</div>
+					  </div>
+					</div>
+					<script>
+						var num = 1;
+						<volist name="theme_conf_field" id="val">
+						<if condition="$val.field_type eq 'list'">
+							var {$key} = [];
+							<php>$field_key = $key;</php>
+							<volist name="val['field_infos']" id="field">
+								{$field_key}.push('{$field}');
+							</volist>
+						</if>
+						</volist>
+						$(function () {
+						    $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+						    $('.tree li.parent_li > span').on('click', function (e) {
+						        var children = $(this).parent('li.parent_li').find(' > ul > li');
+						        if (children.is(":visible")) {
+						            children.hide('fast');
+						            $(this).attr('title', 'Expand this branch').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+						        } else {
+						            children.show('fast');
+						            $(this).attr('title', 'Collapse this branch').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+						        }
+						        e.stopPropagation();
+						    });
+
+							$('.add_field').on('click',function(e){
+								var field_key = $(this).attr('data');
+								num = num +1;
+								_key = num  + parseInt($(this).attr('count'));
+
+								obj=eval("("+field_key+")");
+
+								var add_html = '<li><span><i class="icon-minus-sign"></i> ' + _key + '</span> <a href="javascript:void(0);" data="'+field_key+'" class="del_field">删除</a><ul>';
+								if(obj){
+									$.each(obj,function(index,val){
+							            add_html += '<li><div class="col-sm-12"><label class="col-sm-6 control-label"><span><i class="icon-folder-open"></i> '+ val +' </span></label><div class="col-sm-6"><input type="text" name="'+ field_key +'['+ _key +']['+ val +']" class="form-control"/></div></div></li>';
+									});
+									$(this).parent().children('ul').append(add_html);
+								}
+								e.stopPropagation();
+							});
+							$('.del_field').on('click',function(e){
+								$(this).parent().remove();
+								e.stopPropagation();
+							});
+						});
+					</script>
+
+				  	
