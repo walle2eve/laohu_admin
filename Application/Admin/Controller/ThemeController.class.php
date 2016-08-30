@@ -169,14 +169,14 @@ class ThemeController extends BaseController
 
 		$theme_conf_field = $ThemeInfoModel->theme_conf_field;
 
-		foreach($theme_conf_field as $key=>$val){
-			$theme_conf_field_arr[$key] = $val['field_type'] == 'string' ? '' : array();
-		}
-
 		$json_data = array();
 
 		foreach($list as $row){
 			$theme_info = unserialize($row['theme_info']);
+			foreach($theme_conf_field as $key=>$val){
+				$theme_conf_field_arr[$key] = $val['field_type'] == 'string' ? '' : array();
+				if(!isset($theme_info[$key]))$theme_info[$key] = array();
+			}
 			if(empty($theme_info))$theme_info = $theme_conf_field_arr;
 			$json_data[$row['id']] = $theme_info;
 		}
