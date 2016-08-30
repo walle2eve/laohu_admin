@@ -181,7 +181,7 @@
 				var $message = $('[data-error-box]', $form);
 				var $button = $('.submit-button', $form);
 				//console.log(isNaN($theme_id));
-				if( !/^[0-9]*$/.test($theme_id) ){
+				if( !/^-?\d+$/.test($theme_id) ){
 				  showMessage($message, '请输入主题ID，只能输入数字');
 				  return false;
 				}
