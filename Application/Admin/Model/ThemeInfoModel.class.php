@@ -39,7 +39,8 @@ class ThemeInfoModel extends Model{
 		'stopMusic' => array('field_type'=>'string'),
 		'scale' => array('field_type'=>'string'),
 		'width' => array('field_type'=>'string'),
-		'height' => array('field_type'=>'string'),
+		'height' => array('field_type' => 'string'),
+		'IP'	=> array('field_type' => 'string'),
 		'port' => array('field_type'=>'string'),
 		'versionCode' => array('field_type' => 'string'),
 		'AnimationList' => array('field_type'=>'list','field_infos'=>array(
