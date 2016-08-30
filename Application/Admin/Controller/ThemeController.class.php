@@ -32,6 +32,7 @@ class ThemeController extends BaseController
 		$this->display();
 	}
 	public function edit(){
+
 		$param = I('get.');
 
 		$result = D('ThemeInfo')->get_list($param);
@@ -175,12 +176,14 @@ class ThemeController extends BaseController
 			$theme_info = unserialize($row['theme_info']);
 			foreach($theme_conf_field as $key=>$val){
 				$theme_conf_field_arr[$key] = $val['field_type'] == 'string' ? '' : array();
-				if(!isset($theme_info[$key]))$theme_info[$key] = array();
+				if(!isset($theme_info[$key]))$theme_info[$key] = $val['field_type'] == 'string' ? '' : array();
+			}
+			if(!empty($theme_info['IP'])){
+				$theme_info['IP'] = DesEncrypt($theme_info['IP']);
 			}
 			if(empty($theme_info))$theme_info = $theme_conf_field_arr;
 			$json_data[$row['id']] = $theme_info;
 		}
-
 		header('Content-type:text/json');
 		return $this->ajaxReturn($json_data);
 	}

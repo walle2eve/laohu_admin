@@ -1,5 +1,38 @@
 <?php
+	/*
+	    TripleDES加密
+	*/
+	function DesEncrypt($data)
+	{    
+	    //Pad for PKCS7
+	    $blockSize = mcrypt_get_block_size('tripledes', 'ecb');
+	    $len = strlen($data);
+	    $pad = $blockSize - ($len % $blockSize);
+	    $data .= str_repeat(chr($pad), $pad);
 
+	    $key = C('DES_KEY');
+	    $key = md5($key,TRUE);
+	    $key .= substr($key,0,8); //comment this if you use 168 bits long key
+
+	    //Encrypt data
+	    $encData = mcrypt_encrypt('tripledes', $key, $data, 'ecb'); 
+	    return base64_encode($encData);
+	}
+
+	 /*
+	    TripleDES解密
+	 */
+	 function DesDecrypt($data)
+	 {
+	    $key = C('DES_KEY');
+	    $key = md5($key, TRUE);
+	    $key .= substr($key, 0, 8);
+
+	    //Decrypt data
+	    $fromBase64Str = base64_decode($data);
+	    $decData = mcrypt_decrypt('tripledes', $key, $fromBase64Str, 'ecb');
+	    return $decData;
+	 }
 	/**
 	 * @function bootstrap 风格分页
 	 * @param $count		总记录数

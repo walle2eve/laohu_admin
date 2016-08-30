@@ -189,4 +189,7 @@ return array(
 	'LANG_SWITCH_ON'		 => true,
 	'LANG_LIST'        		 => 'zh-cn', // 允许切换的语言列表 用逗号分隔
 	'VAR_LANGUAGE'     		 => 'l', // 默认语言切换变量
+
+    //DES key
+    'DES_KEY'                => 'quxiang',
 );
