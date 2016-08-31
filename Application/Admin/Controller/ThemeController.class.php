@@ -136,7 +136,7 @@ class ThemeController extends BaseController
 			}
 			// 处理参数
 			$args = I('post.');
-			
+			unset($args['version_id']);
 			$data['name'] = trim($args['themeName']);
 
 			$data['theme_info'] = serialize($args);

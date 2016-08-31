@@ -1,7 +1,7 @@
 					<if condition="$page_error neq ''">
 					<script>	
 						$.showError('{$page_error}',300,function(){
-							$('#edit-theme-conf').modal('hide');
+							$('#edit-version-conf').modal('hide');
 						});
 					</script>
 					</if>
@@ -22,13 +22,13 @@
 							<button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-warning">取消</button>
 						  </div>
 						</div>
-
+						<input type="hidden" name="version_id" value="{$result.id}">
 						<div class="tree well">
-						    <ul><volist name="theme_conf_field" id="val">
+						    <ul><volist name="client_conf_field" id="val">
 						    <if condition="$val.field_type eq 'string'">
 						        <li><div class="col-sm-12">
 						            	<label class="col-sm-3 control-label"><span><i class="icon-folder-open"></i> {$key} </span></label>
-						            	<div class="col-sm-6"><input type="text" name="{$key}"  <if condition="$key eq 'themeid'">readonly</if> value="<if condition="$key eq 'themeid'">{$result.id}<else/><if condition="$key eq 'themeName'">{$result.name}<else/>{$result['theme_info'].$key}</if></if>" class="form-control"/></div>
+						            	<div class="col-sm-6"><input type="text" name="{$key}" value="<if condition="$key eq 'ClientVersion'">{$result.version_no}<else/>{$result['conf'].$key}</if>" class="form-control"/></div>
 						            </div>
 						        </li>
 						    <else/>
@@ -36,11 +36,11 @@
 						        	<php>
 						            	$field_key = $key;
 						            </php>
-						            <span><i class="icon-folder-open"></i> {$key} </span> <a href="javascript:void(0);" class="add_field" data="{$key}" count="{:count($result['theme_info'][$field_key])}">添加</a>
+						            <span><i class="icon-folder-open"></i> {$key} </span> <a href="javascript:void(0);" class="add_field" data="{$key}" count="{:count($result['conf'][$field_key])}">添加</a>
 						            <ul>
-						            <if condition="!empty($result['theme_info'][$key])">
+						            <if condition="!empty($result['conf'][$key])">
 
-						            	<volist name="result['theme_info'][$field_key]" id="fields">
+						            	<volist name="result['conf'][$field_key]" id="fields">
 						            	<php>
 						            		$arr_key = $key;
 						            	</php>
@@ -81,7 +81,7 @@
 					</div>
 					<script type="text/javascript">
 						var num = 1;
-						<volist name="theme_conf_field" id="val">
+						<volist name="client_conf_field" id="val">
 						<if condition="$val.field_type eq 'list'">
 							var {$key} = [];
 							<php>$field_key = $key;</php>

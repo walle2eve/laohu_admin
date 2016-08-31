@@ -100,7 +100,7 @@ class SpinLogModel extends Model
 			$icons = array();
 
 			// 排列规则
-      list($rows,$columns) = explode(',',$row['game_sort']);
+      		list($rows,$columns) = explode(',',$row['game_sort']);
 
 			$wheel = trim_array($wheel);
 			// 矩阵图标

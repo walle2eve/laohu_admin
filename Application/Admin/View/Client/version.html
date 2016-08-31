@@ -1,0 +1,186 @@
+			<layout name="_layout/base" />
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header">客户端版本管理</h3>
+						<div class="row">
+                            <div class="col-md-6">
+                            	
+								<div class="form-group input-group">
+									<button type="button" class="btn btn-outline btn-primary" data-add-trigger><b>+</b> 添加版本 </button>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<a class="btn btn-primary submit-button" href="{:U('Admin/Client/version_json')}" target="_blank">导出json</a>
+								</div>
+                            </div>
+                        </div>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            客户端版本
+                        </div>
+
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>版本ID</th>
+                                            <th>版本号</th>
+											<th>最后操作时间</th>
+											<th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+									<volist name="list" id="vo">
+                                        <tr role="row" key="{$vo.id}" primary="id">
+                                            <td>{$vo.id}</td>
+                                            <td>{$vo.version_no}</td>
+                                            <td>{$vo.input_time}</td>
+                                            <td>
+												<a class="btn btn-app btn-primary no-radius edit_theme_conf" href="{:U('Admin/Client/edit_version_conf')}?version_id={$vo.id}" data-target="#edit-version-conf" data-toggle="modal">
+													<i class="fa fa-edit fa-fw"></i>
+													配置信息
+												</a>
+											</td>
+                                        </tr>
+									</volist>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.table-responsive -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-6 -->
+            </div>
+            <!-- /.row -->
+			<div class="row">
+                <div class="col-lg-12">
+					{$page}
+				</div>
+			</div>
+			<!--{// 编辑主题配置信息}-->
+			<div id="edit-version-conf" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal">
+			  <form class="edit-form">
+				<div class="modal-dialog">
+				  <div class="modal-content">
+				  </div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			  </form>
+			</div><!-- /.modal -->
+			<!--{// 添加版本}-->
+			<div id="add-version-modal" class="modal fade" tabindex="-1" role="dialog">
+			  <form class="add-form">
+				<div class="modal-dialog">
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					  <h4 class="modal-title">
+						<span class="fa fa-gamepad fa-fw"></span>
+						<span>创建版本</span>
+					  </h4>
+					</div>
+					<div class="modal-body">
+					  <div class="form-horizontal">
+						<div class="form-group">
+						  <label class="col-sm-3 control-label">版本号：</label>
+						  <div class="col-sm-6">
+							<input type="text" name="version_no" class="form-control"  placeholder="请输入版本号">
+						  </div>
+						</div>
+						<div class="form-group">
+						  <div class="col-sm-offset-3 col-sm-6">
+							<button class="btn btn-primary submit-button" data-loading-text="创建中，请稍等...">立即创建</button>
+						  </div>
+						</div>
+						<!-- 错误提示 -->
+						<div class="form-group">
+						  <div class="col-sm-offset-3 col-sm-6" data-error-box></div>
+						</div>
+					  </div>
+					</div>
+				  </div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			  </form>
+			</div><!-- /.modal -->
+
+	<script src="__PUBLIC__/plugins/spinner/dist/jquery.spinner.js"></script>
+
+	<script>
+		(function ($) {
+			$('[data-add-trigger]').on('click', function(e){
+				e.preventDefault();
+				$('#add-version-modal').modal('show');
+			});
+			$("#edit-version-conf").on("hidden.bs.modal", function() {  
+			    $(this).removeData("bs.modal");  
+			});  
+			// 表单提交
+			$('.add-form').on('submit', function(e){
+				e.preventDefault();
+				var $form = $(this);
+
+				var $version_no = $('input[name="version_no"]', $form).val();
+
+				var $message = $('[data-error-box]', $form);
+				var $button = $('.submit-button', $form);
+
+				if( !$version_no ){
+				  showMessage($message, '请输入版本号');
+				  return false;
+				}
+
+				var data = $(this).serialize();
+				$button.button('loading');
+				$.post('{:U('Admin/Client/add_version')}', data, function(res){
+				  if(res.status){
+					$.ShowAlert(res.msg);
+					setTimeout(function(){
+					  window.location.href = res.url;
+					}, 1500);
+				  }else{
+					$.showError(res.msg);
+				  }
+				  $button.button('reset');
+				}, 'json');
+			});
+			// 表单提交
+			$('.edit-form').on('submit', function(e){
+				e.preventDefault();
+				var $form = $(this);
+
+				var $message = $('[data-error-box]', $form);
+				var $button = $('.submit-button', $form);
+
+				var data = $(this).serialize();
+				//$button.button('loading');
+				$.post('{:U('Admin/Client/edit_version_conf',array('action'=>'edit_version_conf'))}', data, function(res){
+				  if(res.status){
+					$.ShowAlert(res.msg);
+					setTimeout(function(){
+					  window.location.href = res.url;
+					}, 1500);
+				  }else{
+					$.showError(res.msg);
+				  }
+				  $button.button('reset');
+				}, 'json');
+			});
+		})(jQuery);
+
+		var showMessage = function($target, msg){
+			var html = [];
+			html.push('<div class="alert alert-warning alert-dismissible" role="alert">');
+			html.push('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+			html.push('<strong>' + msg + '</strong>');
+			html.push('</div>');
+			$target.html( html.join('') );
+		};
+	</script>
