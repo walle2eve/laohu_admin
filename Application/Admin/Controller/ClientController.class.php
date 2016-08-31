@@ -137,8 +137,7 @@ class ClientController extends BaseController{
 		//if(empty($result))$this->error('没有可以导出的版本配置信息');
 
 		$client_conf_field = $ClientVersionModel->client_conf_field;
-
-
+		
 		$version_conf = unserialize($result['conf']);
 		foreach($client_conf_field as $key=>$val){
 			$version_conf_field_arr[$key] = $val['field_type'] == 'string' ? '' : array();
