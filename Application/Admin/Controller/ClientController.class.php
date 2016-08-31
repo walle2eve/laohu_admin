@@ -101,18 +101,44 @@ class ClientController extends BaseController{
 		$this->assign('client_conf_field',$client_conf_field);
 		$this->display();
 	}
+	// 清除version_json缓存
+	public function make_version_data(){
+		$json_data = $this->get_version_json_data();
+		S('client_version_data',$json_data);
+	}
 	// 导出app所需json格式
 	public function version_json(){
-		$ClientVersionModel = D('ClientVersion');
-		$result = $ClientVersionModel->order('id DESC')->find();
 
-		if(empty($result))$this->error('没有可以导出的版本配置信息');
-
-		$client_conf_field = $ClientVersionModel->client_conf_field;
+		$ac = I('ac');
 
 		$json_data = array();
 
-		
+		if($ac == 'test'){
+			$json_data = $this->get_version_json_data();
+		}else{
+			$json_data = S('client_version_data');
+			if(!$json_data){
+				$json_data = $this->get_version_json_data();
+				S('client_version_data',$json_data);
+			}
+		}
+
+
+		header('Content-type:text/json');
+		return $this->ajaxReturn($json_data);
+	}
+
+
+	private function get_version_json_data(){
+
+		$ClientVersionModel = D('ClientVersion');
+		$result = $ClientVersionModel->order('id DESC')->find();
+
+		//if(empty($result))$this->error('没有可以导出的版本配置信息');
+
+		$client_conf_field = $ClientVersionModel->client_conf_field;
+
+
 		$version_conf = unserialize($result['conf']);
 		foreach($client_conf_field as $key=>$val){
 			$version_conf_field_arr[$key] = $val['field_type'] == 'string' ? '' : array();
@@ -122,10 +148,7 @@ class ClientController extends BaseController{
 			$version_conf['ip'] = DesEncrypt($version_conf['ip']);
 		}
 		if(empty($version_conf))$version_conf = $version_conf_field_arr;
-		$json_data = $version_conf;
-
-
-		header('Content-type:text/json');
-		return $this->ajaxReturn($json_data);
+			
+		return $version_conf;
 	}
 }

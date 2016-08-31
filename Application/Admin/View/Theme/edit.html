@@ -15,7 +15,8 @@
 								</div></form>
 							</div>
 							<div class="col-md-2">
-							<a class="btn btn-primary submit-button" href="{:U('Admin/Theme/export_json')}" target="_blank">导出json</a>
+								<button type="button" class="btn btn-primary submit-button" id="make_json">更新json</button>&nbsp;
+								<a href = "{:U('Admin/Theme/theme_json',array('ac'=>'test'))}" class="btn btn-primary submit-button" target='_blank'>查看json</a>
 							</div>
                         </div>
                 </div>
@@ -226,6 +227,11 @@
 				  }
 				  $button.button('reset');
 				}, 'json');
+			});
+			$('#make_json').click(function(){
+				 $.get('{:U('Admin/Theme/make_theme_conf_data')}',function(){
+					$.ShowAlert('更新json完毕');
+				 });
 			});
 		})(jQuery);
 

@@ -10,12 +10,19 @@ class BaseController extends Controller
 	protected $uid;
 	protected $login_user;
 
+	protected $not_login_action = array(
+			'login',
+			'dologin',
+			'theme_json',
+			'version_json',
+		);
+
 	public function _initialize(){
 		$this->uid 			=  	session('uid');
 		$this->login_user 	= 	session('login_user');
 
 		// 判断是否已登录
-		if((!$this->uid || !$this->login_user) && !in_array(ACTION_NAME,array('login','dologin'))){
+		if((!$this->uid || !$this->login_user) && !in_array(ACTION_NAME,$this->not_login_action)){
 			$this->display('Public/login');
 			die();
 		}

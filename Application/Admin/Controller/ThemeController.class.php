@@ -161,13 +161,39 @@ class ThemeController extends BaseController
 		$this->assign('theme_conf_field',$theme_conf_field);
 		$this->display();
 	}
+
+	// 清除theme_conf_json缓存
+	public function make_theme_conf_data(){
+		$json_data = $this->get_theme_json_data();
+		S('theme_conf_data',$json_data);
+	}
+
 	// 导出app所需json格式
-	public function export_json(){
+	public function theme_json(){
+
+		$ac = I('ac');
+
+		$json_data = array();
+
+		if($ac == 'test'){
+			$json_data = $this->get_theme_json_data();
+		}else{
+			$json_data = S('theme_conf_data');
+			if(!$json_data){
+				$json_data = $this->get_theme_json_data();
+				S('theme_conf_data',$json_data);
+			}
+		}
+
+		header('Content-type:text/json');
+		return $this->ajaxReturn($json_data);
+	}
+
+	private function get_theme_json_data(){
+
 		$ThemeInfoModel = D('ThemeInfo');
 		$list = $ThemeInfoModel->where('status = 1')->select();
-
-		if(empty($list))$this->error('没有可以导出的主题配置信息');
-
+		//if(empty($list))$this->error('没有可以导出的主题配置信息');
 		$theme_conf_field = $ThemeInfoModel->theme_conf_field;
 
 		$json_data = array();
@@ -184,7 +210,7 @@ class ThemeController extends BaseController
 			if(empty($theme_info))$theme_info = $theme_conf_field_arr;
 			$json_data[$row['id']] = $theme_info;
 		}
-		header('Content-type:text/json');
-		return $this->ajaxReturn($json_data);
+
+		return $json_data;
 	}
 }
