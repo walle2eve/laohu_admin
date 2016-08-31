@@ -136,7 +136,7 @@ class SpinLogModel extends Model
 				foreach($json_data as $key=>$line_row){
 					$t_k = $key%$rows;
 					list($win_line,,,,,) = explode(':',$line_row);
-					$icon = get_win_line_icon($win_line);
+					$icon = get_win_line_icon($win_line,$line);
 					$line_icons[$t_k][] = $icon;
 				}
 			}
