@@ -39,6 +39,7 @@
                                             <th>主题ID</th>
                                             <th>主题名称</th>
 											<th>状态</th>
+											<th>排序<br />(值越小越靠前)</th>
 											<th>最后操作时间</th>
 											<th>操作</th>
                                         </tr>
@@ -49,6 +50,7 @@
                                             <td>{$vo.id}</td>
                                             <td>{$vo.name}</td>
                                             <td><if condition="$vo['status'] eq 1"><i class="fa fa-set-status fa-check text-success" status="{$vo.status}" field="status"></i><else/><i class="fa fa-set-status fa-lock" status="{$vo.status}" field="status"></if></td>
+                                            <td><input type="text" value="{$vo.sort}" class="form-control set-sort" style="width:100px"></td>
                                             <td>{$vo.input_time}</td>
                                             <td>
 												<a class="btn btn-app btn-primary no-radius edit_theme_conf" href="{:U('Admin/Theme/edit_conf')}?themeid={$vo.id}" data-target="#edit-theme-conf" data-toggle="modal">
@@ -170,6 +172,31 @@
 						$.ShowAlert(result.msg);
 					}
 				},'json');
+			});
+			$('.set-sort').on('keyup',function(e){
+				if(e.keyCode == 13){
+					var tr = $(this).parents('tr');
+					var query = new Object();
+					query.key = tr.attr('key');
+					query.sort = $(this).val();
+					if( !/^-?\d+$/.test(query.sort) ){
+						$.showError('请输入排序数值，只能输入数字');
+					  	return false;
+					}
+					$.post('{:U('Admin/Theme/set_sort')}', query, function(result){
+						console.log(result);
+						if(result.status == true){
+							
+							setTimeout(function(){
+								location.reload(true);
+							},1);
+						}else{
+							$.ShowAlert(result.msg);
+							return false;
+						}
+					});
+					//console.log(key);
+				}
 			});
 			// 表单提交
 			$('.add-form').on('submit', function(e){

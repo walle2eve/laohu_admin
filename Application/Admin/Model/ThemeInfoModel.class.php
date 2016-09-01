@@ -8,6 +8,7 @@ class ThemeInfoModel extends Model{
 								'name',
 								'status',
 								'theme_info',
+								'sort',
 								'input_time',
 							);
 
@@ -79,7 +80,7 @@ class ThemeInfoModel extends Model{
 		$page = page($count);
 
 		$list = $this->where($where)
-					//->order('uid DESC')
+					->order('sort ASC')
 					->limit($page->firstRow.','.$page->listRows)
 					->select();
 		return array('list'=>$list,'page'=>$page->show());

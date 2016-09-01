@@ -66,7 +66,39 @@ class ThemeController extends BaseController
 
 		if($return === false){
 			$result['status'] = false;
-			$result['msg'] = '修改状态失败';
+			$result['msg'] = '操作成功！';
+			$this->ajaxReturn($result);
+			exit();
+		}
+		//A('Public')->clear_cache();
+		$this->ajaxReturn($result);
+	}
+	//设置排序
+	public function set_sort(){
+		$result = array(
+			'status' => true,
+		);
+
+		if(!IS_AJAX || !IS_POST)die('error page');
+
+		$id = I('post.key',0);
+		$id = intval($id);
+
+		$theme = D('ThemeInfo')->find($id);
+		if(empty($theme)){
+			$result['status'] = false;
+			$result['msg'] = '参数错误，请刷新后重试';
+			$this->ajaxReturn($result);
+			exit();
+		}
+
+		$data['sort'] = I('post.sort');
+		$data['input_time'] = date('Y-m-d H:i:s');
+		$return = D('ThemeInfo')->where('id = %d',array($id))->save($data);
+
+		if($return === false){
+			$result['status'] = false;
+			$result['msg'] = '操作失败，请重试';
 			$this->ajaxReturn($result);
 			exit();
 		}
@@ -192,7 +224,7 @@ class ThemeController extends BaseController
 	private function get_theme_json_data(){
 
 		$ThemeInfoModel = D('ThemeInfo');
-		$list = $ThemeInfoModel->where('status = 1')->select();
+		$list = $ThemeInfoModel->where('status = 1')->order('sort ASC')->select();
 		//if(empty($list))$this->error('没有可以导出的主题配置信息');
 		$theme_conf_field = $ThemeInfoModel->theme_conf_field;
 
