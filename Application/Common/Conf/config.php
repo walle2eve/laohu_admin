@@ -87,6 +87,16 @@ return array(
 		'db_charset'=>    'utf8',
 	),
 
+    //  MONGO-DB
+    'DB_TYPE_MONGO_CONFIG'  => array(
+        'DB_TYPE'   => 'mongo',
+        'DB_HOST'   =>  'localhost',
+        'DB_PORT'   =>  '27017',
+        'DB_NAME'   =>  'laohu_log',
+        'DB_USER'   =>  '',
+        'DB_PWD'    =>  '',
+    ),
+
     /* 数据缓存设置 */
     'DATA_CACHE_TIME'        => 0, // 数据缓存有效期 0表示永久缓存
     'DATA_CACHE_COMPRESS'    => false, // 数据缓存是否压缩缓存

@@ -62,7 +62,14 @@ class PublicController extends BaseController
 		
 		exit('page failed');
 	}
-	
+
+	// test mongo
+	public function testMongo(){
+		$model = D('SyncLog');
+		print_r($model->field(array('sync_id'=>true,'_id'=>false))->order('sync_id DESC')->limit('50,100')->select());
+	}
+
+
 	// 保存用户登录信息到session
 	private function save_login_info($islogin){
 		$this->logout();

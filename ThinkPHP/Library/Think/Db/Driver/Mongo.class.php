@@ -89,8 +89,9 @@ class Mongo extends Driver
             }
             // 当前MongoCollection对象
             if ($this->config['debug']) {
-                $this->queryStr = $this->_dbName . '.getCollection(' . $collection . ')';
+                $this->queryStr = $this->_dbName . '.getCollection("' . $collection . '")';
             }
+            
             if ($this->_collectionName != $collection) {
                 $this->queryTimes++;
                 N('db_query', 1); // 兼容代码
@@ -99,6 +100,7 @@ class Mongo extends Driver
                 $this->debug(false);
                 $this->_collectionName = $collection; // 记录当前Collection名称
             }
+
         } catch (MongoException $e) {
             E($e->getMessage());
         }
@@ -394,6 +396,7 @@ class Mongo extends Driver
         N('db_query', 1); // 兼容代码
         $query = $this->parseWhere(isset($options['where']) ? $options['where'] : array());
         $field = $this->parseField(isset($options['field']) ? $options['field'] : array());
+
         try {
             if ($this->config['debug']) {
                 $this->queryStr = $this->_dbName . '.' . $this->_collectionName . '.find(';
@@ -402,13 +405,15 @@ class Mongo extends Driver
                     foreach ($field as $f => $v) {
                         $_field_array[$f] = $v ? 1 : 0;
                     }
-
                     $this->queryStr .= $field ? ', ' . json_encode($_field_array) : ', {}';
                 }
                 $this->queryStr .= ')';
             }
+
             $this->debug(true);
+            
             $_cursor = $this->_collection->find($query, $field);
+
             if (!empty($options['order'])) {
                 $order = $this->parseOrder($options['order']);
                 if ($this->config['debug']) {
@@ -439,6 +444,7 @@ class Mongo extends Driver
             }
             $this->debug(false);
             $this->_cursor = $_cursor;
+
             $resultSet     = iterator_to_array($_cursor);
             return $resultSet;
         } catch (\MongoCursorException $e) {
