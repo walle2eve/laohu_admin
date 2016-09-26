@@ -1,97 +1,114 @@
 <?php
 namespace Player\Model;
-use Think\Model;
 
-class SpinLogModel extends Model
+use Think\Model\MongoModel;
+
+class SpinLogModel extends MongoModel
 {
-     protected $connection = 'DB_LAOHU_LOG_CONFIG';
-	   //protected $trueTableName;
-	   protected $tablePrefix = '';
-     // 获取游戏记录
-     public function bet_log($operator_id,$begin_time,$end_time,$order_by='win DESC',$account_id=''){
-   		$where = ' 1=1 ';
+   protected $connection  =  'DB_TYPE_MONGO_CONFIG';
+   protected $dbName      =  'laohu_log';
+   protected $tablePrefix  =  '';
 
-   		// 数据表中存储的是java类型的时间戳，包含毫秒，需要转换
-   		$where .= ' AND (createTime BETWEEN ' . ($begin_time * 1000) . ' AND ' . ($end_time * 1000 + 999) . ') ';
-		if($operator_id != ''){
-			$where .= " AND operator_id = " . $operator_id . " ";
-		}else{
-			$where .= " AND operator_id <> 0 ";
-		}
-		if($account_id != ''){
-			$where .= " AND account_id = '" . $account_id . "' ";
-		}else{
-			$where .= " AND account_id <> '' ";
-		}
+   public function _initialize(){
+      parent::_initialize();
 
-   		$count = $this->where($where)->count();
+      ini_set('mongo.long_as_object', 1);
+   }
 
-   		$page = page($count,0,5);
+   public function bet_log($operator_id,$begin_time,$end_time,$order_by='win DESC',$account_id=''){
+      
+      $where =  array();
 
-   		$order_by = $order_by . '';
+      // 数据表中存储的是java类型的时间戳，包含毫秒，需要转换  
+      $where['createTime'] =  array('between', array($begin_time * 1000, $end_time * 1000 + 999));
 
-   		$list = $this->alias('t')->field('t.*,suser.user_name')->join('LEFT JOIN laohu.t_sys_user suser ON suser.uid = t.operator_id')->where($where)->order($order_by)->limit($page->firstRow.','.$page->listRows)->select();
+      if($operator_id != ''){
+         $where['operator_id'] = intval($operator_id);
+      }
+      if($account_id != ''){
+         $where['account_id'] = $account_id;
+      }else{
+         //$where['account_id'] = array('all','');
+      }
 
-   		//echo $this->getlastsql();
+      $count = $this->where($where)->count();
 
-   		foreach($list as &$row){
-   			// 格式化附加参数
-   			$json_data = (array)json_decode($row['param']);
-   			$row['line'] = count($json_data);
+      $page = page($count);
 
-   			// 矩阵 图标
-   			$wheel = $row['wheel'];
-   			$wheel = rtrim($wheel, "]");
-   			$wheel = ltrim($wheel, "[");
-   			$wheel = explode(',',$wheel);
+      //$order_by = $order_by . ',id DESC';
 
-   			$icons = array();
+      $order_by = 'id DESC';
 
-   			// 排列规则
-         list($rows,$columns) = explode(',',$row['game_sort']);
+      $list = $this->field("log_type,log_time,region_id,server_id,operator_id,theme_id,theme_name,game_sort,account_id,nick_name,user_id,bet,total_bet,win,wheel,is_sactter,reason,param,createTime")->where($where)->order($order_by)->limit($page->firstRow.','.$page->listRows)->select();
 
-   			$wheel = trim_array($wheel);
-   			// 矩阵图标
-   			foreach($wheel as $key=>$val){
-   				$t_k = $key%$rows;
-   				$icon = get_game_icon($row['theme_id'],$val);
-   				if($rows == 5){
-   					// 5行3列只显示中间一行
-   					if(in_array($t_k,array(2))){
-   						$icons[$t_k][] = $icon;
-   					}
-   				}else{
-   					$icons[$t_k][] = $icon;
-   				}
-   			}
-         //print_r($icons);exit();
-   			$row['icons'] = $icons;
 
-   			$line_icons = array();
+      $operators = S('user_roles');
 
-         if(in_array($row['theme_id'],array('1004'))){
-           $line = 9;
-         }elseif(in_array($row['theme_id'],array('1005'))){
-           $line = 1;
-		    }elseif(in_array($row['theme_id'],array('1003'))){
-			   $line = 50;
-         }else{
-           $line = 20;
+      foreach($list as &$row){
+         // 格式化附加参数
+         $json_data = (array)json_decode($row['param']);
+         $row['line'] = count($json_data);
+
+         // 矩阵 图标
+         $wheel = $row['wheel'];
+         $wheel = rtrim($wheel, "]");
+         $wheel = ltrim($wheel, "[");
+         $wheel = explode(',',$wheel);
+
+         $icons = array();
+
+         // 排列规则
+            list($rows,$columns) = explode(',',$row['game_sort']);
+
+         $wheel = trim_array($wheel);
+         // 矩阵图标
+         foreach($wheel as $key=>$val){
+            $t_k = $key%$rows;
+            $icon = get_game_icon($row['theme_id'],$val);
+            if($rows == 5){
+               // 5行3列只显示中间一行
+               if(in_array($t_k,array(2))){
+                  $icons[$t_k][] = $icon;
+               }
+            }else{
+               $icons[$t_k][] = $icon;
+            }
          }
 
-   			// 中奖线图标
-   			if($row['line'] > 0){
-   				foreach($json_data as $key=>$line_row){
-   					$t_k = $key%$rows;
-   					list($win_line,,,,,) = explode(':',$line_row);
-   					$icon = get_win_line_icon($win_line,$line);
-   					$line_icons[$t_k][] = $icon;
-   				}
-   			}
+         $row['icons'] = $icons;
 
-   			$row['win_line_icons'] = $line_icons;
-   			///print_r($row);exit();
-   		}
-   		return array('list'=>$list,'page'=>$page->show());
-   	}
+         $line_icons = array();
+
+          if(in_array($row['theme_id'],array('1004'))){
+             $line = 9;
+          }elseif(in_array($row['theme_id'],array('1005'))){
+             $line = 1;
+         }elseif(in_array($row['theme_id'],array('1003'))){
+             $line = 50;
+          }else{
+             $line = 20;
+          }
+
+         // 中奖线图标
+         if($row['line'] > 0){
+            foreach($json_data as $key=>$line_row){
+               $t_k = $key%$rows;
+               list($win_line,,,,,) = explode(':',$line_row);
+               $icon = get_win_line_icon($win_line,$line);
+               $line_icons[$t_k][] = $icon;
+            }
+         }
+
+         $row['win_line_icons'] = $line_icons;
+
+         $createTime = is_object($row['createTime']) ? (array)$row['createTime'] : $row['createTime'];
+         $row['createTime'] = isset($createTime['value']) ? $createTime['value'] : $createTime;
+
+         $operator_id = is_object($row['operator_id']) ? (array)$row['operator_id'] : $row['operator_id'];
+      
+         $row['user_name'] = isset($operator_id['value']) ? $operator_id['value'] : $operator_id;
+         $row['user_name'] = $operators[$row['user_name']];
+      }
+      return array('list'=>$list,'page'=>$page->show());
+   }
 }

@@ -5,6 +5,8 @@ use Think\Controller;
 
 use Admin\Model\SysDictModel;
 
+use Admin\Model\SpinLogModel;
+
 
 class UserController extends BaseController
 {
@@ -60,7 +62,7 @@ class UserController extends BaseController
 
 
 		// 调取数据
-		$result = D('SpinLog')->bet_log($param['operator_id'],$param['begin_time'],$param['end_time'],$param['order_by'],$param['account_id'],$tables);
+		$result = D('spinLog')->bet_log($param['operator_id'],$param['begin_time'],$param['end_time'],$param['order_by'],$param['account_id']);
 
 		$this->assign('list',$result['list']);
 		$this->assign('page',$result['page']);

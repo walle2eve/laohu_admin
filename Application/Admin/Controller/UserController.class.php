@@ -22,7 +22,7 @@ class UserController extends BaseController
 		}
 
 		// 测试开始时间
-		$param['min_date'] = date('Y-m-d',strtotime('-30 day'));//C('PLAYER_SPIN_BEGIN_DATE');
+		$param['min_date'] = date('Y-m-d',strtotime('-30 day'));
 		$param['max_date'] = date('Y-m-d');
 
 		if(!$param['date_range_picker']){
