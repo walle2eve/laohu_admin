@@ -161,7 +161,7 @@
 				var $button = $('.submit-button', $form);
 
 				var data = $(this).serialize();
-				//$button.button('loading');
+				$button.button('loading');
 				$.post('{:U('Admin/Client/edit_version_conf',array('action'=>'edit_version_conf'))}', data, function(res){
 				  if(res.status){
 					$.ShowAlert(res.msg);

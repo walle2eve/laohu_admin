@@ -10,7 +10,7 @@ class OperatorController extends BaseController
 	public function _initialize(){
 		parent::_initialize();
 	}
-  public function manage(){
+  	public function manage(){
 		$param = I('get.');
 		$list = D('SysUser')->get_list($param);
 		$this->assign('list',$list['list']);
@@ -20,6 +20,46 @@ class OperatorController extends BaseController
 		$user_roles = D('SysDict')->get_dict(100);
 		//echo D('SysDict')->getlastsql();
 		$this->assign('user_roles',$user_roles);
+		$this->display();
+    }
+    public function edit_manager(){
+    	$page_error = '';
+    	$uid = I('id');
+    	$user = D('SysUser')->find($uid);
+
+		if(empty($user)){
+			$page_error = '用户参数错误';
+		}
+		if(IS_AJAX && IS_POST){
+			$return = array(
+				'status' => true,
+				'msg' => '编辑配置成功',
+				'url' => U('Admin/Operator/manage'),
+			);
+
+			if($page_error <> ''){
+				$return['status'] = false;
+				$return['msg'] = $page_error;
+				$this->ajaxReturn($return);
+				exit();
+			}
+
+			// 处理参数
+			$args = I('post.');
+
+			$re = D('SysUser')->where('uid = %d',array($uid))->save($args);
+
+			if($re === false){
+				$return['status'] = false;
+				$return['msg'] = '编辑配置信息失败，请重试！';
+				$this->ajaxReturn($return);
+			}else{
+				$this->ajaxReturn($return);
+			}
+			
+			exit();
+		}
+		$this->assign('result',$user);
 		$this->display();
     }
 	public function add_user(){

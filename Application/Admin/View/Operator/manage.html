@@ -48,7 +48,7 @@
                                             <td>{$vo.discount}% off</td>
                                             <td><if condition="$vo['status'] eq 1"><i class="fa fa-set-status fa-check text-success" status="{$vo.status}" field="status"></i><else/><i class="fa fa-set-status fa-lock" status="{$vo.status}" field="status"></if></td>
                                             <td>
-												<a href="aa.html" class="btn btn-app btn-primary no-radius edit_user" data-toggle="modal" data-target="#myModal">
+												<a class="btn btn-app btn-primary no-radius edit_theme_conf" href="{:U('Admin/Operator/edit_manager')}?id={$vo.uid}" data-target="#edit-operator" data-toggle="modal">
 													<i class="fa fa-edit fa-fw"></i>
 													编辑
 												</a>
@@ -82,12 +82,20 @@
 					{$page}
 				</div>
 			</div>
-
+			<script src="__PUBLIC__/plugins/spinner/dist/jquery.spinner.js"></script>
 			<script type="text/tpl" id="resetPwdTpl">
 				新密码: <input type="text" id="newPwd" length="20">
 				确认新密码: <input type="text" id="reNewPwd" length="20">
 			</script>
-
+			<!--{// 编辑运营商配置信息}-->
+			<div id="edit-operator" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal">
+			  <form class="edit-form">
+				<div class="modal-dialog">
+				  <div class="modal-content">
+				  </div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			  </form>
+			</div><!-- /.modal -->
 			<!--{// 添加用户}-->
 			<div id="add-user-modal" class="modal fade" tabindex="-1" role="dialog">
 			  <form class="add-form">
@@ -169,7 +177,7 @@
 			  </form>
 			</div><!-- /.modal -->
 
-	<script src="__PUBLIC__/plugins/spinner/dist/jquery.spinner.js"></script>
+	
 	<script>
 		(function ($) {
 		  $('[data-add-trigger]').on('click', function(e){
@@ -181,6 +189,9 @@
 			var id = tr.attr('key');
 			resetPwd(id);
 		});
+		$("#edit-operator").on("hidden.bs.modal", function() {  
+			$(this).removeData("bs.modal");  
+		});  
 		$('.delete-user').click(function(){
 			var tr = $(this).parents('tr');
 			var id = tr.attr('key');
@@ -287,6 +298,28 @@
 			  $button.button('reset');
 			}, 'json');
 		  });
+			// 表单提交
+			$('.edit-form').on('submit', function(e){
+				e.preventDefault();
+				var $form = $(this);
+
+				var $message = $('[data-error-box]', $form);
+				var $button = $('.submit-button', $form);
+
+				var data = $(this).serialize();
+				$button.button('loading');
+				$.post('{:U('Admin/Operator/edit_manager',array('action'=>'edit_manager'))}', data, function(res){
+				  if(res.status){
+					$.ShowAlert(res.msg);
+					setTimeout(function(){
+					  window.location.href = res.url;
+					}, 1500);
+				  }else{
+					$.showError(res.msg);
+				  }
+				  $button.button('reset');
+				}, 'json');
+			});
 		})(jQuery);
 
 		var showMessage = function($target, msg){
