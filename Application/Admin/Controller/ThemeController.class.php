@@ -196,8 +196,25 @@ class ThemeController extends BaseController
 
 	// 清除theme_conf_json缓存
 	public function make_theme_conf_data(){
+		$return = array(
+			'status' => true,
+			'msg' => '更新json成功',
+			'url' => U('Admin/Theme/edit'),
+		);
 		$json_data = $this->get_theme_json_data();
 		S('theme_conf_data',$json_data);
+		// 上传至oss
+		$file_name = 'client_theme.json';
+		$json_data = json_encode($json_data);
+		$re = OssPutContent($file_name,$json_data);
+
+		if($re){
+			$this->ajaxReturn($return);
+		}else{
+			$return['status'] = false;
+			$return['msg'] = '编辑配置信息失败，请重试！';
+			$this->ajaxReturn($return);
+		}
 	}
 
 	// 导出app所需json格式

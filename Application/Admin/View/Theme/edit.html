@@ -256,8 +256,14 @@
 				}, 'json');
 			});
 			$('#make_json').click(function(){
-				 $.get('{:U('Admin/Theme/make_theme_conf_data')}',function(){
-					$.ShowAlert('更新json完毕');
+				 $.get('{:U('Admin/Theme/make_theme_conf_data')}',function(res){
+					//$.ShowAlert('更新json完毕');
+					  if(res.status){
+						$.ShowAlert(res.msg);
+
+					  }else{
+						$.showError(res.msg);
+					  }
 				 });
 			});
 		})(jQuery);

@@ -58,6 +58,8 @@ class UserController extends BaseController
 		else
 			$result = array('list'=>array(),'page'=> '');
 
+		
+
 		$this->assign('list',$result['list']);
 		$this->assign('page',$result['page']);
         $this->display();

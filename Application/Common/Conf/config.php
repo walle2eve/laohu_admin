@@ -206,4 +206,10 @@ return array(
 	
     //DES key
     'DES_KEY'                => 'quxiang',
+
+    //OSS 
+    'OSS_ACCESS_ID'         => 'ZwrJ4xFlrhlLa7Zm',
+    'OSS_ACCESS_KEY'        => 'sYqhvTZrsxNce8aPOHljyNJbkHgGzW',
+    'OSS_ENDPOINT'          => 'http://oss-cn-hongkong.aliyuncs.com',
+    'OSS_BUCKET'            => 'cientres1',
 );

@@ -44,6 +44,7 @@ class ThemeInfoModel extends Model{
 		'IP'	=> array('field_type' => 'string'),
 		'port' => array('field_type'=>'string'),
 		'versionCode' => array('field_type' => 'string'),
+		'sceneName' => array('field_type' => 'string'),
 		'AnimationList' => array('field_type'=>'list','field_infos'=>array(
 			'SpriteName',
 			'id',

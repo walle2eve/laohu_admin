@@ -1,4 +1,29 @@
 <?php
+	/**
+	 * oss
+	 * $object oss端文件名称
+	 * $content 要上传的字符串
+	 */
+	function OssPutContent($object,$content){
+		$OSS_ACCESS_ID = C('OSS_ACCESS_ID');
+		$OSS_ACCESS_KEY = C('OSS_ACCESS_KEY');
+		$OSS_ENDPOINT = C('OSS_ENDPOINT');
+		$OSS_BUCKET	=	C('OSS_BUCKET');
+
+	    Vendor('OSS.autoload');
+
+	    $ossClient = new \OSS\OssClient(
+	        $OSS_ACCESS_ID, $OSS_ACCESS_KEY, $OSS_ENDPOINT);
+	    try{
+	        $ossClient->putObject($OSS_BUCKET, $object, $content);
+	    } catch(OssException $e) {
+	        //printf(__FUNCTION__ . ": FAILED\n");
+	        //printf($e->getMessage() . "\n");
+	        return false;
+	    }
+
+	   	return true;
+	}
 	/*
 	    TripleDES加密
 	*/
