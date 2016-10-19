@@ -35,4 +35,6 @@ class SpinStatModel extends Model{
 
 		return array('operator_info' => $result, 'stat_list' => $list);
 	}
+	// 获取总投注次数
+	//public function get_count_bet($operator_id,$account_id)
 }

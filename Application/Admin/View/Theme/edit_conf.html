@@ -36,7 +36,7 @@
 						        	<php>
 						            	$field_key = $key;
 						            </php>
-						            <span><i class="icon-folder-open"></i> {$key} </span> <a href="javascript:void(0);" class="add_field" data="{$key}" count="{:count($result['theme_info'][$field_key])}">添加</a>
+						            <span><i class="icon-folder-open"></i> {$key} </span> <a href="javascript:void(0);" class="add_field" data="{$key}" count="{$result['theme_info'].$field_key|array_keys|max}">添加</a>
 						            <ul>
 						            <if condition="!empty($result['theme_info'][$key])">
 
@@ -106,8 +106,8 @@
 
 							$('.add_field').on('click',function(e){
 								var field_key = $(this).attr('data');
-								num = num +1;
-								_key = num  + parseInt($(this).attr('count'));
+								num = num + 1;
+								_key = num  + (parseInt($(this).attr('count')) ? parseInt($(this).attr('count')) : 0);
 
 								obj=eval("("+field_key+")");
 

@@ -127,6 +127,7 @@ class SpinLogModel extends MongoModel
 		}
 
 		$count = $this->where($where)->count();
+		//$count = D('SpinStat')->alias('stat')->join('LEFT JOIN ')->where($where)->sum('stat.count_bet');
 
 		$page = page($count);
 
