@@ -48,4 +48,9 @@ class UserInfoModel extends Model{
 			'page' => $page->show(),
 		);
 	}
+
+	// 
+	public function get_user_id($account_id){
+		return $this->where('account_id = "%s"',array($account_id))->getField('user_id');
+	}
 }

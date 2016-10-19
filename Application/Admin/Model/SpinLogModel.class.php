@@ -126,8 +126,16 @@ class SpinLogModel extends MongoModel
 			//$where['account_id'] = array('all','');
 		}
 
-		$count = $this->where($where)->count();
-		//$count = D('SpinStat')->alias('stat')->join('LEFT JOIN ')->where($where)->sum('stat.count_bet');
+		//$count = $this->where($where)->count();
+		$count = D('SpinStat')->get_count_bet($operator_id,$begin_time,$end_time,$account_id);
+		
+		if(date('Y-m-d',$end_time) == date('Y-m-d')){
+			$stime = strtotime(date('Y-m-d'));
+			$etime = $stime+86399;
+			$today_where = $where;
+			$today_where['createTime'] = array('between', array($stime * 1000, $etime * 1000 + 999));
+			$count_today = $this->where($today_where)->count();
+		}
 
 		$page = page($count);
 

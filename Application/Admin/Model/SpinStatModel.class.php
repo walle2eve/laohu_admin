@@ -36,5 +36,11 @@ class SpinStatModel extends Model{
 		return array('operator_info' => $result, 'stat_list' => $list);
 	}
 	// 获取总投注次数
-	//public function get_count_bet($operator_id,$account_id)
+	public function get_count_bet($operator_id,$begin_time,$end_time,$account_id = ''){
+		$where['operator_id'] = $operator_id;
+		$where['stat_date']	=	array('between', array(date('Y-m-d',$begin_time), date('Y-m-d',$end_time)));
+		if($account_id != '')
+			$where['user_id'] = D('UserInfo')->get_user_id($account_id);
+		return $this->where()->sum('count_bet');
+	}
 }
