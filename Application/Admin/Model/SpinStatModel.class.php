@@ -41,6 +41,6 @@ class SpinStatModel extends Model{
 		$where['stat_date']	=	array('between', array(date('Y-m-d',$begin_time), date('Y-m-d',$end_time)));
 		if($account_id != '')
 			$where['user_id'] = D('UserInfo')->get_user_id($account_id);
-		return $this->where()->sum('count_bet');
+		return $this->where($where)->sum('count_bet');
 	}
 }
