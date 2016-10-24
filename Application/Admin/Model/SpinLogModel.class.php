@@ -135,6 +135,8 @@ class SpinLogModel extends MongoModel
 			$today_where = $where;
 			$today_where['createTime'] = array('between', array($stime * 1000, $etime * 1000 + 999));
 			$count_today = $this->where($today_where)->count();
+
+			$count = $count + $count_today;
 		}
 
 		$page = page($count);

@@ -114,7 +114,10 @@ class ClientController extends BaseController{
 
 		$file_name = 'client_version.json';
 		$json_data = json_encode($json_data);
-		$re = OssPutContent($file_name,$json_data);
+
+		$re = StoragePutContent($file_name,$json_data);
+		//$re = OssPutContent($file_name,$json_data);
+		//$re = QiNiuPutContent($file_name,$json_data);
 
 		if($re){
 			$this->ajaxReturn($return);

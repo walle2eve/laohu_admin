@@ -207,9 +207,20 @@ return array(
     //DES key
     'DES_KEY'                => 'quxiang',
 
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    // 存储类型，Oss OR QiNiu
+    'STORAGE_TYPE'          => 'Oss',
     //OSS 
     'OSS_ACCESS_ID'         => 'ZwrJ4xFlrhlLa7Zm',
     'OSS_ACCESS_KEY'        => 'sYqhvTZrsxNce8aPOHljyNJbkHgGzW',
     'OSS_ENDPOINT'          => 'http://oss-cn-hongkong.aliyuncs.com',
     'OSS_BUCKET'            => 'cientres1',
+
+    //qiniu 云存储
+    'QINIU_BUCKET'          => 'laohures',
+    'QINIU_ACCESS_KEY'      => 'ZHsRfw1Sbtfft124szCAB5Kca1GHT6_U2JJIXZpw',
+    'QINIU_SECRET_KEY'      => 'yYDguUEmV8KdfrZXDIr80743ENJppFjAZ6VZkSX4',
+
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 );

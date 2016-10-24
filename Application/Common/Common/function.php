@@ -1,4 +1,12 @@
 <?php
+	function StoragePutContent($object,$content){
+		$type = C('STORAGE_TYPE');
+		$func = $type . 'PutContent';
+		if(!function_exists($func)){
+			$func = 'OssPutContent';
+		}
+		return $func($object,$content);
+	}
 	/**
 	 * oss
 	 * $object oss端文件名称
@@ -23,6 +31,46 @@
 	    }
 
 	   	return true;
+	}
+	/***
+	 * qiniu 云存储
+	 * 
+	 */
+	function QiNiuPutContent($targetFilePath,$content){
+	  Vendor('QiNiu.autoload');
+
+	  $accessKey = C('QINIU_ACCESS_KEY');
+	  $secretKey = C('QINIU_SECRET_KEY');
+	  $auth = new \Qiniu\Auth($accessKey, $secretKey);
+
+	  $bucket = C('QINIU_BUCKET');
+	  /**
+	  $policy = array(
+	      'callbackUrl' => 'http://your.domain.com/callback.php',
+	      'callbackBody' => 'filename=$(fname)&filesize=$(fsize)'
+	  );
+	  **/
+	  //$uptoken = $auth->uploadToken($bucket, null, 3600, $policy);
+	  $uptoken = $auth->uploadToken($bucket, $targetFilePath, 3600, array('insertOnly' => 1));
+
+	  $bukMgr = new \Qiniu\Storage\BucketManager($auth);
+
+	  $ret = $bukMgr->delete($bucket, $targetFilePath);
+
+	  $uploadMgr = new \Qiniu\Storage\UploadManager();
+
+	  list($ret, $err) = $uploadMgr->put($uptoken, $targetFilePath, $content, null, 'application/json');
+	  //echo "\n====> putFile result: \n";
+	  //var_dump($ret);exit();
+
+	  if ($err !== null) {
+	  //	var_dump($err);
+	      return false;
+	  } else {
+	  //    var_dump($ret);
+	  	 return true;
+	  }
+
 	}
 	/*
 	    TripleDES加密

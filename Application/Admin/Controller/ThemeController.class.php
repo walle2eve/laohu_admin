@@ -202,17 +202,23 @@ class ThemeController extends BaseController
 			'url' => U('Admin/Theme/edit'),
 		);
 		$json_data = $this->get_theme_json_data();
+
 		S('theme_conf_data',$json_data);
+
 		// 上传至oss
 		$file_name = 'client_theme.json';
 		$json_data = json_encode($json_data);
-		$re = OssPutContent($file_name,$json_data);
+
+		$re = StoragePutContent($file_name,$json_data);
+
+		//$re = OssPutContent($file_name,$json_data);
+		//$re = QiNiuPutContent($file_name,$json_data);
 
 		if($re){
 			$this->ajaxReturn($return);
 		}else{
 			$return['status'] = false;
-			$return['msg'] = '编辑配置信息失败，请重试！';
+			$return['msg'] = '配置信息上传失败，请重试！';
 			$this->ajaxReturn($return);
 		}
 	}
