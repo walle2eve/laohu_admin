@@ -24,6 +24,7 @@ class ThemeInfoModel extends Model{
 		'themeid' => array('field_type'=>'string'),
 		'themeName' => array('field_type'=>'string'),
 		'atlasName' => array('field_type'=>'string'),
+		'atlasName2' => array('field_type'=>'string'),
 		'assetName' => array('field_type'=>'string'),
 		'iconName' => array('field_type'=>'string'),
 		'Logo' => array('field_type'=>'string'),
