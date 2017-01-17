@@ -14,6 +14,12 @@ class ClientVersionModel extends Model{
 		'isMust' => array('field_type'=>'string'),
 		'ip' => array('field_type'=>'string'),
 		'ClientUrl' => array('field_type'=>'string'),
+		'Debuger' => array('field_type'=>'string'),
+		'IosClientVersion' => array('field_type'=>'string'),
+		'IosClientUrl' => array('field_type'=>'string'),
+		'TestPlayRoomIp' => array('field_type'=>'string'),
+		'TestPlayGameIp' => array('field_type'=>'string'),
+		
 		'fileList' => array('field_type' => 'list','field_infos' => array(
 			'FileName',
 			'Version',

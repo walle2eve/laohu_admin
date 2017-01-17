@@ -167,6 +167,12 @@ class ClientController extends BaseController{
 		if(!empty($version_conf['ip'])){
 			$version_conf['ip'] = DesEncrypt($version_conf['ip']);
 		}
+		if(!empty($version_conf['TestPlayRoomIp'])){
+			$version_conf['TestPlayRoomIp'] = DesEncrypt($version_conf['TestPlayRoomIp']);
+		}
+		if(!empty($version_conf['TestPlayGameIp'])){
+			$version_conf['TestPlayGameIp'] = DesEncrypt($version_conf['TestPlayGameIp']);
+		}
 		if(empty($version_conf))$version_conf = $version_conf_field_arr;
 			
 		return $version_conf;

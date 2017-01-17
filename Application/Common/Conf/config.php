@@ -210,7 +210,7 @@ return array(
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // 存储类型，Oss OR QiNiu
-    'STORAGE_TYPE'          => 'Oss',
+    'STORAGE_TYPE'          => 'QiNiu',
     //OSS 
     'OSS_ACCESS_ID'         => 'ZwrJ4xFlrhlLa7Zm',
     'OSS_ACCESS_KEY'        => 'sYqhvTZrsxNce8aPOHljyNJbkHgGzW',

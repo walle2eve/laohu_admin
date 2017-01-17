@@ -152,11 +152,14 @@
 												  </a>
 												  <div class="dropdown-menu" role="menu" aria-labelledby="drop{$vo.id}">
 													<div class="dropdown-icons">
-														<volist name="vo['icons']" id="icons">
-															<volist name="icons" id="icon">
-																<img src="__PUBLIC__/game_icon{$icon}" width="50" height="50" />
+														<volist name="vo['icons']" id="icons_wheel" key="io">
+															<volist name="icons_wheel" id="icons" >
+																<foreach name="icons" item="icon" key="iooo">
+																	<img src="__PUBLIC__/game_icon{$icon}" width="50" height="50" />
+																</foreach>
+																<br />
 															</volist>
-															<br />
+															<if condition="$vo['wheel_count'] gt $io"><hr /></if>
 														</volist>
 													</div>
 													<if condition=" $vo['line'] gt 0">

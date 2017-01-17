@@ -39,7 +39,7 @@ class SpinLogModel extends MongoModel
 
       $order_by = 'id DESC';
 
-      $list = $this->field("log_type,log_time,region_id,server_id,operator_id,theme_id,theme_name,game_sort,account_id,nick_name,user_id,bet,total_bet,win,wheel,is_sactter,reason,param,createTime")->where($where)->order($order_by)->limit($page->firstRow.','.$page->listRows)->select();
+      $list = $this->field("id,log_type,log_time,region_id,server_id,operator_id,theme_id,theme_name,game_sort,account_id,nick_name,user_id,bet,total_bet,win,wheel,is_sactter,reason,param,createTime")->where($where)->order($order_by)->limit($page->firstRow.','.$page->listRows)->select();
 
 
       $operators = S('user_roles');
@@ -50,28 +50,43 @@ class SpinLogModel extends MongoModel
          $row['line'] = count($json_data);
 
          // 矩阵 图标
+         // 矩阵 图标
          $wheel = $row['wheel'];
-         $wheel = rtrim($wheel, "]");
-         $wheel = ltrim($wheel, "[");
+         $wheel = str_replace("[", "", $wheel);
+         $wheel = str_replace("]", "", $wheel);
+         $wheel = str_replace("{", "", $wheel);
+         $wheel = str_replace("}", "", $wheel);
          $wheel = explode(',',$wheel);
 
          $icons = array();
 
          // 排列规则
-            list($rows,$columns) = explode(',',$row['game_sort']);
+         list($rows,$columns) = explode(',',$row['game_sort']);
+
+         $icons_count = intval($rows * $columns);
 
          $wheel = trim_array($wheel);
+
+         $row['wheel_count'] = intval(count($wheel)/$icons_count);
+         if($row['wheel_count'] > 1){
+            $wheel = array_chunk($wheel,$icons_count);
+         }else{
+            $wheel[] = $wheel;
+         }
+
          // 矩阵图标
-         foreach($wheel as $key=>$val){
-            $t_k = $key%$rows;
-            $icon = get_game_icon($row['theme_id'],$val);
-            if($rows == 5){
-               // 5行3列只显示中间一行
-               if(in_array($t_k,array(2))){
-                  $icons[$t_k][] = $icon;
+         foreach($wheel as $k=>$arow){
+            foreach($arow as $key=>$val){
+               $t_k = $key%$rows;
+               $icon = get_game_icon($row['theme_id'],$val);
+               if($rows == 5){
+                  // 5行3列只显示中间一行
+                  if(in_array($t_k,array(2))){
+                     $icons[$k][$t_k][] = $icon;
+                  }
+               }else{
+                  $icons[$k][$t_k][] = $icon;
                }
-            }else{
-               $icons[$t_k][] = $icon;
             }
          }
 
