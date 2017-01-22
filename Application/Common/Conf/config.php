@@ -212,10 +212,17 @@ return array(
     // 存储类型，Oss OR QiNiu
     'STORAGE_TYPE'          => 'QiNiu',
     //OSS 
+    /***
     'OSS_ACCESS_ID'         => 'ZwrJ4xFlrhlLa7Zm',
     'OSS_ACCESS_KEY'        => 'sYqhvTZrsxNce8aPOHljyNJbkHgGzW',
     'OSS_ENDPOINT'          => 'http://oss-cn-hongkong.aliyuncs.com',
     'OSS_BUCKET'            => 'cientres1',
+    ***/
+    'OSS_ACCESS_ID'         => 'LTAIjfeLFDJ4HIVK',
+    'OSS_ACCESS_KEY'        => 'pJRBD2fPztKiNXtQfDlhUZPQWHoAg2',
+    'OSS_ENDPOINT'          => 'http://oss-cn-qingdao.aliyuncs.com',
+    'OSS_BUCKET'            => 'laohuupdate',
+
 
     //qiniu 云存储
     'QINIU_BUCKET'          => 'laohures',

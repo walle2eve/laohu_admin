@@ -7,19 +7,9 @@ use Admin\Model\SysDictModel;
 
 class ThemeController extends BaseController
 {
-	public $versionType = 'occifial';
-
-	public $themeModel = null;
-
+	public $version_type = '';
 	public function _initialize(){
 		parent::_initialize();
-		$this->themeModel = D('ThemeInfo');
-
-		if(I('version_type') == 'beta'){
-			$this->versionType = 'beta';
-			$this->themeModel = D('ThemeInfoBeta');
-		}
-		$this->assign('version_type',$this->versionType);
 	}
 	public function stat(){
 
@@ -46,7 +36,7 @@ class ThemeController extends BaseController
 
 		$param = I('get.');
 
-		$result = $this->themeModel->get_list($param);
+		$result = D('ThemeInfo')->get_list($param);
 
 		$this->assign('page',$result['page']);
 		$this->assign('list',$result['list']);
@@ -64,7 +54,7 @@ class ThemeController extends BaseController
 		$id = I('post.key',0);
 		$id = intval($id);
 
-		$theme = $this->themeModel->find($id);
+		$theme = D('ThemeInfo')->find($id);
 		if(empty($theme)){
 			$result['status'] = false;
 			$result['msg'] = '参数错误，无法修改状态，请刷新后重试';
@@ -73,7 +63,7 @@ class ThemeController extends BaseController
 		}
 		$data['status'] = $theme['status'] == 1 ? -1 : 1;
 		$data['input_time'] = date('Y-m-d H:i:s');
-		$return = $this->themeModel->where('id = %d',array($id))->save($data);
+		$return = D('ThemeInfo')->where('id = %d',array($id))->save($data);
 
 		if($return === false){
 			$result['status'] = false;
@@ -95,7 +85,7 @@ class ThemeController extends BaseController
 		$id = I('post.key',0);
 		$id = intval($id);
 
-		$theme = $this->themeModel->find($id);
+		$theme = D('ThemeInfo')->find($id);
 		if(empty($theme)){
 			$result['status'] = false;
 			$result['msg'] = '参数错误，请刷新后重试';
@@ -105,7 +95,7 @@ class ThemeController extends BaseController
 
 		$data['sort'] = I('post.sort');
 		$data['input_time'] = date('Y-m-d H:i:s');
-		$return = $this->themeModel->where('id = %d',array($id))->save($data);
+		$return = D('ThemeInfo')->where('id = %d',array($id))->save($data);
 
 		if($return === false){
 			$result['status'] = false;
@@ -121,23 +111,22 @@ class ThemeController extends BaseController
 		$result = array(
 			'status' => true,
 			'msg' => '创建游戏主题成功',
-			'url' => U('Admin/Theme/edit',array('version_type'=>$this->versionType)),
+			'url' => U('Admin/Theme/edit'),
 		);
 		if(IS_AJAX && IS_POST){
 			$args = I('post.');
-			$this->themeModel->startTrans();
-			
-			if(!$this->themeModel->create()){
+			D('ThemeInfo')->startTrans();
+			if(!D('ThemeInfo')->create()){
 				$result['status'] = false;
-				$result['msg'] = $this->themeModel->getError();
+				$result['msg'] = D('ThemeInfo')->getError();
 				$this->ajaxReturn($result);
 				exit();
 			}
 			$args['status'] = 1;
 			$args['input_time'] = date('Y-m-d H:i:s');
-			$id = $this->themeModel->add($args);
+			$id = D('ThemeInfo')->add($args);
 			if(!$id){
-				$this->themeModel->rollback();
+				D('ThemeInfo')->rollback();
 
 				$result['status'] = false;
 				$result['msg'] = '添加游戏主题失败';
@@ -146,7 +135,7 @@ class ThemeController extends BaseController
 			}
 
 		//	A('Public')->clear_cache();
-			$this->themeModel->commit();
+			D('ThemeInfo')->commit();
 			$this->ajaxReturn($result);
 			exit();
 		}
@@ -157,14 +146,14 @@ class ThemeController extends BaseController
 		$page_error = '';
 		$theme_id = I('themeid');
 		$theme_id = intval($theme_id);
-		//$ThemeInfoModel = D('ThemeInfo');
+		$ThemeInfoModel = D('ThemeInfo');
 
-		$result = $this->themeModel->find($theme_id);
+		$result = $ThemeInfoModel->find($theme_id);
 		if(!$result){
 			$page_error = "参数错误,找不到指定的主题信息";
 		}
 
-		$theme_conf_field = $this->themeModel->theme_conf_field;
+		$theme_conf_field = $ThemeInfoModel->theme_conf_field;
 
 		if(IS_AJAX && IS_POST){
 			$return = array(
@@ -185,7 +174,7 @@ class ThemeController extends BaseController
 
 			$data['theme_info'] = serialize($args);
 			$data['input_time'] = date('Y-m-d H:i:s');
-			$re = $this->themeModel->where('id = %d',array($theme_id))->save($data);
+			$re = $ThemeInfoModel->where('id = %d',array($theme_id))->save($data);
 
 			if($re){
 				$this->ajaxReturn($return);
@@ -215,19 +204,16 @@ class ThemeController extends BaseController
 		);
 		$json_data = $this->get_theme_json_data();
 
-		S('theme_conf_data_' . $this->$versionType,$json_data);
+		S('theme_conf_data',$json_data);
 
 		// 上传至oss
 		$file_name = 'client_theme.json';
 		$json_data = json_encode($json_data);
 
-		//$re = StoragePutContent($file_name,$json_data);
+		$re = StoragePutContent($file_name,$json_data);
 
-		if($this->versionType == 'beta'){
-			$re = QiNiuPutContent($file_name,$json_data);
-		}else{
-			$re = OssPutContent($file_name,$json_data);
-		}
+		//$re = OssPutContent($file_name,$json_data);
+		//$re = QiNiuPutContent($file_name,$json_data);
 
 		if($re){
 			$this->ajaxReturn($return);
@@ -248,10 +234,10 @@ class ThemeController extends BaseController
 		if($ac == 'test'){
 			$json_data = $this->get_theme_json_data();
 		}else{
-			$json_data = S('theme_conf_data_' . $this->$versionType);
+			$json_data = S('theme_conf_data');
 			if(!$json_data){
 				$json_data = $this->get_theme_json_data();
-				S('theme_conf_data_' . $this->$versionType,$json_data);
+				S('theme_conf_data',$json_data);
 			}
 		}
 
@@ -261,9 +247,10 @@ class ThemeController extends BaseController
 
 	private function get_theme_json_data(){
 
-		$list = $this->themeModel->where('status = 1')->order('sort ASC')->select();
+		$ThemeInfoModel = D('ThemeInfo');
+		$list = $ThemeInfoModel->where('status = 1')->order('sort ASC')->select();
 		//if(empty($list))$this->error('没有可以导出的主题配置信息');
-		$theme_conf_field = $this->themeModel->theme_conf_field;
+		$theme_conf_field = $ThemeInfoModel->theme_conf_field;
 
 		$json_data = array();
 

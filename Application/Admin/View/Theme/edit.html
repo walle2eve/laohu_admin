@@ -5,7 +5,7 @@
 						<div class="row">
                             <div class="col-md-3"><button type="button" class="btn btn-outline btn-primary" data-add-trigger><b>+</b> 添加新主题 </button></div>
 							<div class="col-md-3"></div>
-                            <div class="col-md-4"><form method="get" action="{:U('Admin/Theme/edit')}">
+                            <div class="col-md-4"><form method="get" action="{:U('Admin/Theme/edit',array('version_type'=>$version_type))}">
 								<div class="form-group input-group">
 									<input type="text" class="form-control" name="keyword"  placeholder="输入主题名称进行模糊查询..." value="{$param.keyword}">
 									<span class="input-group-btn">
@@ -16,7 +16,7 @@
 							</div>
 							<div class="col-md-2">
 								<button type="button" class="btn btn-primary submit-button" id="make_json">更新json</button>&nbsp;
-								<a href = "{:U('Admin/Theme/theme_json',array('ac'=>'test'))}" class="btn btn-primary submit-button" target='_blank'>查看json</a>
+								<a href = "{:U('Admin/Theme/theme_json',array('ac'=>'test','version_type'=>$version_type))}" class="btn btn-primary submit-button" target='_blank'>查看json</a>
 							</div>
                         </div>
                 </div>
@@ -53,7 +53,7 @@
                                             <td><input type="text" value="{$vo.sort}" class="form-control set-sort" style="width:100px"></td>
                                             <td>{$vo.input_time}</td>
                                             <td>
-												<a class="btn btn-app btn-primary no-radius edit_theme_conf" href="{:U('Admin/Theme/edit_conf')}?themeid={$vo.id}" data-target="#edit-theme-conf" data-toggle="modal">
+												<a class="btn btn-app btn-primary no-radius edit_theme_conf" href="{:U('Admin/Theme/edit_conf',array('version_type'=>$version_type))}?themeid={$vo.id}" data-target="#edit-theme-conf" data-toggle="modal">
 													<i class="fa fa-edit fa-fw"></i>
 													配置信息
 												</a>
@@ -79,7 +79,7 @@
 			</div>
 			<!--{// 编辑主题配置信息}-->
 			<div id="edit-theme-conf" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal">
-			  <form class="edit-form">
+			  <form class="edit-form"><input type="hidden" name="version_type" value="{$version_type}" />
 				<div class="modal-dialog">
 				  <div class="modal-content">
 				  </div><!-- /.modal-content -->
@@ -88,7 +88,7 @@
 			</div><!-- /.modal -->
 			<!--{// 添加游戏主题}-->
 			<div id="add-theme-modal" class="modal fade" tabindex="-1" role="dialog">
-			  <form class="add-form">
+			  <form class="add-form"><input type="hidden" name="version_type" value="{$version_type}" />
 				<div class="modal-dialog">
 				  <div class="modal-content">
 					<div class="modal-header">
@@ -152,7 +152,7 @@
 				query.key = tr.attr('key');
 				obj.removeClass('fa-check fa-lock text-success').addClass('fa-spinner fa-spin');
 
-				$.post('{:U('Admin/Theme/set_status')}', query, function(result){
+				$.post('{:U('Admin/Theme/set_status',array('version_type'=>$version_type))}', query, function(result){
 					if(result.status){
 
 						if(query.val == 1){
@@ -179,6 +179,7 @@
 					var query = new Object();
 					query.key = tr.attr('key');
 					query.sort = $(this).val();
+					query.version_type = '{$version_type}';
 					if( !/^-?\d+$/.test(query.sort) ){
 						$.showError('请输入排序数值，只能输入数字');
 					  	return false;
@@ -256,7 +257,7 @@
 				}, 'json');
 			});
 			$('#make_json').click(function(){
-				 $.get('{:U('Admin/Theme/make_theme_conf_data')}',function(res){
+				 $.get('{:U('Admin/Theme/make_theme_conf_data',array('version_type'=>$version_type))}',function(res){
 					//$.ShowAlert('更新json完毕');
 					  if(res.status){
 						$.ShowAlert(res.msg);

@@ -6,10 +6,11 @@
                             <div class="col-md-6">
                             	
 								<div class="form-group input-group">
+									<a href = "<eq name="version_type" value="beta">{:U('Admin/Client/version',array('version_type'=>'occifial'))}<else/>{:U('Admin/Client/version',array('version_type'=>'beta'))}</eq>" class="btn btn-primary submit-button"><eq name="version_type" value="beta">正式<else/>测试</eq>版本管理 </a>&nbsp;
 									<button type="button" class="btn btn-outline btn-primary" data-add-trigger><b>+</b> 添加版本 </button>
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									<button type="button" class="btn btn-primary submit-button" id="make_json">更新json</button>&nbsp;
-									<a href = "{:U('Admin/Client/version_json',array('ac'=>'test'))}" class="btn btn-primary submit-button" target='_blank'>查看json</a>
+									<a href = "{:U('Admin/Client/version_json',array('ac'=>'test','version_type'=>$version_type))}" class="btn btn-primary submit-button" target='_blank'>查看json</a>
 								</div>
                             </div>
                         </div>
@@ -43,7 +44,7 @@
                                             <td>{$vo.version_no}</td>
                                             <td>{$vo.input_time}</td>
                                             <td>
-												<a class="btn btn-app btn-primary no-radius edit_theme_conf" href="{:U('Admin/Client/edit_version_conf')}?version_id={$vo.id}" data-target="#edit-version-conf" data-toggle="modal">
+												<a class="btn btn-app btn-primary no-radius edit_theme_conf" href="{:U('Admin/Client/edit_version_conf',array('version_type'=>$version_type))}?version_id={$vo.id}" data-target="#edit-version-conf" data-toggle="modal">
 													<i class="fa fa-edit fa-fw"></i>
 													配置信息
 												</a>
@@ -69,7 +70,7 @@
 			</div>
 			<!--{// 编辑主题配置信息}-->
 			<div id="edit-version-conf" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal">
-			  <form class="edit-form">
+			  <form class="edit-form"><input type="hidden" name="version_type" value="{$version_type}">
 				<div class="modal-dialog">
 				  <div class="modal-content">
 				  </div><!-- /.modal-content -->
@@ -78,7 +79,7 @@
 			</div><!-- /.modal -->
 			<!--{// 添加版本}-->
 			<div id="add-version-modal" class="modal fade" tabindex="-1" role="dialog">
-			  <form class="add-form">
+			  <form class="add-form"><input type="hidden" name="version_type" value="{$version_type}">
 				<div class="modal-dialog">
 				  <div class="modal-content">
 					<div class="modal-header">
@@ -175,7 +176,7 @@
 				}, 'json');
 			});
 			$('#make_json').click(function(){
-				 $.get('{:U('Admin/Client/make_version_data')}',function(){
+				 $.get('{:U('Admin/Client/make_version_data',array('version_type'=>$version_type))}',function(){
 					$.ShowAlert('更新json完毕');
 				 });
 			});
