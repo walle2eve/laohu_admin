@@ -23,7 +23,8 @@
 	    $ossClient = new \OSS\OssClient(
 	        $OSS_ACCESS_ID, $OSS_ACCESS_KEY, $OSS_ENDPOINT);
 	    try{
-	        $ossClient->putObject($OSS_BUCKET, $object, $content);
+	        $result = $ossClient->putObject($OSS_BUCKET, $object, $content);
+	        
 	    } catch(OssException $e) {
 	        //printf(__FUNCTION__ . ": FAILED\n");
 	        //printf($e->getMessage() . "\n");
