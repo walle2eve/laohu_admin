@@ -49,6 +49,7 @@ class ThemeInfoModel extends Model{
 		'port' => array('field_type'=>'string'),
 		'versionCode' => array('field_type' => 'string'),
 		'sceneName' => array('field_type' => 'string'),
+		'IsUseCommonHeaderImg' => array('field_type' => 'string'),
 		'AnimationList' => array('field_type'=>'list','field_infos'=>array(
 			'SpriteName',
 			'id',

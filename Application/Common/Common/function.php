@@ -195,7 +195,8 @@
 		if($icon_id == 0){
 			return '/Icon_' . $icon_id . '.png';
 		}else{
-			return '/' . $themd_id . '/' . $themd_id . '_' . $icon_id . '.png';
+			//return '/' . $themd_id . '/' . $themd_id . '_' . $icon_id . '.png';
+			return '/' . $themd_id . '/Icon_' . $icon_id . '.png';
 		}
 
 	}

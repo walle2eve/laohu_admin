@@ -27,7 +27,7 @@
 						    <ul><volist name="theme_conf_field" id="val">
 						    <if condition="$val.field_type eq 'string'">
 						        <li><div class="col-sm-12">
-						            	<label class="col-sm-3 control-label"><span><i class="icon-folder-open"></i> {$key} </span></label>
+						            	<label class="col-sm-6 control-label"><span><i class="icon-folder-open"></i> {$key} </span></label>
 						            	<div class="col-sm-6"><input type="text" name="{$key}"  <if condition="$key eq 'themeid'">readonly</if> value="<if condition="$key eq 'themeid'">{$result.id}<else/><if condition="$key eq 'themeName'">{$result.name}<else/>{$result['theme_info'].$key}</if></if>" class="form-control"/></div>
 						            </div>
 						        </li>
