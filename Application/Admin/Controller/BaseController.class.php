@@ -15,6 +15,7 @@ class BaseController extends Controller
 			'dologin',
 			'theme_json',
 			'version_json',
+			'download',
 		);
 
 	public function _initialize(){

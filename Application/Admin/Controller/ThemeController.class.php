@@ -123,6 +123,7 @@ class ThemeController extends BaseController
 			'msg' => '创建游戏主题成功',
 			'url' => U('Admin/Theme/edit',array('version_type'=>$this->versionType)),
 		);
+		
 		if(IS_AJAX && IS_POST){
 			$args = I('post.');
 			$this->themeModel->startTrans();
@@ -170,7 +171,7 @@ class ThemeController extends BaseController
 			$return = array(
 				'status' => true,
 				'msg' => '编辑配置成功',
-				'url' => U('Admin/Theme/edit'),
+				'url' => U('Admin/Theme/edit',array('version_type'=>$this->versionType)),
 			);
 			if($page_error <> ''){
 				$return['status'] = false;
@@ -211,7 +212,7 @@ class ThemeController extends BaseController
 		$return = array(
 			'status' => true,
 			'msg' => '更新json成功',
-			'url' => U('Admin/Theme/edit'),
+			'url' => U('Admin/Theme/edit',array('version_type'=>$this->versionType)),
 		);
 		$json_data = $this->get_theme_json_data();
 

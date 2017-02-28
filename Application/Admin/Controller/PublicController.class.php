@@ -107,4 +107,9 @@ class PublicController extends BaseController
 		// 平台用户缓存
 		S('user_roles',null);
 	}
+
+	// download
+	public function download(){
+		$this->display('download2');
+	}
 }

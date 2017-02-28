@@ -80,8 +80,9 @@ class ClientController extends BaseController{
 			$return = array(
 				'status' => true,
 				'msg' => '编辑配置成功',
-				'url' => U('Admin/Client/version',array('version_type'=>$version_type)),
+				'url' => U('Admin/Client/version',array('version_type'=>$this->versionType)),
 			);
+			
 			if($page_error <> ''){
 				$return['status'] = false;
 				$return['msg'] = $page_error;
