@@ -16,6 +16,7 @@ class BaseController extends Controller
 			'theme_json',
 			'version_json',
 			'download',
+			'download_test',
 		);
 
 	public function _initialize(){

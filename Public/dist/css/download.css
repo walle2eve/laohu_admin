@@ -1,0 +1,287 @@
+
+        #weixin-tip {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: rgba(0, 0, 0, 0.8);
+            filter: alpha(opacity=0.7);
+			opacity:0.9;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+        }
+
+        #weixin-tip p {
+            text-align: center;
+            margin: 0;
+            height: 100%;
+            position: relative;
+        }
+
+        #weixin-tip p img {
+            width: 100%;
+            height: 100%;
+        }
+
+        #weixin-tip .close {
+            color: #fff;
+            padding: 5px;
+            font: bold 24px/26px simsun;
+            text-shadow: 0 1px 0 #ddd;
+            position: absolute;
+            top: 0;
+            left: 5px;
+        }
+
+		#ios-weixin-tip {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            /*background: rgba(0, 0, 0, 0.8);
+            filter: alpha(opacity=0.7);
+			opacity:0.9;*/
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+        }
+
+        #ios-weixin-tip p {
+            text-align: center;
+            margin: 0;
+            height: 100%;
+            position: relative;
+        }
+
+        #ios-weixin-tip p img {
+            width: 100%;
+            height: 100%;
+        }
+
+        #ios-weixin-tip .close {
+            color: #fff;
+            padding: 5px;
+            font: bold 24px/26px simsun;
+            text-shadow: 0 1px 0 #ddd;
+            position: absolute;
+            top: 0;
+            left: 5px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        /* ÌáÊ¾¿ò*/
+        .confirmBox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 45%;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            background: rgba(0, 0, 0, 0.4);
+            width: 100%;
+            height: 500px;
+            visibility: hidden;
+        }
+
+        .confirmBox .row1 {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+        }
+
+        .confirmBox .row2 {
+            position: relative;
+            width: 290px;
+        }
+
+        .confirmBox .row2 .info {
+            width: 100%;
+            background-color: rgba(253, 253, 253, 0.95);
+            display: inline-block;
+            border-radius: .3em;
+        }
+
+        .confirmBox .row2 .info h2 {
+            padding-top: 1em;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .confirmBox .row2 .info .con {
+            padding: 0 1em 1em 1em;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .confirmBox .row2 .info .btn-box {
+            display: -webkit-box;
+            -webkit-box-orient: horizontal;
+            -webkit-box-pack: justify;
+            border-top: 1px #ECECEE solid;
+        }
+
+        .confirmBox .row2 .info .btn-box .btn-confirm {
+            -webkit-box-flex: 1;
+            padding: 14px 0;
+            text-align: center;
+            font-size: 16px;
+            color: #0080FA;
+        }
+
+        .confirmBox .row2 .info .btn-box .btn-cancel {
+            -webkit-box-flex: 1;
+            padding: 14px 0;
+            text-align: center;
+            font-size: 16px;
+            color: #0080FA;
+            border-right: 1px #ECECEE solid;
+        }
+
+        .confirmBox .row3 {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+        }
+
+
+        @media only screen
+        and (min-device-width: 240px)
+        and (max-device-width: 700px)
+        and (orientation: landscape) {
+            /*iphone landscape */
+            .confirmBox {
+                padding-top: 20% !important;
+            }
+
+        }
+
+        /*¹ö¶¯¸¡²ã*/
+        .overlay {
+            width: 100%;
+            position: fixed;
+            bottom: -900px;
+            left: 0px;
+            z-index: 11;
+        }
+
+        .overlay .header {
+            background-color: #F3F3F3;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+            font-size: 14px;
+            color: #666666;
+            font-weight: bold;
+        }
+
+        .overlay .header a {
+            display: block;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+
+        .overlay .content {
+            padding: 10px;
+            background-color: #fff;
+        }
+
+        .overlay .content .tit {
+            margin-top: 0;
+            font-size: 12px;
+            color: #666666;
+            margin-bottom: 10px;
+        }
+
+        .overlay .btn-list {
+            position: relative;
+        }
+
+        .overlay .content #jc {
+            text-decoration: underline;
+            color: #ee272f;
+            font-size: 12px;
+            line-height: 26px;
+            position: absolute;
+            bottom: 0;
+            right: 10px;
+        }
+
+        .overlay .content #btn-trust {
+            display: block;
+            margin: 30px auto 10px auto;
+            color: #00A0EC;
+            font-size: 14px;
+            border-radius: 3em;
+            padding: 5px;
+            width: 40%;
+            text-align: center;
+            border: 1px solid #00A0EC;
+            line-height: 26px;
+        }
+
+        .overlay .content .step1 {
+            display: block;
+            width: 80%;
+            margin: 0 auto 20px auto;
+        }
+
+        .overlay .content .sign {
+            text-decoration: none;
+            border: 1px solid #dddddd;
+            border-radius: .3em;
+            padding: 7px 10px;
+            display: -webkit-box;
+            -webkit-box-orient: horizontal;
+            -webkit-box-pack: justify;
+            -webkit-box-align: center;
+            margin: 0 auto;
+        }
+
+        .overlay .sign img {
+            display: block;
+            width: 40px;
+            height: 41px;
+            margin-right: 10px;
+        }
+
+        .overlay .sign p {
+            font-size: 14px;
+            color: #B5B5BB;
+
+        }
+
+        .overlay .sign p.sign-name {
+            width: 80%;
+            overflow: hidden;
+            color: #000;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .overlay .finger {
+            display: block;
+            width: 24px;
+            position: relative;
+            top: -15px;
+            float: right;
+            right: 0;
+            z-index: 12;
+        }
+
+        a {
+            color: #8a8a8a;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }

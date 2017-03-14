@@ -19,7 +19,8 @@ class ClientVersionModel extends Model{
 		'IosClientUrl' => array('field_type'=>'string'),
 		'TestPlayRoomIp' => array('field_type'=>'string'),
 		'TestPlayGameIp' => array('field_type'=>'string'),
-		
+		'IosDownloadUrl' => array('field_type'=>'string'),
+		'AndroidDownloadUrl' => array('field_type'=>'string'),
 		'fileList' => array('field_type' => 'list','field_infos' => array(
 			'FileName',
 			'Version',
@@ -47,6 +48,17 @@ class ClientVersionModel extends Model{
 					->limit($page->firstRow.','.$page->listRows)
 					->select();
 		return array('list'=>$list,'page'=>$page->show());
+	}
+
+	public function get_last_version(){
+
+		$where = ' 1=1 ';
+
+		$version_info = $this->where($where)
+					->order('id DESC')
+					->find();
+		$version_info['conf'] = unserialize($version_info['conf']);
+		return $version_info;
 	}
 }
 ?>

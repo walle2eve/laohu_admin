@@ -98,7 +98,7 @@ class SpinLogModel extends MongoModel
              $line = 9;
           }elseif(in_array($row['theme_id'],array('1005'))){
              $line = 1;
-         }elseif(in_array($row['theme_id'],array('1003'))){
+         }elseif(in_array($row['theme_id'],array('1003','1010'))){
              $line = 50;
           }else{
              $line = 20;

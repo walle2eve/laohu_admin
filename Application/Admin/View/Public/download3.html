@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>盘龙娱乐</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+        <meta name="description" content=""/>
+        <meta name="keywords" content=""/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+        <meta name="renderer" content="webkit"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <meta http-equiv="Cache-Control" content="no-siteapp"/>
+        <meta name="mobile-web-app-capable" content="yes"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+        <link href="__PUBLIC__/dist/css/basic.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="__PUBLIC__/dist/css/idangerous.swiper.css" >
+        <link rel="stylesheet" href="__PUBLIC__/dist/css/download.css" />
+        <script type="text/javascript" src="__PUBLIC__/plugins/jQuery/jquery-1.11.3.min.js"></script>
+    </head>
+
+    <body>
+        <div id="main" style="min-width:300px!important; max-width:730px!important; margin:auto; overflow:hidden;">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div><img class="top" src="__PUBLIC__/dist/images/bg.png"/></div>
+                </div>
+            </div>
+            <p style="font-size: 14px; font-family: 微软雅黑; padding-top: 12px;"> 微信不允许直接下载文件，请点击右上角分享按钮，选择在浏览器中打开, 或者复制链接到浏览器。
+            </p>
+            <table width="100%" cellspace="0">
+                <tbody>
+                    <tr align="center">
+                        <td>
+                        </td>
+                    </tr>
+                    <tr align="center">
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="swiper-container4">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide red-slide">
+                                        <div class="li"> <img class="doc" src="__PUBLIC__/dist/images/android.jpg" /><img class="doc" id="ad" src="__PUBLIC__/dist/images/anbutton.png" onclick="android()" /></div>
+                                        <div class="li odd"> <img class="doc" src="__PUBLIC__/dist/images/ios.jpg" /><img class="doc" id="ios" src="__PUBLIC__/dist/images/iosbutton.png" onclick="IOS()" /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p style="font-size: 14px; font-family: 微软雅黑; padding-top: 12px;">苹果用户请注意，下载游戏后，到“设置”-“通用”-“设备管理（描述文件）”（VPN下面）-设置成信任状态后，即可正常运行游戏。</p>
+                            <br>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="weixin-tip">
+                <p>
+                    <img src="__PUBLIC__/dist/images/android.png" alt="微信扫描打开APP下载链接提示代码优化">
+                    <span id="close" title="关闭" class="close">×</span>
+                </p>
+            </div>
+            <div id="ios-weixin-tip">
+                <p>
+                    <img src="__PUBLIC__/dist/images/ios.png" alt="微信扫描打开APP下载链接提示代码优化">
+                    <span id="ios-close" title="关闭" class="close">×</span>
+                </p>
+            </div>
+            <script>
+                var isWeiXin = function () {
+                    var ua = navigator.userAgent.toLowerCase();
+                    if (ua.match(/MicroMessenger/i) == "micromessenger") {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+                function doLocation(url) {
+                    var a = document.createElement("a");
+                    if (!a.click) {
+                        window.location = url;
+                        return;
+                    }
+                    a.setAttribute("href", url);
+                    a.style.display = "none";
+                    document.body.appendChild(a);
+                    a.click();
+                }
+                function android() {
+                    if (isWeiXin()) {
+                        var winHeight = typeof window.innerHeight != "undefined" ? window.innerHeight : document.documentElement.clientHeight;
+                        var tip = document.getElementById("weixin-tip");
+                        var close = document.getElementById("close");
+                        tip.style.height = winHeight + "px";
+                        tip.style.display = "block";
+                        close.onclick = function () {
+                            tip.style.display = "none";
+                        }
+                    } else {
+                        window.location.href = "{$androidDownloadUrl}";
+                        return;
+                    }
+                }
+        
+                function IOS() {
+                    if (isWeiXin()) {
+                        var winHeight = typeof window.innerHeight != "undefined" ? window.innerHeight : document.documentElement.clientHeight;
+                        var tip = document.getElementById("ios-weixin-tip");
+                        var close = document.getElementById("ios-close");
+                        tip.style.height = winHeight + "px";
+                        tip.style.display = "block";
+                        close.onclick = function () {
+                            tip.style.display = "none";
+                        }
+                    } else {
+                        window.location.href = "{$iosDownloadUrl}";
+                        return;
+                    }
+                }
+            </script>
+    </body>
+
+</html>

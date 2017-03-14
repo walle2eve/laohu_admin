@@ -27,7 +27,7 @@
 						    <ul><volist name="client_conf_field" id="val">
 						    <if condition="$val.field_type eq 'string'">
 						        <li><div class="col-sm-12">
-						            	<label class="col-sm-3 control-label"><span><i class="icon-folder-open"></i> {$key} </span></label>
+						            	<label class="col-sm-4 control-label"><span><i class="icon-folder-open"></i> {$key} </span></label>
 						            	<div class="col-sm-6"><input type="text" name="{$key}" value="<if condition="$key eq 'ClientVersion'">{$result.version_no}<else/>{$result['conf'].$key}</if>" class="form-control"/></div>
 						            </div>
 						        </li>
