@@ -45,6 +45,11 @@ class SpinLogModel extends MongoModel
       $operators = S('user_roles');
 
       foreach($list as &$row){
+		foreach($row as $key=>$val){
+			if(is_object($row[$key])){
+				$row[$key] = $val->value;
+			}
+		}
          // 格式化附加参数
          $json_data = (array)json_decode($row['param']);
          $row['line'] = count($json_data);

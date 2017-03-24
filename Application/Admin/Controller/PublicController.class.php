@@ -109,13 +109,13 @@ class PublicController extends BaseController
 	}
 
 	// download
-	public function download(){
+	public function download_test(){
 
 		$this->display('download2');
 	}
 
 	// download
-	public function download_test(){
+	public function download(){
 
 		$version = D('ClientVersion')->get_last_version();
 		$iosDownloadUrl = $version['conf']['IosDownloadUrl'];
