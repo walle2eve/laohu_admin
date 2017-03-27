@@ -16,6 +16,9 @@ class ClientController extends BaseController{
 		if(I('version_type') == 'beta'){
 			$this->versionType = 'beta';
 			$this->clientModel = D('ClientVersionBeta');
+		}elseif(I('version_type') == 'reveal'){
+			$this->versionType = 'reveal';
+			$this->clientModel = D('ClientVersionReveal');
 		}
 		$this->assign('version_type',$this->versionType);
 	}
@@ -133,6 +136,8 @@ class ClientController extends BaseController{
 
 		if($this->versionType == 'beta'){
 			$re = QiNiuPutContent($file_name,$json_data);
+		}elseif($this->versionType == 'reveal'){
+			$re = OssPutContent($file_name,$json_data,$this->versionType);
 		}else{
 			$re = OssPutContent($file_name,$json_data);
 		}

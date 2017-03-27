@@ -61,7 +61,7 @@ return array(
 
     /* 数据库设置 */
     'DB_TYPE'                => 'mysql', // 数据库类型
-    'DB_HOST'                => '119.9.74.11,119.9.76.96', // 服务器地址
+    'DB_HOST'                => '172.31.26.235,172.31.31.51', // 服务器地址
 	'DB_PORT'                => '3306', // 端口
     'DB_NAME'                => 'laohu', // 数据库名
     'DB_USER'                => 'quxiang', // 用户名
@@ -79,7 +79,7 @@ return array(
 	// log库连接信息
 	'DB_LAOHU_LOG_CONFIG' => array(
 		'db_type'  => 'mysql',
-		'db_host'  => '119.9.74.11,119.9.76.96',
+		'db_host'  => '172.31.26.235,172.31.31.51',
 		'db_port'  => '3306',
 		'db_user'  => 'quxiang',
 		'db_pwd'   => '55CD3F6DF491F945',
@@ -94,11 +94,11 @@ return array(
     //  MONGO-DB
     'DB_TYPE_MONGO_CONFIG'  => array(
         'DB_TYPE'   => 'mongo',
-        'DB_HOST'   =>  '119.9.76.96',
+        'DB_HOST'   =>  '172.31.31.51',
         'DB_PORT'   =>  '27017',
         'DB_NAME'   =>  'laohu_log',
-        'DB_USER'   =>  'laohu_log',
-        'DB_PWD'    =>  'ts',
+        'DB_USER'   =>  '',//'laohu_log',
+        'DB_PWD'    =>  '',//'ts',
     ),
 	
     /* 数据缓存设置 */
@@ -218,10 +218,18 @@ return array(
     'OSS_ENDPOINT'          => 'http://oss-cn-hongkong.aliyuncs.com',
     'OSS_BUCKET'            => 'cientres1',
     ***/
-    'OSS_ACCESS_ID'         => 'LTAIjfeLFDJ4HIVK',
-    'OSS_ACCESS_KEY'        => 'pJRBD2fPztKiNXtQfDlhUZPQWHoAg2',
-    'OSS_ENDPOINT'          => 'http://oss-cn-qingdao.aliyuncs.com',
-    'OSS_BUCKET'            => 'laohuupdate',
+    'occifial' => array(
+        'OSS_ACCESS_ID'         => 'LTAIjfeLFDJ4HIVK',
+        'OSS_ACCESS_KEY'        => 'pJRBD2fPztKiNXtQfDlhUZPQWHoAg2',
+        'OSS_ENDPOINT'          => 'http://oss-cn-qingdao.aliyuncs.com',
+        'OSS_BUCKET'            => 'laohuupdate',
+    ),
+    'reveal' => array(
+        'OSS_ACCESS_ID'         => 'LTAIjfeLFDJ4HIVK',
+        'OSS_ACCESS_KEY'        => 'pJRBD2fPztKiNXtQfDlhUZPQWHoAg2',
+        'OSS_ENDPOINT'          => 'http://oss-cn-hongkong.aliyuncs.com',
+        'OSS_BUCKET'            => 'slottest',
+    ),
 
 
     //qiniu 云存储

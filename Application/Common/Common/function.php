@@ -12,12 +12,13 @@
 	 * $object oss端文件名称
 	 * $content 要上传的字符串
 	 */
-	function OssPutContent($object,$content){
-		$OSS_ACCESS_ID = C('OSS_ACCESS_ID');
-		$OSS_ACCESS_KEY = C('OSS_ACCESS_KEY');
-		$OSS_ENDPOINT = C('OSS_ENDPOINT');
-		$OSS_BUCKET	=	C('OSS_BUCKET');
-
+	function OssPutContent($object,$content,$version="occifial"){
+		$oss_conf = C($version);
+		$OSS_ACCESS_ID = $oss_conf['OSS_ACCESS_ID'];
+		$OSS_ACCESS_KEY = $oss_conf['OSS_ACCESS_KEY'];
+		$OSS_ENDPOINT = $oss_conf['OSS_ENDPOINT'];
+		$OSS_BUCKET	=	$oss_conf['OSS_BUCKET'];
+		//print_r($bucket);exit();
 	    Vendor('OSS.autoload');
 
 	    $ossClient = new \OSS\OssClient(
@@ -37,7 +38,7 @@
 	 * qiniu 云存储
 	 * 
 	 */
-	function QiNiuPutContent($targetFilePath,$content){
+	function QiNiuPutContent($targetFilePath,$content,$bucket=""){
 	  Vendor('QiNiu.autoload');
 
 	  $accessKey = C('QINIU_ACCESS_KEY');

@@ -18,6 +18,9 @@ class ThemeController extends BaseController
 		if(I('version_type') == 'beta'){
 			$this->versionType = 'beta';
 			$this->themeModel = D('ThemeInfoBeta');
+		}elseif(I('version_type') == 'reveal'){
+			$this->versionType = 'reveal';
+			$this->themeModel = D('ThemeInfoReveal');
 		}
 		$this->assign('version_type',$this->versionType);
 	}
@@ -226,6 +229,8 @@ class ThemeController extends BaseController
 
 		if($this->versionType == 'beta'){
 			$re = QiNiuPutContent($file_name,$json_data);
+		}elseif($this->versionType == 'reveal'){
+			$re = OssPutContent($file_name,$json_data,$this->versionType);
 		}else{
 			$re = OssPutContent($file_name,$json_data);
 		}
