@@ -230,6 +230,12 @@ return array(
         'OSS_ENDPOINT'          => 'http://oss-cn-hongkong.aliyuncs.com',
         'OSS_BUCKET'            => 'slottest',
     ),
+    'cf365' => array(
+        'OSS_ACCESS_ID'         => 'LTAIjfeLFDJ4HIVK',
+        'OSS_ACCESS_KEY'        => 'pJRBD2fPztKiNXtQfDlhUZPQWHoAg2',
+        'OSS_ENDPOINT'          => 'http://oss-cn-hongkong.aliyuncs.com',
+        'OSS_BUCKET'            => '365cf',
+    ),
 
 
     //qiniu 云存储

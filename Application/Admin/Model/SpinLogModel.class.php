@@ -115,7 +115,8 @@ class SpinLogModel extends MongoModel
 		$where =  array();
 
 		// 数据表中存储的是java类型的时间戳，包含毫秒，需要转换	
-		$where['createTime']	=	array('between', array($begin_time * 1000, $end_time * 1000 + 999));
+		$betweentime  = array($begin_time * 1000, $end_time * 1000 + 999);
+		$where['createTime']	=	array('between', $betweentime);
 
 		if($operator_id != ''){
 			$where['operator_id'] = intval($operator_id);
@@ -134,8 +135,9 @@ class SpinLogModel extends MongoModel
 			$etime = $stime+86399;
 			$today_where = $where;
 			$today_where['createTime'] = array('between', array($stime * 1000, $etime * 1000 + 999));
+			//$today_where['log_time'] = array('between', array($stime * 1000, $etime * 1000 + 999));
 			$count_today = $this->where($today_where)->count();
-
+			//echo $count_today;
 			$count = $count + $count_today;
 		}
 
@@ -143,8 +145,31 @@ class SpinLogModel extends MongoModel
 
 		$order_by = $order_by . ',id DESC';
 
-		$list = $this->field("id,log_type,log_time,region_id,server_id,operator_id,theme_id,theme_name,game_sort,account_id,nick_name,user_id,bet,total_bet,win,wheel,is_sactter,reason,param,createTime")->where($where)->order($order_by)->limit($page->firstRow.','.$page->listRows)->select();
+		$list = $this->field("id,log_type,log_time,region_id,server_id,operator_id,theme_id,theme_name,game_sort,account_id,nick_name,user_id,bet,mul,total_bet,win,wheel,is_sactter,reason,param,createTime")->where($where)->order($order_by)->limit($page->firstRow.','.$page->listRows)->select();
 
+		
+		$where['createTime'] = array('$gte'=>$betweentime[0],'$lte'=>$betweentime[1]);
+		$sum_args = array(
+				array('$match' => $where),
+				array('$group' => array(
+					"_id" => NULL,
+					"total_bet"  => array('$sum' => '$total_bet'),
+					"total_win"  => array('$sum' => '$win')
+					))
+			);
+		$total_bet_win = $this->aggregate($sum_args);
+
+		if(!empty($total_bet_win['result']) && isset($total_bet_win['result'])){
+			$total_bet = round($total_bet_win['result'][0]['total_bet'],2);
+			$total_win = round($total_bet_win['result'][0]['total_win'],2);
+		}else{
+			$total_bet = 0;
+			$total_win = 0;
+		}
+
+		//echo $this->getlastsql();
+		//print_r($total_bet_win);
+		
 		$operators = S('user_roles');
 
 		foreach($list as &$row){
@@ -153,6 +178,7 @@ class SpinLogModel extends MongoModel
 					$row[$key] = $val->value;
 				}
 			}
+
 			// 格式化附加参数
 			$json_data = (array)json_decode($row['param']);
 			$row['line'] = count($json_data);
@@ -232,6 +258,6 @@ class SpinLogModel extends MongoModel
 			$row['user_name'] = $operators[$row['user_name']];
 
 		}
-		return array('list'=>$list,'page'=>$page->show());
+		return array('list'=>$list,'page'=>$page->show(),'total_bet' => $total_bet, 'total_win' => $total_win);
 	}
 }

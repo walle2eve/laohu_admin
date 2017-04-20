@@ -30,9 +30,11 @@
 								</div>
 								<div class="col-md-2">
 									<select name="order_by"  class="form-control">
+										<option value="createTime" <eq name="param['order_by']" value="createTime">selected="selected"</eq>>游戏时间</option>
 										<option value="win" <eq name="param['order_by']" value="win">selected="selected"</eq>>中奖金额最多</option>
 										<option value="total_bet" <eq name="param['order_by']" value="total_bet">selected="selected"</eq>>投入最高</option>
 										<option value="bet" <eq name="param['order_by']" value="bet">selected="selected"</eq>>倍率最高</option>
+
 									</select>
 								</div>
 								<div class="col-md-2">
@@ -119,13 +121,21 @@
 												  </div>
 												</div>
 											</td>
-                      <td>{$vo.bet}</td>
+                      						<td>{$vo.mul}</td>
 											<td>{$vo.total_bet}</td>
 											<td>{$vo.line}</td>
 											<td>{$vo.win}</td>
 											<td><if condition="$vo['reason'] eq 4">YES<else/>NO</if></td>
                                         </tr>
 									</volist>
+									<tr>
+									<td colspan="5"></td>
+									<td>总投入</td>
+									<td>{$total_bet}</td>
+									<td>总赢取</td>
+									<td>{$total_win}</td>
+									<td></td>
+									</tr>
                                     </tbody>
                                 </table>
                             </div>

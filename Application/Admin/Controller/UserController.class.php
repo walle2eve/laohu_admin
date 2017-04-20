@@ -45,7 +45,7 @@ class UserController extends BaseController
 		}
 
 		// 排序
-		$orderbys = array('win','bet','total_bet');
+		$orderbys = array('win','bet','total_bet','createTime');
 
 		$param['order_by'] = !in_array($param['order_by'],$orderbys) ? 'win' : $param['order_by'];
 
@@ -62,6 +62,8 @@ class UserController extends BaseController
 
 		$this->assign('list',$result['list']);
 		$this->assign('page',$result['page']);
+		$this->assign('total_bet',$result['total_bet']);
+		$this->assign('total_win',$result['total_win']);
         $this->display();
     }
 	// 用户资金记录

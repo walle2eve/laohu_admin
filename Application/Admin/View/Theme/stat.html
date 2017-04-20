@@ -13,13 +13,12 @@
                 <div class="col-lg-12">
                     <h3 class="page-header">游戏主题统计</h3>
 						<div class="row"><form method="post" action="{:U('Admin/Theme/stat')}" id="stat_form">
-                            <div class="col-md-2">
+                            <div class="col-md-12">
 								<div class="form-group input-group">
-									<a class="btn btn-app btn-primary" href="{:U('Admin/Theme/edit')}"/>主题管理</a>
-								</div>
-							</div>
-                            <div class="col-md-3">
-                                <div class="form-group input-group">
+									<a class="btn btn-app btn-primary" href="{:U('Admin/Theme/edit')}"/>主题管理(7乐)</a>
+										&nbsp;
+									<a class="btn btn-app btn-primary" href="{:U('Admin/Theme/edit/version_type/cf365')}"/>主题管理(超凡365)</a>
+										&nbsp;
                                     <a class="btn btn-app btn-primary" href="{:U('Admin/Theme/edit/version_type/beta')}"/>主题管理(测试版本)</a>
                                         &nbsp;
                                     <a class="btn btn-app btn-primary" href="{:U('Admin/Theme/edit/version_type/reveal')}"/>主题管理(展示版本)</a>

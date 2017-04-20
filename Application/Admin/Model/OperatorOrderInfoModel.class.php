@@ -67,7 +67,7 @@ class OperatorOrderInfoModel extends Model{
 	}
 
 	// add_deposit, 添加运营商充值记录
-	public function add_deposit($operator_id,$amount,$discount,$deposit_gold,$remark=''){
+	public function add_deposit($operator_id,$amount,$discount,$deposit_gold,$discount_money,$remark=''){
 		$operator_info = D('SysUser')->where('uid = %d',array($operator_id))->find();
 		if(!$operator_info)return array('status'=>false,'msg'=>'运营商信息错误');
 		if($operator_info['discount'] != $discount) return array('status'=>false,'msg'=>'运营商折扣信息错误');
@@ -76,6 +76,7 @@ class OperatorOrderInfoModel extends Model{
 		$param['discount'] = $discount;
 		$param['amount'] = $amount;
 		$param['gold'] = $deposit_gold;
+		$param['discount_money'] = $discount_money;
 		$param['total_gold'] = $operator_info['gold'] + $deposit_gold;
 		$param['order_type'] = self::DEPOSIT_ORDER_TYPE;
 		$param['admin_id'] = session('uid');

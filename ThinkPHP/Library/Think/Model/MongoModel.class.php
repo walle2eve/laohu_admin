@@ -454,7 +454,16 @@ class MongoModel extends Model
 
         return $this->db->group($key, $init, $reduce, $option);
     }
-
+    // 20170410 新增
+    /**
+     * 聚合接口
+     * @access public
+     * @return string
+     */
+    public function aggregate($pipeline, $option=array()) {
+        $option = $this->_parseOptions($option);
+        return $this->db->aggregate($pipeline, $option);
+    }
     /**
      * 返回Mongo运行错误信息
      * @access public

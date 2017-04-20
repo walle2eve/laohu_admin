@@ -122,6 +122,6 @@ class PublicController extends BaseController
 		$androidDownloadUrl = $version['conf']['AndroidDownloadUrl'];
 		$this->assign('iosDownloadUrl',$iosDownloadUrl);
 		$this->assign('androidDownloadUrl',$androidDownloadUrl);
-		$this->display('download3');
+		$this->display('download4');
 	}
 }

@@ -536,7 +536,40 @@ class Mongo extends Driver
             E($e->getMessage());
         }
     }
+    //聚合接口
+    public function aggregate($pipeline,$options=array()){
+        if(isset($options['table']) && $this->_collectionName != $options['table']) {
+            $this->switchCollection($options['table'],'',false);
+        }
+        $this->model  =   $options['model'];
+        $this->queryTimes++;
+        N('db_query',1); // 兼容代码
 
+        if($this->config['debug']) {
+            $this->queryStr   =  $this->_dbName.'.'.$this->_collectionName.'.aggregate('.json_encode($pipeline).')';
+        }
+        try{
+            $this->debug(true);
+            $option = array();
+            if(isset($options['allowDiskUse'])) {
+                $option['allowDiskUse'] = $options['allowDiskUse'];
+            }
+            if(isset($options['cursor'])) {
+                $option['cursor'] = $options['cursor'];
+            }
+            if(isset($options['explain'])) {
+                $option['explain'] = $options['explain'];
+            }
+            if(isset($options['maxTimeMS'])) {
+                $option['maxTimeMS'] = $options['maxTimeMS'];
+            }
+            $aggregate = $this->_collection->aggregate($pipeline,$option);
+            $this->debug(false);
+            return $aggregate;
+        } catch (\MongoCursorException $e) {
+            E($e->getMessage());
+        }
+    }
     /**
      * 取得数据表的字段信息
      * @access public

@@ -65,7 +65,7 @@
                                             <th>日期（DATE）</th>
                                             <th>平台</th>
                                             <th>充值金额</th>
-																						<th>折扣</th>
+																						<th>回扣</th>
 																						<th>获得游戏币转入额度</th>
 																						<th>充值状态</th>
 																						<th>游戏币总计</th>
@@ -128,21 +128,21 @@
 							</div>
                         </div>
 						<div class="form-group">
-						  <label class="col-sm-3 control-label">折扣：</label>
+						  <label class="col-sm-3 control-label">回扣：</label>
 						  <div class="col-sm-3">
 							<input type="text" name="discount" id="discount" class="form-control" value="0%" readonly>
 						  </div>
 						</div>
 						<div class="form-group">
-						  <label class="col-sm-3 control-label">充值金币数：</label>
+						  <label class="col-sm-3 control-label">充值金额：</label>
 						  <div class="col-sm-6">
-							<input type="text" name="gold" id="gold" class="form-control" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="请输入要充值的金币数">
+							<input type="text" name="amount" id="amount" class="form-control" onkeyup="value=value.replace(/[^\d.]/g,'')" placeholder="请输入充值金额">
 						  </div>
 						</div>
 						<div class="form-group">
-						  <label class="col-sm-3 control-label">金额：</label>
+						  <label class="col-sm-3 control-label">金币数：</label>
 						  <div class="col-sm-6">
-							<input type="text" name="amount" id="amount" class="form-control" value="0" readonly>
+							<input type="text" name="gold" id="gold" class="form-control" value="0" readonly>
 						  </div>
 						</div>
 
@@ -189,7 +189,7 @@
 
 							$('#discount').val('0' + '%');
 
-							$('#amount').val(0);
+							$('#gold').val(0);
 
 							if(op_id == ''){
 								return false;
@@ -200,12 +200,12 @@
 								if(res.status){
 
 									var discount = parseFloat(res.discount);
-									var gold = parseFloat($('#gold').val());
+									var amount = parseFloat($('#amount').val());
 
-									if(gold > 0){
-										var amount = gold - (gold * (discount / 100));
-										amount = Digit.round(amount,2);
-										$('#amount').val(amount);
+									if(amount > 0){
+										var gold = amount - (amount * (discount / 100));
+										gold = Digit.round(gold,2);
+										$('#gold').val(gold);
 									}
 
 									discount = res.discount + '%';
@@ -219,14 +219,14 @@
 
 							});
 						});
-						$('input[name=gold]').blur(function(){
-							var gold = parseFloat($(this).val());
+						$('input[name=amount]').blur(function(){
+							var amount = parseFloat($(this).val());
 							var discount = parseFloat($('#discount').val());
 							console.log(discount);
-							if(gold >= 0 && discount != NaN){
-								var amount = gold - (gold * (discount / 100));
-								amount = Digit.round(amount,2);
-								$('#amount').val(amount);
+							if(amount >= 0 && discount != NaN){
+								var gold = amount - (amount * (discount / 100));
+								gold = Digit.round(gold,2);
+								$('#gold').val(gold);
 							}
 						});
 						</if>

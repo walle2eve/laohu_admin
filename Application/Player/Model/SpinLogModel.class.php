@@ -39,17 +39,17 @@ class SpinLogModel extends MongoModel
 
       $order_by = 'id DESC';
 
-      $list = $this->field("id,log_type,log_time,region_id,server_id,operator_id,theme_id,theme_name,game_sort,account_id,nick_name,user_id,bet,total_bet,win,wheel,is_sactter,reason,param,createTime")->where($where)->order($order_by)->limit($page->firstRow.','.$page->listRows)->select();
+      $list = $this->field("id,log_type,log_time,region_id,server_id,operator_id,theme_id,theme_name,game_sort,account_id,nick_name,user_id,bet,mul,total_bet,win,wheel,is_sactter,reason,param,createTime")->where($where)->order($order_by)->limit($page->firstRow.','.$page->listRows)->select();
 
 
       $operators = S('user_roles');
 
       foreach($list as &$row){
-		foreach($row as $key=>$val){
-			if(is_object($row[$key])){
-				$row[$key] = $val->value;
-			}
-		}
+         foreach($row as $key=>$val){
+            if(is_object($row[$key])){
+               $row[$key] = $val->value;
+            }
+         }
          // 格式化附加参数
          $json_data = (array)json_decode($row['param']);
          $row['line'] = count($json_data);
@@ -129,6 +129,7 @@ class SpinLogModel extends MongoModel
          $row['user_name'] = isset($operator_id['value']) ? $operator_id['value'] : $operator_id;
          $row['user_name'] = $operators[$row['user_name']];
       }
+
       return array('list'=>$list,'page'=>$page->show());
    }
 }

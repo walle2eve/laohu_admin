@@ -92,7 +92,7 @@ class DepositController extends BaseController
 		}
 		if($amount <= 0){
 			$result['status'] = false;
-			$result['msg'] = '请填写大于0的充值金币数';
+			$result['msg'] = '请填写大于0的充值金额';
 			$this->ajaxReturn($result);
 			exit();
 		}
@@ -109,9 +109,13 @@ class DepositController extends BaseController
 			exit();
 		}
 
-		$amount = round($gold - ($gold * ($discount / 100)),2);
+		//$amount = round($gold - ($gold * ($discount / 100)),2);
 
-		$return = D('OperatorOrderInfo')->add_deposit($operator_id,$amount,$discount,$gold);
+		$discount_money = round($amount * ($discount / 100),2);
+
+		$gold = $amount - $discount_money;
+
+		$return = D('OperatorOrderInfo')->add_deposit($operator_id,$amount,$discount,$gold,$discount_money);
 
 		if($return['status'] === true){
 			$this->ajaxReturn($result);

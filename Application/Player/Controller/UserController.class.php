@@ -19,7 +19,7 @@ class UserController extends BaseController
     {
 		$param = I('get.');
 
-		//$param['operator_id'] = 10022;
+		//$param['operator_id'] = 10024;
 
 		if(!$param['account_id'] || !$param['access_key'])exit('登录信息错误!');
 		// 验证玩家登陆信息
@@ -29,9 +29,9 @@ class UserController extends BaseController
 
 		if(strtoupper($param['access_key']) != strtoupper(md5($param['account_id'] . $player_info['uniquekey']))) exit('access_key错误,无法确认玩家信息!');
 
-		$param['operator_id'] = $player_info['operator_id'];
-		
 		if($player_info['status'] != 1) exit('玩家账号已冻结!');
+
+		$param['operator_id'] = $player_info['operator_id'];
 
 		// 测试开始时间
 		$param['min_date'] = date('Y-m-d',strtotime('-30 day'));//C('PLAYER_SPIN_BEGIN_DATE');
