@@ -50,6 +50,7 @@ class ThemeInfoModel extends Model{
 		'versionCode' => array('field_type' => 'string'),
 		'sceneName' => array('field_type' => 'string'),
 		'IsUseCommonHeaderImg' => array('field_type' => 'string'),
+		'fileSize' => array('field_type' => 'string'),
 		'AnimationList' => array('field_type'=>'list','field_infos'=>array(
 			'SpriteName',
 			'id',

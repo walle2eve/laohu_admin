@@ -37,7 +37,7 @@ class UserController extends BaseController
 		}
 
 		if(!$param['begin_time'] || strtotime($param['begin_time']) < strtotime("-30 day")){
-			//$param['begin_time'] = strtotime(date('Y-m-d 00:00:00',strtotime("-30 day")));
+			$param['begin_time'] = strtotime(date('Y-m-d 00:00:00',strtotime("-30 day")));
 			$param['end_time'] = time();
 		}else{
 			$param['begin_time'] = strtotime(date('Y-m-d 00:00:00',strtotime($param['begin_time'])));

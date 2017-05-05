@@ -21,6 +21,7 @@ class ClientVersionModel extends Model{
 		'TestPlayGameIp' => array('field_type'=>'string'),
 		'IosDownloadUrl' => array('field_type'=>'string'),
 		'AndroidDownloadUrl' => array('field_type'=>'string'),
+		'fileSize' => array('field_type'=>'string'),
 		'fileList' => array('field_type' => 'list','field_infos' => array(
 			'FileName',
 			'Version',

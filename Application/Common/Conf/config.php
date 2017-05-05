@@ -237,7 +237,6 @@ return array(
         'OSS_BUCKET'            => '365cf',
     ),
 
-
     //qiniu 云存储
     'QINIU_BUCKET'          => 'laohures',
     'QINIU_ACCESS_KEY'      => 'ZHsRfw1Sbtfft124szCAB5Kca1GHT6_U2JJIXZpw',

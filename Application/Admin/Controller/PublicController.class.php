@@ -116,8 +116,12 @@ class PublicController extends BaseController
 
 	// download
 	public function download(){
-
-		$version = D('ClientVersion')->get_last_version();
+		if(I('operator') == 'cf365'){
+			$version = D('ClientVersionCf365')->get_last_version();
+		}else{
+			$version = D('ClientVersion')->get_last_version();
+		}
+		
 		$iosDownloadUrl = $version['conf']['IosDownloadUrl'];
 		$androidDownloadUrl = $version['conf']['AndroidDownloadUrl'];
 		$this->assign('iosDownloadUrl',$iosDownloadUrl);
