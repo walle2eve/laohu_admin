@@ -1,0 +1,373 @@
+		<div class="wizard" id="satellite-wizard" data-title="Create Activity">
+
+			<!-- Step 1 Name & FQDN -->
+			<div class="wizard-card" data-cardname="base">
+				<h3>一般信息</h3>
+
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="">选择平台</label>
+						</div>
+						<div class="col-sm-9">
+							<if condition="substr($login_user['user_role'],0,4) eq '1002' ">
+							<input type="hidden" id="activity-operator-id" name="operator_id" value="{$login_user['uid']}" />
+							<input type="text" id="operator-name" value="{$login_user['user_name']}" class="form-control" readonly="readonly" style="width:250px"/>
+							<else/>
+							<select name="operator_id" id="activity-operator-id" data-placeholder="请选择平台" style="width:200px;" class="chzn-select create-server-service-list form-control" data-validate="validateOperator">
+								<option value="">请选择平台</option>
+								<volist name="user_roles" id="vo">
+								<option value="{$key}" <if condition="$key eq $login_user['uid']">selected</if>>{$vo}</option>
+								</volist>
+							</select>
+							</if>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="">信息发送给</label>
+						</div>
+						<div class="col-sm-9">
+							<select name="user_type" id="activity-user-type" data-placeholder="信息发送给" style="width:250px;" class="chzn-select create-server-service-list form-control"  data-validate="validateUserType">
+								<option value="1">所有用户</option>
+								<option value="2">vip用户</option>
+								<option value="3">个人用户</option>
+								<option value="4">导入用户列表（csv File）</option>
+							</select>
+							<input type="hidden" value="" name="userids" id="activity_userids" />
+							<input type="hidden" value="" name="accounts" id="activity_accounts" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="">有效时间</label>
+						</div>
+						<div class="col-sm-6">
+							<input class="form-control date_range_picker clear-val" type="text" readonly name="activity_date_picker" id="id-date-range-picker-0" value=""  data-placeholder="活动有效时间"  data-validate="validateActTime"/>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="">描述</label>
+						</div>
+						<div class="col-sm-9">
+							<textarea data-placeholder="描述信息" class="form-control clear-val" id="remark" name="remark" rows="5" data-validate="validateRemark"></textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="">启用</label>
+						</div>
+						<div class="col-sm-9">
+							<label class="radio">
+							  <input type="radio" class="clear-val" data-placeholder="稍后启用" name="status" value="0">
+							  稍后启用
+							</label>
+							<label class="radio">
+							  <input type="radio" class="clear-val" data-placeholder="立即启用" name="status" value="1" checked>
+							  立即启用
+							</label>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="wizard-card" data-cardname="user">
+				<h3>用户限制</h3>
+
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="">年龄</label>
+						</div>
+						<div class="col-sm-3">
+							<input type="radio" name="age_status" value="0" checked>
+							  关闭
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="radio" name="age_status" value="1">
+							  启用
+						</div>
+						<div class="col-sm-3">
+							最小限制年龄
+							<div class="input-group spinner" data-trigger="spinner" id="min-age-spinner">
+							  <input type="text" name="min_age" class="form-control text-center clear-val" value="18" data-max="100" data-min="18" data-step="1" readonly>
+							  <div class="input-group-addon">
+								<a href="javascript:;" class="spin-up" data-spin="up"><i class="fa fa-caret-up"></i></a>
+								<a href="javascript:;" class="spin-down" data-spin="down"><i class="fa fa-caret-down"></i></a>
+							  </div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							最大限制年龄
+							<div class="input-group spinner" data-trigger="spinner" id="max-age-spinner">
+							  <input type="text" name="max_age" class="form-control text-center clear-val" value="19" data-max="100" data-min="19" data-step="1" readonly >
+							  <div class="input-group-addon"  data-validate="validateMaxAge">
+								<a href="javascript:;" class="spin-up" data-spin="up"><i class="fa fa-caret-up"></i></a>
+								<a href="javascript:;" class="spin-down" data-spin="down"><i class="fa fa-caret-down"></i></a>
+							  </div>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="">VIP等级</label>
+						</div>
+						<div class="col-sm-3">
+							  <input type="radio" name="vip_status" value="0" checked>
+							  关闭&nbsp;&nbsp;&nbsp;&nbsp;
+							  <input type="radio" name="vip_status" value="1">
+							  启用
+						</div>
+						<div class="col-sm-3">
+							最小vip等级
+							<select name="min_vip_level" class="clear-val">
+								<for start="1" end="6">
+								<option value="{$i}">{$i}</option>
+								</for>
+							</select> 
+						</div>
+						<div class="col-sm-3" class="clear-val">
+							最大vip等级
+							<select name="max_vip_level"  data-validate="validateMaxVip">
+								<for start="1" end="6">
+								<option value="{$i}">{$i}</option>
+								</for>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="">累计转入金币</label>
+						</div>
+						<div class="col-sm-3">
+							  <input type="radio" name="deposit_status" value="0" checked>
+							  关闭
+							   &nbsp;&nbsp;&nbsp;&nbsp;
+							  <input type="radio" name="deposit_status" value="1">
+							  启用
+						</div>
+						<div class="col-sm-3">
+							最小金币<input type="text" name="min_deposit_coins" class="form-control clear-val amount" style="width:100px">
+						</div>
+						<div class="col-sm-3">
+						 	最大金币<input type="text" name="max_deposit_coins" class="form-control clear-val amount" style="width:100px">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							
+						</div>
+						<div class="col-sm-9">
+							时间限制 &nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="radio" name="deposit_time_status" value="0" checked>
+							  关闭 
+							  &nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="radio" name="deposit_time_status" value="1">
+							  启用
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							
+						</div>
+						<div class="col-sm-6">
+							<input class="form-control date_range_picker clear-val" type="text" readonly name="deposit_date_picker" id="id-date-range-picker-1" value=""  data-placeholder="转入时间"/>
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="">累计投注金币</label>
+						</div>
+						<div class="col-sm-3">
+							  <input type="radio" name="bet_status" value="0" checked>
+							  关闭
+							  &nbsp;&nbsp;&nbsp;&nbsp;
+							  <input type="radio" name="bet_status" value="1">
+							  启用
+						</div>
+						<div class="col-sm-3">
+							最小金币<input type="text" name="min_bet_coins" class="form-control clear-val amount" style="width:100px">
+						</div>
+						<div class="col-sm-3">
+							最大金币<input type="text" name="max_bet_coins" class="form-control clear-val amount" style="width:100px">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-3">
+							
+						</div>
+						<div class="col-sm-9">
+							时间限制 &nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="radio" name="bet_time_status" value="0" checked>
+							  关闭 
+							   &nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="radio" name="bet_time_status" value="1">
+							  启用
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							
+						</div>
+						<div class="col-sm-6">
+							<input class="form-control date_range_picker clear-val" type="text" readonly name="bet_date_picker" id="id-date-range-picker-2" value="" data-placeholder="投注时间"/>
+						</div>
+					</div>
+			</div>
+
+			<div class="wizard-card" data-cardname="roles">
+				<h3>赠送规则</h3>
+				<div class="wizard-input-section">
+					<div class="form-group">
+				      <select size="10" name="gameid" id="gameid" class="gamelist clear-val" data-validate="validateGame">
+				      <volist name="gamelist" id="vo">
+				      	<option value="{$vo.id}">{$vo.name}</option>
+				      </volist>
+				      </select>
+				      <input type="hidden" name="gamename" id="gamename">
+				      <input type="hidden" name="activityid" id="activityid" value="0">
+			      	</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+			     		<div class="col-sm-4">
+			     		Lines <select name="game_lines" id="lines" class="clear-val game-change"></select>
+						</div>
+			     		<div class="col-sm-4">
+			     		Rounds <select id="rounds" name="game_rounds" class="clear-val">
+			     			<php>for($i=1;$i<=50;$i++){</php>
+			     			<option value="{$i}">{$i}</option>
+			     			<php>}</php>
+			     		</select>
+						</div>
+					</div>
+					<div class="form-group">
+			     		<div class="col-sm-4">
+			     			Mul <select name="game_mul" id="mul" class="clear-val game-change"></select>
+						</div>
+			     		<div class="col-sm-4">
+			     			Total Bet <input type="text" id="totalbet" name="totalbet" readonly="true" class="clear-val" style="width:50px"  data-validate="validateTotalbet">
+						</div>
+					</div>
+					<div class="form-group">
+			     		<div class="col-sm-4">
+			     		Bet <select name="game_bet" id="bet" class="clear-val game-change"></select>
+			     		<input type="hidden" id="game_totalbet_formula"/>
+			     		<input type="hidden" id="game_lines_bet"/>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="wizard-card" data-cardname="done">
+				<h3>确认信息</h3>
+
+				<div class="wizard-input-section">
+					<div class="form-group">
+			     		<div class="col-sm-3">
+			     		平台：
+						</div>
+						<div class="col-sm-9" id="operator"></div>
+					</div>
+					<div class="form-group">
+			     		<div class="col-sm-3">
+			     		信息发送给：
+						</div>
+						<div class="col-sm-9" id="usertype"></div>
+					</div>
+					<div class="form-group">
+			     		<div class="col-sm-3">
+			     		有效时间：
+						</div>
+						<div class="col-sm-9" id="activitytime"></div>
+					</div>
+					<div class="form-group">
+			     		<div class="col-sm-3">
+			     		描述：
+						</div>
+						<div class="col-sm-9" id="remarktext"></div>
+					</div>
+					<div class="form-group">
+			     		<div class="col-sm-3">
+			     		启用：
+						</div>
+						<div class="col-sm-9" id="statustext"></div>
+					</div>
+					<div class="form-group">
+			     		<div class="col-sm-3">
+			     		年龄：
+						</div>
+						<div class="col-sm-9" id="age"></div>
+					</div>
+					<div class="form-group">
+			     		<div class="col-sm-3">
+			     		vip等级：
+						</div>
+						<div class="col-sm-9" id="viplevel"></div>
+					</div>
+					<div class="form-group">
+			     		<div class="col-sm-3">
+			     		累计转入金币：
+						</div>
+						<div class="col-sm-9" id="depositmoney"></div>
+					</div>
+					<div class="form-group">
+			     		<div class="col-sm-3">
+			     		累计投注金币：
+						</div>
+						<div class="col-sm-9" id="betmoney"></div>
+					</div>
+					<div class="form-group">
+			     		<div class="col-sm-3">
+			     		已选择游戏：
+						</div>
+						<div class="col-sm-9" id="gamelist"></div>
+					</div>
+					<div class="form-group">
+			     		<div class="col-sm-3">
+			     		Lines
+						</div>
+						<div class="col-sm-3" id="show-lines"></div>
+						<div class="col-sm-3">
+			     		Rounds
+						</div>
+						<div class="col-sm-3" id="show-rounds"></div>
+					</div>
+					<div class="form-group">
+			     		<div class="col-sm-3">
+			     		Mul
+						</div>
+						<div class="col-sm-3" id="show-mul"></div>
+			     		<div class="col-sm-3">
+			     		Total Bet
+						</div>
+						<div class="col-sm-3" id="show-totalbet"></div>
+					</div>
+					<div class="form-group">
+			     		<div class="col-sm-3">
+			     		Bet
+						</div>
+						<div class="col-sm-9" id="show-bet"></div>
+					</div>
+				</div>
+
+				<div class="wizard-success">
+					<div class="alert alert-success">
+						<span class="create-server-name"></span>Activity Created <strong>Successfully.</strong>
+					</div>
+	
+					<!--<a class="btn btn-default create-another-server">Create another activity</a>
+					<span style="padding:0 10px">or</span>-->
+					<a class="btn btn-success im-done">Done</a>
+				</div>
+			</div>
+		</div>
+
+
+
