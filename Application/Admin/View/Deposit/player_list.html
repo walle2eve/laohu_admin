@@ -56,30 +56,30 @@
                                     <thead>
                                         <tr>
                                             <th>流水号</th>
-																						<th>运营商订单号</th>
+											<th>运营商订单号</th>
                                             <th>日期（DATE）</th>
                                             <th>转入运营商</th>
-																						<th>玩家用户名</th>
-                                            <th>转入金额</th>
-																						<th>转入获得游戏币数量</th>
-																						<th>转入进度</th>
-																						<th>游戏币余额</th>
-											                  </tr>
-											              </thead>
-											          		<tbody>
-																				<volist name="list" id="vo">
-											                      <tr>
-											                      <td>{$vo.sn}</td>
-																						<td>{$vo.operator_sn}</td>
-											                      <td>{$vo.create_time}</td>
-																						<td>{$vo.user_name}</td>
-																						<td>{$vo.account_id}</td>
-											                      <td>{$vo.amount}</td>
-											                      <td>{$vo.gold}</td>
-																						<td><if condition="$vo['status'] eq 1"><font color="#5cb85c">完成</span><else><if condition="$vo['status'] eq 0"><font color="#f0ad4e">进行中</span><else><font color="#d9534f">失败</span></if></if></td>
-																						<td>{$vo.balance_gold}</td>
-											                      </tr>
-																				</volist>
+											<th>玩家用户名</th>
+                                            <th>转入游戏币</th>
+											<th>转入获得游戏币数量</th>
+											<th>转入进度</th>
+											<th>游戏币余额</th>
+										</tr>
+									</thead>
+									<tbody>
+									<volist name="list" id="vo">
+										<tr>
+											<td>{$vo.sn}</td>
+											<td>{$vo.operator_sn}</td>
+											<td>{$vo.create_time}</td>
+											<td>{$vo.user_name}</td>
+											<td>{$vo.account_id}</td>
+											<td>{$vo.amount}</td>
+											<td>{$vo.gold}</td>
+											<td><if condition="$vo['status'] eq 1"><font color="#5cb85c">完成</span><else><if condition="$vo['status'] eq 0"><font color="#f0ad4e">进行中</span><else><font color="#d9534f">失败</span></if></if></td>
+											<td>{$vo.balance_gold}</td>
+										</tr>
+									</volist>
                                     </tbody>
                                 </table>
                             </div>

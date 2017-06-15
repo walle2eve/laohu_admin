@@ -31,7 +31,12 @@ class ThemeInfoModel extends Model{
 		'iconName' => array('field_type'=>'string'),
 		'Logo' => array('field_type'=>'string'),
 		'backGround' => array('field_type'=>'string'),
+		'lineNumChange' => array('field_type'=>'string'),
 		'lineNum' => array('field_type'=>'string'),
+		'linesBet' => array('field_type' => 'string'),
+		'mul' => array('field_type'=>'string'),
+		'bet' => array('field_type'=>'string'),
+		'totalBet' => array('field_type' => 'string'),
 		'num' => array('field_type'=>'string'),
 		'model' => array('field_type'=>'string'),
 		'MiniLogo' => array('field_type'=>'string'),
@@ -50,7 +55,7 @@ class ThemeInfoModel extends Model{
 		'versionCode' => array('field_type' => 'string'),
 		'sceneName' => array('field_type' => 'string'),
 		'IsUseCommonHeaderImg' => array('field_type' => 'string'),
-		'fileSize' => array('field_type' => 'string'),
+		'RTP' => array('field_type' => 'string'),
 		'AnimationList' => array('field_type'=>'list','field_infos'=>array(
 			'SpriteName',
 			'id',
@@ -91,5 +96,18 @@ class ThemeInfoModel extends Model{
 					->limit($page->firstRow.','.$page->listRows)
 					->select();
 		return array('list'=>$list,'page'=>$page->show());
+	}
+
+	public function get_options(){
+
+		$where = " status = 1 AND id > 0 ";
+		$list = $this->where($where)
+					->order('sort ASC')
+					->select();
+		return $list;
+	}
+
+	public function get_info($themeid){
+		return $this->find($themeid);
 	}
 }

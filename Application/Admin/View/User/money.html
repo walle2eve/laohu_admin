@@ -20,7 +20,7 @@
 										<option value="diposit" <eq name="param['order_by']" value="diposit">selected="selected"</eq>>转入最多</option>
 										<option value="bet" <eq name="param['order_by']" value="bet">selected="selected"</eq>>消耗最多</option>
 										<option value="win" <eq name="param['order_by']" value="win">selected="selected"</eq>>赢取最多</option>
-										<option value="withdraw" <eq name="param['order_by']" value="withdraw">selected="selected"</eq>>提取最多</option>
+										<option value="withdraw" <eq name="param['order_by']" value="withdraw">selected="selected"</eq>>转出最多</option>
 										<option value="gold" <eq name="param['order_by']" value="gold">selected="selected"</eq>>剩余最多</option>
 									</select>
 								</div>
@@ -54,12 +54,12 @@
                                         <tr>
                                             <if condition="$login_user['user_role'] eq 100110 "><th>平台</th></if>
                                             <th>用户名</th>
-																						<th>VIP等级</th>
+											<th>VIP等级</th>
                                             <th>转入</th>
                                             <th>消耗</th>
-																						<th>赢取</th>
-																						<th>提取</th>
-																						<th>剩余</th>
+											<th>赢取</th>
+											<th>转出</th>
+											<th>剩余</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -67,12 +67,12 @@
                                         <tr>
                                             <if condition="$login_user['user_role'] eq 100110 "><td>{$vo.user_name}</td></if>
                                             <td>{$vo.account_id}</td>
-																						<td>{$vo.vip_level}&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-id="{$vo.user_id}" class="set_vip_level">修改</a></td>
+											<td>{$vo.vip_level}&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-id="{$vo.user_id}" class="set_vip_level">修改</a></td>
                                             <td>{$vo.deposit|default='0.00'}</td>
                                             <td>{$vo.bet|default='0.00'}</td>
-																						<td>{$vo.win|default='0.00'}</td>
-																						<td>{$vo.withdraw|default='0.00'}</td>
-																						<td>{$vo.gold|default='0.00'}</td>
+											<td>{$vo.win|default='0.00'}</td>
+											<td>{$vo.withdraw|default='0.00'}</td>
+											<td>{$vo.gold|default='0.00'}</td>
                                         </tr>
 									</volist>
                                     </tbody>

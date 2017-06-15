@@ -22,6 +22,7 @@ class ClientVersionModel extends Model{
 		'IosDownloadUrl' => array('field_type'=>'string'),
 		'AndroidDownloadUrl' => array('field_type'=>'string'),
 		'fileSize' => array('field_type'=>'string'),
+		'updateInfo' => array('field_type'=>'textarea'),
 		'fileList' => array('field_type' => 'list','field_infos' => array(
 			'FileName',
 			'Version',

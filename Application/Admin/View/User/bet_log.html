@@ -25,13 +25,13 @@
 											<i class="glyphicon glyphicon-calendar fa fa-calendar">
 											</i>
 										</span>
-										<input class="form-control" type="text" readonly name="date_range_picker" id="id-date-range-picker-1" value="{$param.begin_time|date='Y-m-d',###} - {$param.end_time|date='Y-m-d',###}"/>
+										<input class="form-control date" type="text" readonly name="date_range_picker" id="id-date-range-picker-1" value="{$param.begin_time|date='Y-m-d',###} - {$param.end_time|date='Y-m-d',###}"/>
 									</div>
 								</div>
 								<div class="col-md-2">
 									<select name="order_by"  class="form-control">
 										<option value="createTime" <eq name="param['order_by']" value="createTime">selected="selected"</eq>>游戏时间</option>
-										<option value="win" <eq name="param['order_by']" value="win">selected="selected"</eq>>中奖金额最多</option>
+										<option value="win" <eq name="param['order_by']" value="win">selected="selected"</eq>>中奖游戏币最多</option>
 										<option value="total_bet" <eq name="param['order_by']" value="total_bet">selected="selected"</eq>>投入最高</option>
 										<option value="bet" <eq name="param['order_by']" value="bet">selected="selected"</eq>>倍率最高</option>
 
@@ -74,7 +74,7 @@
 											<th>倍率</th>
 											<th>投入</th>
 											<th>中奖线数</th>
-											<th>中奖金额</th>
+											<th>中奖游戏币</th>
 											<th>FREE</th>
                                         </tr>
                                     </thead>
@@ -162,8 +162,8 @@
 
 				//$('.dropdown-toggle').dropdown('toggle');
 
-				$('input[name=date_range_picker]').daterangepicker({
-					format: 'YYYY-MM-DD',
+				$('.date').daterangepicker({
+					//format: 'YYYY-MM-DD',
 					startDate: '{$param.begin_time|date='Y-m-d',###}',
 					endDate: '{$param.end_time|date='Y-m-d',###}',
 					minDate: '{$param.min_date}',

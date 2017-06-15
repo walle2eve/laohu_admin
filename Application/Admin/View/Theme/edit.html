@@ -150,6 +150,7 @@
 				query.field = $(this).attr('field');
 				query.val = $(this).attr('status');
 				query.key = tr.attr('key');
+				query.version_type = '{$version_type}';
 				obj.removeClass('fa-check fa-lock text-success').addClass('fa-spinner fa-spin');
 
 				$.post('{:U('Admin/Theme/set_status',array('version_type'=>$version_type))}', query, function(result){
@@ -161,7 +162,7 @@
 							obj.removeClass('fa-spinner fa-spin').addClass('fa-check text-success').attr('status',1);
 						}
 							setTimeout(function(){
-								location.reload(true);
+							//	location.reload(true);
 							},1);
 					}else{
 						if(query.val == -1){

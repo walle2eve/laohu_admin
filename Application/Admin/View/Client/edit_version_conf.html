@@ -25,10 +25,20 @@
 						<input type="hidden" name="version_id" value="{$result.id}">
 						<div class="tree well">
 						    <ul><volist name="client_conf_field" id="val">
-						    <if condition="$val.field_type eq 'string'">
+						    <if condition="$val.field_type eq 'string' Or $val.field_type eq 'textarea'">
 						        <li><div class="col-sm-12">
 						            	<label class="col-sm-4 control-label"><span><i class="icon-folder-open"></i> {$key} </span></label>
-						            	<div class="col-sm-6"><input type="text" name="{$key}" value="<if condition="$key eq 'ClientVersion'">{$result.version_no}<else/>{$result['conf'].$key}</if>" class="form-control"/></div>
+						            	<div class="col-sm-6">
+						            	<if condition="$val.field_type eq 'string'">
+
+						            	<input type="text" name="{$key}" value="<if condition="$key eq 'ClientVersion'">{$result.version_no}<else/>{$result['conf'].$key}</if>" class="form-control"/>
+
+						            	<elseif condition="$val.field_type eq 'textarea'" />
+
+						            	<textarea name="{$key}" rows="5" class="form-control"><if condition="$key eq 'ClientVersion'">{$result.version_no}<else/>{$result['conf'].$key}</if></textarea>
+						            	<else />
+						            	</if>
+						            	</div>
 						            </div>
 						        </li>
 						    <else/>

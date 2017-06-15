@@ -71,6 +71,7 @@ class ThemeController extends BaseController
 		$id = intval($id);
 
 		$theme = $this->themeModel->find($id);
+
 		if(empty($theme)){
 			$result['status'] = false;
 			$result['msg'] = '参数错误，无法修改状态，请刷新后重试';
@@ -83,7 +84,7 @@ class ThemeController extends BaseController
 
 		if($return === false){
 			$result['status'] = false;
-			$result['msg'] = '操作成功！';
+			$result['msg'] = '操作失败！';
 			$this->ajaxReturn($result);
 			exit();
 		}

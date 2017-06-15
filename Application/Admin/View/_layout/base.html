@@ -10,9 +10,12 @@
     <title>{:C('WEB_SITE')}</title>
     <!-- Bootstrap Core CSS -->
     <link href="__PUBLIC__/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
     <if condition="ACTION_NAME eq 'edit' AND CONTROLLER_NAME eq 'Theme'">
     <link href="__PUBLIC__/plugins/bootstrap-treeview-master/dist/bootstrap-treeview.min.css" rel="stylesheet">
     </if>
+
 
     <!-- MetisMenu CSS -->
     <link href="__PUBLIC__/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
@@ -33,21 +36,64 @@
 	
 	<link rel="stylesheet" href="__PUBLIC__/plugins/daterangepicker/daterangepicker-bs3.css" />
 
-    <style>
+    <if condition="ACTION_NAME eq 'index' AND CONTROLLER_NAME eq 'Activity'">
 
+    <link href="__PUBLIC__/plugins/bootstrap-wizard/src/bootstrap-wizard.css" rel="stylesheet" />
+    <link href="__PUBLIC__/dist/chosen/chosen.css" rel="stylesheet" />
+
+    <link href="__PUBLIC__/plugins/bootstrap-fileinput-master/css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
+    <link href="__PUBLIC__/plugins/bootstrap-fileinput-master/themes/explorer/theme.css" media="all" rel="stylesheet" type="text/css"/>
+
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/dist/css/prettify.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/dist/css/bootstrap-duallistbox.css">
+
+    <style type="text/css">
+            .wizard-modal p {
+                margin: 0 0 10px;
+                padding: 0;
+            }
+            #wizard-ns-detail-servers, .wizard-additional-servers {
+                font-size: 12px;
+                margin-top: 10px;
+                margin-left: 15px;
+            }
+            #wizard-ns-detail-servers > li, .wizard-additional-servers li {
+                line-height: 20px;
+                list-style-type: none;
+            }
+            #wizard-ns-detail-servers > li > img {
+                padding-right: 5px;
+            }
+
+            .wizard-modal .chzn-container .chzn-results {
+                max-height: 150px;
+            }
+            .wizard-addl-subsection {
+                margin-bottom: 40px;
+            }
+            .create-server-agent-key {
+                margin-left: 15px; 
+                width: 90%;
+            }
     </style>
+
+    </if>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <script src="__PUBLIC__/dist/js/html5shiv-3.7.0.js"></script>
+        <script src="__PUBLIC__/dist/js/respond-1.3.0.min.js"></script>
     <![endif]-->
 	
     <!-- jQuery -->
-    <script src="__PUBLIC__/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <script src="__PUBLIC__/dist/js/jquery-2.0.3.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
+
     <script src="__PUBLIC__/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
 
     <!-- Metis Menu Plugin JavaScript -->
     <script src="__PUBLIC__/bower_components/metisMenu/dist/metisMenu.min.js"></script>
@@ -63,6 +109,9 @@
 	
     <!-- Custom Theme JavaScript -->
     <script src="__PUBLIC__/dist/js/sb-admin-2.js"></script>
+
+    
+
 	
 </head>
 

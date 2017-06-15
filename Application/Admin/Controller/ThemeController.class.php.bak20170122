@@ -116,13 +116,16 @@ class ThemeController extends BaseController
 		if(IS_AJAX && IS_POST){
 			$args = I('post.');
 			D('ThemeInfo')->startTrans();
+			
 			if(!D('ThemeInfo')->create()){
 				$result['status'] = false;
 				$result['msg'] = D('ThemeInfo')->getError();
 				$this->ajaxReturn($result);
 				exit();
 			}
+
 			$args['status'] = 1;
+
 			$args['input_time'] = date('Y-m-d H:i:s');
 			$id = D('ThemeInfo')->add($args);
 			if(!$id){

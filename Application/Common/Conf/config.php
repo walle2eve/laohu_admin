@@ -61,11 +61,11 @@ return array(
 
     /* 数据库设置 */
     'DB_TYPE'                => 'mysql', // 数据库类型
-    'DB_HOST'                => '172.31.26.235,172.31.31.51', // 服务器地址
+    'DB_HOST'                => 'localhost', // 服务器地址
 	'DB_PORT'                => '3306', // 端口
     'DB_NAME'                => 'laohu', // 数据库名
-    'DB_USER'                => 'quxiang', // 用户名
-    'DB_PWD'                 => '55CD3F6DF491F945', // 密码
+    'DB_USER'                => 'root', // 用户名
+    'DB_PWD'                 => '312250544', // 密码
     'DB_PREFIX'              => 't_', // 数据库表前缀
     'DB_PARAMS'              => array(), // 数据库连接参数
     'DB_DEBUG'               => false, // 数据库调试模式 开启后可以记录SQL日志
@@ -79,10 +79,10 @@ return array(
 	// log库连接信息
 	'DB_LAOHU_LOG_CONFIG' => array(
 		'db_type'  => 'mysql',
-		'db_host'  => '172.31.26.235,172.31.31.51',
+		'db_host'  => 'root',
 		'db_port'  => '3306',
-		'db_user'  => 'quxiang',
-		'db_pwd'   => '55CD3F6DF491F945',
+		'db_user'  => 'root',
+		'db_pwd'   => '312250544',
 		'db_name'  => 'laohu_log',
 		'db_charset'=>    'utf8',
 		'DB_DEPLOY_TYPE'         => 1, 
@@ -94,7 +94,7 @@ return array(
     //  MONGO-DB
     'DB_TYPE_MONGO_CONFIG'  => array(
         'DB_TYPE'   => 'mongo',
-        'DB_HOST'   =>  '172.31.31.51',
+        'DB_HOST'   =>  'localhost',
         'DB_PORT'   =>  '27017',
         'DB_NAME'   =>  'laohu_log',
         'DB_USER'   =>  '',//'laohu_log',
@@ -204,6 +204,9 @@ return array(
 	'LANG_LIST'        		 => 'zh-cn', // 允许切换的语言列表 用逗号分隔
 	'VAR_LANGUAGE'     		 => 'l', // 默认语言切换变量
 	
+    // upload file path
+    'UPLOAD_ROOT_PATH'       => './Uploads/', 
+
     //DES key
     'DES_KEY'                => 'quxiang',
 

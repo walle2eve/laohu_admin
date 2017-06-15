@@ -33,19 +33,13 @@
 ?>
 <html><br /><br /><br />
 <form method="post">
-1:<input type="text" name="num[1]"><br /><br />
-2:<input type="text" name="num[2]"><br /><br />
-3:<input type="text" name="num[3]"><br /><br />
-4:<input type="text" name="num[4]"><br /><br />
-5:<input type="text" name="num[5]"><br /><br />
-6:<input type="text" name="num[6]"><br /><br />
-7:<input type="text" name="num[7]"><br /><br />
-8:<input type="text" name="num[8]"><br /><br />
-9:<input type="text" name="num[9]"><br /><br />
-10:<input type="text" name="num[10]"><br /><br />
-11:<input type="text" name="num[11]"><br /><br />
-12:<input type="text" name="num[12]"><br /><br />
-13:<input type="text" name="num[13]"><br /><br />
+<?php
+for($i=0;$i<=12;$i++){
+	?>
+	<?php echo $i;?>:<input type="text" name="num[<?php echo $i;?>]"><br /><br />
+	<?php
+}
+?>
 <input type="submit"><br />
 </form>
 </html>	

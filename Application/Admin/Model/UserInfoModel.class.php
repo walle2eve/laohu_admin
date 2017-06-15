@@ -53,4 +53,8 @@ class UserInfoModel extends Model{
 	public function get_user_id($account_id){
 		return $this->where('account_id = "%s"',array($account_id))->getField('user_id');
 	}
+
+	public function get_user_id_by_operator($account_id,$operator_id){
+		return $this->where('operator_id = %d AND account_id = "%s" AND status = 1',array($operator_id,$account_id))->getField('user_id');
+	}
 }

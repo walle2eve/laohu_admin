@@ -21,7 +21,7 @@
 															<i class="glyphicon glyphicon-calendar fa fa-calendar">
 															</i>
 														</span>
-														<input class="form-control" type="text" readonly name="date_range_picker" id="id-date-range-picker-1" value="{$param.begin_time} - {$param.end_time}"/>
+														<input class="form-control date_range_picker" type="text" readonly name="date_range_picker" id="id-date-range-picker-1" value="{$param.begin_time} - {$param.end_time}"/>
 													</div>
 												</div>
 												<div class="col-md-2">
@@ -55,14 +55,14 @@
                                     <thead>
                                         <tr>
                                             <th>流水号</th>
-																						<th>运营商订单号</th>
+											<th>运营商订单号</th>
                                             <th>日期（DATE）</th>
                                             <th>提现平台</th>
                                             <th>用户名</th>
-																						<th>转出游戏币数量</th>
-																						<th>转出进度</th>
-																						<th>转出反充游戏币</th>
-																						<th>游戏币余额</th>
+											<th>转出游戏币数量</th>
+											<th>转出进度</th>
+											<th>反补游戏币</th>
+											<th>游戏币余额</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -106,12 +106,55 @@
 
 			<script>
 			$(document).ready(function() {
-						$('input[name=date_range_picker]').daterangepicker({
-							format: 'YYYY-MM-DD',
-							startDate: '{$param.begin_time}',
-							endDate: '{$param.end_time}',
-						}).prev().on('click', function(){
-							$(this).next().focus();
-						});
+					$('.date_range_picker').daterangepicker({
+						//timePicker: true,
+						//timePickerIncrement: 5,
+						format: 'YYYY-MM-DD',
+						startDate: '{$param.begin_time}',
+						endDate: '{$param.end_time}',
+						//minDate: new Date(),
+						//timePicker24Hour: true,
+						
+						locale: {
+					        "format": "YYYY-MM-DD",
+					        "separator": " - ",
+					        "applyLabel": "Apply",
+					        "cancelLabel": "Cancel",
+					        "fromLabel": "From",
+					        "toLabel": "To",
+					        "customRangeLabel": "Custom",
+					        "weekLabel": "W",
+					        "daysOfWeek": [
+					            "Su",
+					            "Mo",
+					            "Tu",
+					            "We",
+					            "Th",
+					            "Fr",
+					            "Sa"
+					        ],
+					        "monthNames": [
+					            "January",
+					            "February",
+					            "March",
+					            "April",
+					            "May",
+					            "June",
+					            "July",
+					            "August",
+					            "September",
+					            "October",
+					            "November",
+					            "December"
+					        ],
+					        "firstDay": 1
+					    },
+						//maxDate: '{$param.max_date}',
+					}, function(start, end, label) {
+						console.log(this);
+					  	console.log('New date range selected: ' + Date.parse(start.format('YYYY-MM-DD HH:mm:ss'))/1000 + ' to ' + Date.parse(end.format('YYYY-MM-DD HH:mm:ss')) /1000 + ' (predefined range: ' + label + ')');
+					}).prev().on('click', function(){
+						$(this).next().focus();
+					});
 			});
 			</script>
