@@ -153,7 +153,7 @@
 							最小金币<input type="text" name="min_deposit_coins" class="form-control clear-val amount" style="width:100px">
 						</div>
 						<div class="col-sm-3">
-						 	最大金币<input type="text" name="max_deposit_coins" class="form-control clear-val amount" style="width:100px">
+						 	最大金币<input type="text" name="max_deposit_coins" class="form-control clear-val amount" style="width:100px"  data-validate="validateMaxDeposit">
 						</div>
 					</div>
 					<div class="form-group">
@@ -174,7 +174,7 @@
 							
 						</div>
 						<div class="col-sm-6">
-							<input class="form-control date_range_picker clear-val" type="text" readonly name="deposit_date_picker" id="id-date-range-picker-1" value=""  data-placeholder="转入时间"/>
+							<input class="form-control date_range_picker clear-val" type="text" readonly name="deposit_date_picker" id="id-date-range-picker-1" value=""  data-placeholder="转入时间" data-validate="validateDepositTime"/>
 						</div>
 					</div>
 
@@ -194,7 +194,7 @@
 							最小金币<input type="text" name="min_bet_coins" class="form-control clear-val amount" style="width:100px">
 						</div>
 						<div class="col-sm-3">
-							最大金币<input type="text" name="max_bet_coins" class="form-control clear-val amount" style="width:100px">
+							最大金币<input type="text" name="max_bet_coins" class="form-control clear-val amount" style="width:100px"   data-validate="validateMaxBet">
 						</div>
 					</div>
 
@@ -216,7 +216,7 @@
 							
 						</div>
 						<div class="col-sm-6">
-							<input class="form-control date_range_picker clear-val" type="text" readonly name="bet_date_picker" id="id-date-range-picker-2" value="" data-placeholder="投注时间"/>
+							<input class="form-control date_range_picker clear-val" type="text" readonly name="bet_date_picker" id="id-date-range-picker-2" value="" data-placeholder="投注时间" data-validate="validateBetTime"/>
 						</div>
 					</div>
 			</div>
@@ -240,7 +240,7 @@
 			     		Lines <select name="game_lines" id="lines" class="clear-val game-change"></select>
 						</div>
 			     		<div class="col-sm-4">
-			     		Rounds <select id="rounds" name="game_rounds" class="clear-val">
+			     		Rounds <select id="rounds" name="game_rounds" class="clear-val" data-validate="validateRounds">
 			     			<php>for($i=1;$i<=50;$i++){</php>
 			     			<option value="{$i}">{$i}</option>
 			     			<php>}</php>

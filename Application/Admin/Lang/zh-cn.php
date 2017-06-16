@@ -36,4 +36,13 @@ return array(
 	'LOG_CONTENT_120190'	=> '获取玩家订单状态',
 	'LOG_CONTENT_120200'	=> '设置玩家vip等级为vip{$vip_level}',
 
+	/**/
+
+	'activity_status' => array(
+		'0'	=> '未开始',
+		'1' => '进行中',
+		'2' => '已结束',
+		'3' => '已关闭',
+		),
+
 );

@@ -46,13 +46,17 @@
                                     <thead>
                                         <tr>
                                             <th width="8%">平台</th>
-                                            <th width="20%">有效时间</th>
+                                            <th width="15%">有效时间</th>
                                             <th width="35%">描述</th>
-											<th width="8%">状态(是否开始)</th>
-											<th width="20%">操作</th>
+											<th width="8%">是否启用</th>
+											<th width="8%">活动状态</th>
+											<th width="17%">操作</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    <php>
+                                    $time = time();
+                                    </php>
 									<volist name="list" id="vo">
                                         <tr role="row" key="{$vo.id}" primary="id">
                                             <td>{$vo.operator_name}</td>
@@ -61,9 +65,23 @@
                                             <p>{$vo.end_time|date="Y-m-d H:i:s",###}</p>
                                             </td>
                                             <td>{$vo.remark}</td>
-                                            <td><if condition="$vo['status'] eq 1"><i class="fa fa-set-status fa-check text-success" status="{$vo.status}" field="status"></i><else/><i class="fa fa-set-status fa-lock" status="{$vo.status}" field="status"></if></td>
                                             <td>
-                                            <neq name="vo['status']" value="1">
+                                            <php>
+                                            if($vo['show_status'] == 0)
+                                            $set_status = 'fa-set-status';
+                                            else
+                                            $set_status = '';
+                                            </php>
+                                            <if condition="$vo['status'] eq 1">
+                                            <i class="fa {$set_status} fa-check text-success" status="{$vo.status}" field="status"></i>
+                                            <else/>
+                                            <i class="fa {$set_status} fa-lock" status="{$vo.status}" field="status">
+                                            </if></td>
+                                            <td>{$vo.show_status_content}</td>
+                                            <td>
+
+                                            <if condition="$time lt $vo['end_time']">
+                                            	<if condition="$vo['status'] eq 0">	
 												<a class="btn btn-app btn-primary no-radius edit_activity" href="{:U('Admin/Activity/index')}?id={$vo.id}" data-id="{$vo.id}">
 													<i class="fa fa-edit fa-fw"></i>
 													编辑
@@ -72,7 +90,8 @@
 													<i class="fa fa-trash fa-fw"></i>
 													删除
 												</a>
-											</neq>
+												</if>
+											</if>
 											</td>
                                         </tr>
 									</volist>
@@ -381,6 +400,7 @@
 								}, 2000);
 							}else{
 								$.showError(res.msg);
+								//errorPopover(element, res.msg, allowHtml)
 								wizard._submitting = false;
 								wizard.submitFailure();
 							}
@@ -439,7 +459,7 @@
 
 							$('#remark').val(activityInfo.remark);
 
-							$("input:radio[name='status']").eq(activityInfo.activity_switch).attr("checked",true);
+							$("input:radio[name='status']").eq(activityInfo.status).attr("checked",true);
 							// step 2
 							$("input:radio[name='age_status']").eq(activityInfo.age_status).attr("checked",true);
 
@@ -719,21 +739,35 @@
 				function validateTotalbet(el){
 					var name = el.val();
 					var retValue = {};
-					//console.log($('#gameid').val());
-					//console.log($('#gamename').val());
+
 					if($('#gamename').val() != "" &&  (name == "" || name == undefined || name == null)){
 						retValue.status = false;
 						retValue.msg = "totalbet 计算错误，请查看相应游戏主题配置信息";
 					}
 					return retValue;
 				}
-				
+
+				function validateRounds(el){
+					var name = el.val();
+					var retValue = {};
+
+					if(name == "" || name == null){
+						retValue.status = false;
+						retValue.msg = "请选择rounds";
+					} else {
+						retValue.status = true;
+					}
+					return retValue;
+				}
+
 				function validateMaxAge(el){
 					var retValue = {};
-					var age_status = $("input:radio[name=age_status]:checked").val();
+					var age_status = $("input:radio[name='age_status']:checked").val();
+					console.log('age_status = ' + age_status);
 					if(age_status == 1){
 						var min_age = $("input[name=min_age]").val();
 						var max_age = $("input[name=max_age]").val();
+						console.log('age = ' + min_age + ' ' + max_age );
 						if(!min_age || !max_age){
 							retValue.status = false;
 							retValue.msg = "请选择年龄区间！";
@@ -747,17 +781,79 @@
 
 				function validateMaxVip(el){
 					var retValue = {};
-					var vip_status = $("input:radio[name=vip_status]:checked").val();
+					var vip_status = $("input:radio[name='vip_status']:checked").val();
+					console.log('vip_status = ' + vip_status);
 					if(vip_status == 1){
 						var min_vip_level = $("select[name=min_vip_level]").val();
 						var max_vip_level = $("select[name=max_vip_level]").val();
+						console.log('vip_level = ' + min_vip_level + ' ' + max_vip_level );
 						if(!min_vip_level || !max_vip_level){
 							retValue.status = false;
 							retValue.msg = "请选择vip区间！";
 						}else if(min_vip_level > max_vip_level){
 							retValue.status = false;
-							retValue.msg = "年龄区间错误！";
+							retValue.msg = "vip区间错误！";
 						}
+					}
+					return retValue;
+				}
+
+				function validateMaxDeposit(el){
+					var retValue = {};
+					var deposit_status = $("input:radio[name=deposit_status]:checked").val();
+					if(deposit_status == 1){
+						var min_deposit_coins = $("input[name=min_deposit_coins]").val();
+						var max_deposit_coins = $("input[name=max_deposit_coins]").val();
+						if(!min_deposit_coins || !max_deposit_coins){
+							retValue.status = false;
+							retValue.msg = "请填写转入金币区间！";
+						}else if(min_deposit_coins > max_deposit_coins){
+							retValue.status = false;
+							retValue.msg = "转入金币区间错误！";
+						}
+					}
+					return retValue;
+				}
+
+				function validateMaxBet(el){
+					var retValue = {};
+					var bet_status = $("input:radio[name=bet_status]:checked").val();
+					if(bet_status == 1){
+						var min_bet_coins = $("input[name=min_bet_coins]").val();
+						var max_bet_coins = $("input[name=max_bet_coins]").val();
+						if(!min_bet_coins || !max_bet_coins){
+							retValue.status = false;
+							retValue.msg = "请填写投注金币区间！";
+						}else if(min_bet_coins > max_bet_coins){
+							retValue.status = false;
+							retValue.msg = "投注金币区间错误！";
+						}
+					}
+					return retValue;
+				}
+
+				function validateDepositTime(el){
+					var retValue = {};
+					var name = el.val();
+
+					var deposit_status = $("input:radio[name=deposit_status]:checked").val();
+					var deposit_time_status = $("input:radio[name=deposit_time_status]:checked").val();
+					if(deposit_status == 1 && deposit_time_status == 1 && (name == "" || name == undefined || name == null)){
+						retValue.status = false;
+						retValue.msg = "请选择转入时间！";
+					}
+					return retValue;
+				}
+
+				function validateBetTime(el){
+					var retValue = {};
+					var name = el.val();
+
+					var bet_status = $("input:radio[name=bet_status]:checked").val();
+					var bet_time_status = $("input:radio[name=bet_time_status]:checked").val();
+					if(bet_status == 1 && bet_time_status == 1 && (name == "" || name == undefined || name == null)){
+						retValue.status = false;
+						retValue.msg = "请选择投注时间！";
 					}
 					return retValue;
 				}

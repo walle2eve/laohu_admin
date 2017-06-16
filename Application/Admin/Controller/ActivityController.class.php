@@ -163,6 +163,7 @@ class ActivityController extends BaseController
     }
 
     public function save(){
+
     	$result = array(
 			'status' => true,
 			'msg' => '创建活动成功',
@@ -187,6 +188,7 @@ class ActivityController extends BaseController
     	}
     	// ---------------------------------------------
     	$id = $postdata['activityid'];
+
 
     	$actiData['operator_id'] = $postdata['operator_id'];
 
@@ -221,11 +223,11 @@ class ActivityController extends BaseController
     	}
 
     	$actiData['remark']	= $postdata['remark'];
-    	
-    	// 默认活动状态未开始
-    	$actiData['status'] = 0;
 
-    	$actiData['activity_switch'] = intval($postdata['status']);
+    	// 默认活动状态未开始
+    	//$actiData['status'] = 0;
+    	$actiData['status'] = intval($postdata['status']);
+    	//$actiData['activity_switch'] = intval($postdata['status']);
 
     	// age status
     	$actiData['age_status'] = intval($postdata['age_status']);
@@ -266,7 +268,7 @@ class ActivityController extends BaseController
 
     		if($actiData['min_deposit_coins'] > $actiData['max_deposit_coins']){
 	    		$result['status'] 	= false;
-	    		$result['msg']		= '转入金额区间错误';
+	    		$result['msg']		= '转入金币区间错误';
 	    		$this->ajaxReturn($result);
 				exit();
     		}
@@ -276,7 +278,7 @@ class ActivityController extends BaseController
 	    	if($postdata['deposit_date_picker']  && $actiData['deposit_time_status'] == 1){
 		    	if(!isset($postdata['deposit_date_picker']) || $postdata['deposit_date_picker'] == false){
 		    		$result['status'] 	= false;
-		    		$result['msg']		= '请选择累计转入金额起止时间';
+		    		$result['msg']		= '请选择累计转入起止时间';
 		    		$this->ajaxReturn($result);
 					exit();
 		    	}
@@ -288,14 +290,14 @@ class ActivityController extends BaseController
 
 		    	if(!$actiData['min_deposit_time'] || !$actiData['max_deposit_time']){
 		    		$result['status'] 	= false;
-		    		$result['msg']		= '累计转入金额起止时间格式有误';
+		    		$result['msg']		= '累计转入起止时间格式有误';
 		    		$this->ajaxReturn($result);
 					exit();
 		    	}
 
 		    	if($actiData['min_deposit_time'] >= $actiData['max_deposit_time']){
 		    		$result['status'] 	= false;
-		    		$result['msg']		= '累计转入金额结束时间必须大于开始时间';
+		    		$result['msg']		= '累计转入结束时间必须大于开始时间';
 		    		$this->ajaxReturn($result);
 					exit();
 		    	}
@@ -312,7 +314,7 @@ class ActivityController extends BaseController
 
     		if($actiData['min_bet_coins'] > $actiData['max_bet_coins']){
 	    		$result['status'] 	= false;
-	    		$result['msg']		= '投注金额区间错误';
+	    		$result['msg']		= '投注金币区间错误';
 	    		$this->ajaxReturn($result);
 				exit();
     		}
@@ -322,7 +324,7 @@ class ActivityController extends BaseController
 	    	if($postdata['bet_date_picker'] && $actiData['bet_time_status'] == 1){
 		    	if(!isset($postdata['bet_date_picker']) || $postdata['bet_date_picker'] == false){
 		    		$result['status'] 	= false;
-		    		$result['msg']		= '请选择累计投注金额起止时间';
+		    		$result['msg']		= '请选择累计投注起止时间';
 		    		$this->ajaxReturn($result);
 					exit();
 		    	}
@@ -334,14 +336,14 @@ class ActivityController extends BaseController
 
 		    	if(!$actiData['min_bet_time'] || !$actiData['max_bet_time']){
 		    		$result['status'] 	= false;
-		    		$result['msg']		= '累计转入金额起止时间格式有误';
+		    		$result['msg']		= '累计投注起止时间格式有误';
 		    		$this->ajaxReturn($result);
 					exit();
 		    	}
 
 		    	if($actiData['min_bet_time'] >= $actiData['max_bet_time']){
 		    		$result['status'] 	= false;
-		    		$result['msg']		= '累计投注金额结束时间必须大于开始时间';
+		    		$result['msg']		= '累计投注结束时间必须大于开始时间';
 		    		$this->ajaxReturn($result);
 					exit();
 		    	}
@@ -372,7 +374,7 @@ class ActivityController extends BaseController
 
     	$actiData['theme_param'] = json_encode($gameinfo);
 
-    	$actiData['free_info'] = "恭喜你，获得 %s 免费旋转次数 %d 次，TOTAL BET为 %s，请立即前往领取";
+    	$actiData['free_info'] = "恭喜你,获得%s免费旋转次数%d次,TOTAL BET为%s，请立即前往领取";
 
     	$actiData['free_info'] = sprintf($actiData['free_info'],$gameinfo['theme_name'],$gameinfo['rounds'],$gameinfo['total_bet']);
 
@@ -383,18 +385,35 @@ class ActivityController extends BaseController
     		$actiData['accounts'] = $postdata['accounts'];
     	}
 
+
+    	$activityModel = D('Activity');
     	// add 
-		D('Activity')->startTrans();
+		$activityModel->startTrans();
 
 		if($id) {
-			$activity_id = D('Activity')->where('id = %d',array($id))->save($actiData);
+    	
+			$activity = $activityModel->find($id);
+			if(empty($activity)){
+				$result['status'] = false;
+				$result['msg'] = '参数错误，无该信息';
+				$this->ajaxReturn($result);
+				exit();
+			}
+			if($activity['end_time'] < time()){
+				$result['status'] = false;
+				$result['msg'] = '活动已过期，不能编辑';
+				$this->ajaxReturn($result);
+				exit();
+			}
+
+			$activity_id = $activityModel->where('id = %d',array($id))->save($actiData);
 			D('ActivityUser')->where('activity_id = %d',array($id))->delete();
 			$result['msg'] = '修改活动成功';
 		}
-		else $activity_id = D('Activity')->add($actiData);
+		else $activity_id = $activityModel->add($actiData);
 
 		if(!$activity_id){
-			D('Activity')->rollback();
+			$activityModel->rollback();
     		$result['status'] 	= false;
     		$result['msg']		= '记录存储失败，请稍后重试！';
     		$this->ajaxReturn($result);
@@ -423,7 +442,7 @@ class ActivityController extends BaseController
 			}	
 		}
 
-		D('Activity')->commit();
+		$activityModel->commit();
 
     	$this->ajaxReturn($result);
     }
@@ -481,7 +500,7 @@ class ActivityController extends BaseController
 			$this->ajaxReturn($result);
 			exit();
 		}
-		$status = $activity['status'] == 1 ? -1 : 1;
+		$status = $activity['status'] == 1 ? 0 : 1;
 		$return = D('Activity')->where('id = %d',array($id))->setField('status',$status);
 
 		if($return === false){

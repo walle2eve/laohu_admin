@@ -9,7 +9,7 @@ class SysLogModel extends Model {
 
 	const PLAYER_LOGIN			= 120110;	// 玩家登录
 	const PLAYER_REGISTER		= 120120;	// 玩家注册
-	const PLAYER_UPDATE_PWD	= 120130;	// 修改玩家密码
+	const PLAYER_UPDATE_PWD		= 120130;	// 修改玩家密码
 	const GET_PLAYER_INFO		= 120140;	// 获取玩家信息
 
 	const FROZEN_PLAYER			= 120150;	// 冻结玩家账号
