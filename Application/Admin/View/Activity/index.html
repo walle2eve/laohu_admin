@@ -154,6 +154,7 @@
 			<script type="text/javascript">
 				var box;
 				var gamelist;
+				
 				$(document).ready(function() {
 
 					Date.prototype.format = function(format){
@@ -739,7 +740,8 @@
 				function validateTotalbet(el){
 					var name = el.val();
 					var retValue = {};
-
+					//console.log($('#gameid').val());
+					//console.log($('#gamename').val());
 					if($('#gamename').val() != "" &&  (name == "" || name == undefined || name == null)){
 						retValue.status = false;
 						retValue.msg = "totalbet 计算错误，请查看相应游戏主题配置信息";
