@@ -362,9 +362,9 @@ class ActivityController extends BaseController
 
     	$gameinfo['rounds'] = intval($postdata['game_rounds']);
 
-    	$gameinfo['mul'] = intval($postdata['game_mul']);
+    	$gameinfo['mul'] = floatval($postdata['game_mul']);
 
-    	$gameinfo['bet'] = intval($postdata['game_bet']);
+    	$gameinfo['bet'] = floatval($postdata['game_bet']);
 
     	$gameinfo['total_bet'] = floatval($postdata['totalbet']);
 

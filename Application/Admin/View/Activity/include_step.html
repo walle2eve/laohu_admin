@@ -44,7 +44,6 @@
 						</div>
 						<div class="col-sm-6">
 							<input class="form-control date_range_picker clear-val" type="text" readonly name="activity_date_picker" id="id-date-range-picker-0" value=""  data-placeholder="活动有效时间"  data-validate="validateActTime"/>
-							</select>
 						</div>
 					</div>
 					<div class="form-group">
@@ -82,10 +81,10 @@
 							<label class="">年龄</label>
 						</div>
 						<div class="col-sm-3">
-							<input type="radio" name="age_status" value="0" checked>
+							<input type="radio" name="age_status" value="0" checked="checked" />
 							  关闭
 							&nbsp;&nbsp;&nbsp;&nbsp;
-							<input type="radio" name="age_status" value="1">
+							<input type="radio" name="age_status" value="1" />
 							  启用
 						</div>
 						<div class="col-sm-3">
@@ -115,9 +114,9 @@
 							<label class="">VIP等级</label>
 						</div>
 						<div class="col-sm-3">
-							  <input type="radio" name="vip_status" value="0" checked>
+							  <input type="radio" name="vip_status" value="0" checked="checked" />
 							  关闭&nbsp;&nbsp;&nbsp;&nbsp;
-							  <input type="radio" name="vip_status" value="1">
+							  <input type="radio" name="vip_status" value="1" />
 							  启用
 						</div>
 						<div class="col-sm-3">
@@ -143,17 +142,17 @@
 							<label class="">累计转入金币</label>
 						</div>
 						<div class="col-sm-3">
-							  <input type="radio" name="deposit_status" value="0" checked>
+							  <input type="radio" name="deposit_status" value="0"  checked="checked" />
 							  关闭
 							   &nbsp;&nbsp;&nbsp;&nbsp;
-							  <input type="radio" name="deposit_status" value="1">
+							  <input type="radio" name="deposit_status" value="1" />
 							  启用
 						</div>
 						<div class="col-sm-3">
-							最小金币<input type="text" name="min_deposit_coins" class="form-control clear-val amount" style="width:100px">
+							最小金币<input type="text" name="min_deposit_coins" class="form-control clear-val amount" style="width:100px" />
 						</div>
 						<div class="col-sm-3">
-						 	最大金币<input type="text" name="max_deposit_coins" class="form-control clear-val amount" style="width:100px"  data-validate="validateMaxDeposit">
+						 	最大金币<input type="text" name="max_deposit_coins" class="form-control clear-val amount" style="width:100px"  data-validate="validateMaxDeposit" />
 						</div>
 					</div>
 					<div class="form-group">
@@ -162,10 +161,10 @@
 						</div>
 						<div class="col-sm-9">
 							时间限制 &nbsp;&nbsp;&nbsp;&nbsp;
-							<input type="radio" name="deposit_time_status" value="0" checked>
+							<input type="radio" name="deposit_time_status" value="0"  checked="checked" />
 							  关闭 
 							  &nbsp;&nbsp;&nbsp;&nbsp;
-							<input type="radio" name="deposit_time_status" value="1">
+							<input type="radio" name="deposit_time_status" value="1" />
 							  启用
 						</div>
 					</div>
@@ -184,17 +183,17 @@
 							<label class="">累计投注金币</label>
 						</div>
 						<div class="col-sm-3">
-							  <input type="radio" name="bet_status" value="0" checked>
+							  <input type="radio" name="bet_status" value="0"  checked="checked" />
 							  关闭
 							  &nbsp;&nbsp;&nbsp;&nbsp;
-							  <input type="radio" name="bet_status" value="1">
+							  <input type="radio" name="bet_status" value="1" />
 							  启用
 						</div>
 						<div class="col-sm-3">
-							最小金币<input type="text" name="min_bet_coins" class="form-control clear-val amount" style="width:100px">
+							最小金币<input type="text" name="min_bet_coins" class="form-control clear-val amount" style="width:100px" />
 						</div>
 						<div class="col-sm-3">
-							最大金币<input type="text" name="max_bet_coins" class="form-control clear-val amount" style="width:100px"   data-validate="validateMaxBet">
+							最大金币<input type="text" name="max_bet_coins" class="form-control clear-val amount" style="width:100px"   data-validate="validateMaxBet" />
 						</div>
 					</div>
 
@@ -204,10 +203,10 @@
 						</div>
 						<div class="col-sm-9">
 							时间限制 &nbsp;&nbsp;&nbsp;&nbsp;
-							<input type="radio" name="bet_time_status" value="0" checked>
+							<input type="radio" name="bet_time_status" value="0"  checked="checked" />
 							  关闭 
 							   &nbsp;&nbsp;&nbsp;&nbsp;
-							<input type="radio" name="bet_time_status" value="1">
+							<input type="radio" name="bet_time_status" value="1" />
 							  启用
 						</div>
 					</div>
@@ -230,8 +229,8 @@
 				      	<option value="{$vo.id}">{$vo.name}</option>
 				      </volist>
 				      </select>
-				      <input type="hidden" name="gamename" id="gamename">
-				      <input type="hidden" name="activityid" id="activityid" value="0">
+				      <input type="hidden" name="gamename" id="gamename" />
+				      <input type="hidden" name="activityid" id="activityid" value="0" />
 			      	</div>
 				</div>
 				<div class="wizard-input-section">
@@ -252,7 +251,7 @@
 			     			Mul <select name="game_mul" id="mul" class="clear-val game-change"></select>
 						</div>
 			     		<div class="col-sm-4">
-			     			Total Bet <input type="text" id="totalbet" name="totalbet" readonly="true" class="clear-val" style="width:50px"  data-validate="validateTotalbet">
+			     			Total Bet <input type="text" id="totalbet" name="totalbet" readonly="true" class="clear-val" style="width:50px"  data-validate="validateTotalbet" />
 						</div>
 					</div>
 					<div class="form-group">

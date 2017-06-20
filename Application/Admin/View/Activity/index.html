@@ -47,10 +47,11 @@
                                         <tr>
                                             <th width="8%">平台</th>
                                             <th width="15%">有效时间</th>
-                                            <th width="35%">描述</th>
+                                            <th width="32%">描述</th>
 											<th width="8%">是否启用</th>
 											<th width="8%">活动状态</th>
-											<th width="17%">操作</th>
+											<th width="15%">操作</th>
+											<th width="5%">详情</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -75,7 +76,7 @@
                                             <if condition="$vo['status'] eq 1">
                                             <i class="fa {$set_status} fa-check text-success" status="{$vo.status}" field="status"></i>
                                             <else/>
-                                            <i class="fa {$set_status} fa-lock" status="{$vo.status}" field="status">
+                                            <i class="fa {$set_status} fa-lock" status="{$vo.status}" field="status"></i>
                                             </if></td>
                                             <td>{$vo.show_status_content}</td>
                                             <td>
@@ -93,6 +94,7 @@
 												</if>
 											</if>
 											</td>
+											<td><a href="" target="_blank">查看</a></td>
                                         </tr>
 									</volist>
                                     </tbody>
@@ -242,7 +244,7 @@
 						}else{
 							//find('input').attr('disabled',false);
 							$("#activity_accounts").val("");
-							wizard.cards["user"].el.find(':input').val('').removeAttr('disabled');
+							wizard.cards["user"].el.find(':input[type=text]').val('').removeAttr('disabled');
 						}
 					});
 	
@@ -414,7 +416,6 @@
 							window.location.reload();
 							//wizard.reset();	
 						}, 250);
-						
 					});
 				
 					//wizard.el.find(".wizard-success .create-another-server").click(function() {
@@ -657,7 +658,7 @@
 					if(!$lineNum || $lineNum == undefined) $lineNum = $('#lines').val();
 					if(!$mul || $mul == undefined) $mul = $('#mul').val();
 					if(!$bet || $bet == undefined) $bet = $('#bet').val();
-					console.log(totalBetFormula);
+					//console.log(totalBetFormula);
 					var totalBet = eval(totalBetFormula);
 					if(!totalBet || totalBet == undefined){
 						$.showError('游戏参数不完整导致totalbet计算错误！');
@@ -764,8 +765,8 @@
 
 				function validateMaxAge(el){
 					var retValue = {};
-					var age_status = $("input:radio[name='age_status']:checked").val();
-					console.log('age_status = ' + age_status);
+					var age_status = $('input:radio[name="age_status"]:checked').val();
+
 					if(age_status == 1){
 						var min_age = $("input[name=min_age]").val();
 						var max_age = $("input[name=max_age]").val();
@@ -783,7 +784,7 @@
 
 				function validateMaxVip(el){
 					var retValue = {};
-					var vip_status = $("input:radio[name='vip_status']:checked").val();
+					var vip_status = $("input[type='radio'][name='vip_status']:checked").val();
 					console.log('vip_status = ' + vip_status);
 					if(vip_status == 1){
 						var min_vip_level = $("select[name=min_vip_level]").val();
