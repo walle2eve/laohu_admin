@@ -242,9 +242,9 @@
 								openChooseWindow();
 							}
 						}else{
-							//find('input').attr('disabled',false);
 							$("#activity_accounts").val("");
-							wizard.cards["user"].el.find(':input[type=text]').val('').removeAttr('disabled');
+							//wizard.cards["user"].el.find(':input[type=text]').val('').removeAttr('disabled');
+							wizard.cards["user"].el.find(':input').removeAttr('disabled');
 						}
 					});
 	
