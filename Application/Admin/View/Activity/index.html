@@ -81,8 +81,8 @@
                                             <td>{$vo.show_status_content}</td>
                                             <td>
 
-                                            <if condition="$time lt $vo['end_time']">
-                                            	<if condition="$vo['status'] eq 0">	
+                                            <if condition="$time lt $vo['begin_time'] OR ($time gt $vo['begin_time'] and $time lt $vo['end_time'] and $vo['status'] eq 0)">
+                                            	
 												<a class="btn btn-app btn-primary no-radius edit_activity" href="{:U('Admin/Activity/index')}?id={$vo.id}" data-id="{$vo.id}">
 													<i class="fa fa-edit fa-fw"></i>
 													编辑
@@ -91,10 +91,11 @@
 													<i class="fa fa-trash fa-fw"></i>
 													删除
 												</a>
-												</if>
+												
 											</if>
 											</td>
-											<td><a href="" target="_blank">查看</a></td>
+											<td><a href="{:U('Admin/Activity/detail',array('id' => $vo['id']))}" data-id="{$vo.id}">查看</a></td>
+											<!-- data-toggle="modal" data-target="#show-detail-modal"-->
                                         </tr>
 									</volist>
                                     </tbody>
@@ -114,6 +115,50 @@
 					{$page}
 				</div>
 			</div>
+
+			<!--{// 显示详情}-->
+			<div id="show-detail-modal" class="modal fade" tabindex="-1" role="dialog">
+				<div class="modal-dialog">
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					  <h4 class="modal-title">
+						<span class="glyphicon glyphicon-gift"></span>
+						<span>活动详情</span>
+					  </h4>
+					</div>
+					<div class="modal-body">
+					  <div class="form-horizontal">
+						<div class="form-group">
+                            <label class="col-sm-3 control-label">平台：</label>
+							<div class="col-sm-6 operator">
+							</div>
+                        </div>
+						<div class="form-group">
+						  <label class="col-sm-3 control-label">信息发送给：</label>
+						  <div class="col-sm-6 user-type">
+						  </div>
+						</div>
+						<div class="form-group">
+						  <label class="col-sm-3 control-label">有效时间：</label>
+						  <div class="col-sm-6 activity-time">
+						  </div>
+						</div>
+						<div class="form-group">
+						  <label class="col-sm-3 control-label">描述：</label>
+						  <div class="col-sm-6 remark">
+						  </div>
+						</div>
+						<div class="form-group">
+						  <label class="col-sm-3 control-label">是否启用：</label>
+						  <div class="col-sm-6 status">
+						  </div>
+						</div>
+					  </div>
+					</div>
+				  </div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
 
 			<include file="Activity/include_step" />
 			<!-- js begin -->
@@ -222,9 +267,15 @@
 						$("#activity-user-type option:first").prop("selected", 'selected');
 						$("#activity_userids").val("");
 						$("#activity_accounts").val("");
+						$("#accounts_label").text('');
 					});
 					$('#activity-user-type').on('change',function(e){
 						var $usertype = $(this).val();
+
+						$("#activity_userids").val("");
+						$("#activity_accounts").val("");
+						$("#accounts_label").text('');
+
 						if($usertype > 2){
 							wizard.cards["user"].el.find('input').attr('disabled','disabled');
 							if($usertype == 4){
@@ -237,12 +288,9 @@
 								//console.log($usertype);
 								openUploadWindow($operator);
 							}else if ($usertype == 3){
-								$("#activity_userids").val("");
-								$("#activity_accounts").val("");
 								openChooseWindow();
 							}
 						}else{
-							$("#activity_accounts").val("");
 							//wizard.cards["user"].el.find(':input[type=text]').val('').removeAttr('disabled');
 							wizard.cards["user"].el.find(':input').removeAttr('disabled');
 						}
@@ -253,7 +301,7 @@
 						timePickerIncrement: 5,
 						format: 'YYYY-MM-DD HH:mm:ss',
 						startDate: new Date(),
-						timePicker24Hour: false,
+						timePicker12Hour: false,
 
 						locale: {
 					        "format": "YYYY-MM-DD HH:mm:ss",
@@ -305,6 +353,8 @@
 			          selectedListLabel: '已选',
 
 			          preserveSelectionOnMove: false,//'moved',
+
+			          selectorMinimalHeight: 180,
 
 			          moveOnSelect: false,
 
@@ -426,7 +476,9 @@
 						e.preventDefault();
 						wizard.show();
 					});
+					// 
 
+					// edit activity
 					$('.edit_activity').on('click',function(e){
 
 						var $activityid = $(this).data('id');
@@ -578,7 +630,7 @@
 					    showCaption: true,//是否显示标题
 					    browseClass: "btn btn-primary", //按钮样式     
 					    dropZoneEnabled: false,//是否显示拖拽区域
-					    maxFileSize: 0,//单位为kb，如果为0表示不限制文件大小
+					    maxFileSize: 2048,//单位为kb，如果为0表示不限制文件大小
 					    maxFileCount: 1, //表示允许同时上传的最大文件个数
 					    enctype: 'multipart/form-data',
 					    validateInitialCount: true,
@@ -595,6 +647,7 @@
 					//异步上传返回结果处理
 					$("#uploadfile").on("fileuploaded", function (event, data, previewId, index) {
 					    var res = data.response;
+
 					    //alert(JSON.stringify(data));
 					    if(!res.status){
 					    	$.showError(res.msg);
@@ -605,6 +658,12 @@
 					    if(res.data.ignoreArr){
 					    //	$("#showUploadResult").html("以下用户未导入成功");
 					    }
+					    var files = "";
+					    $.each(data.files,function(n,i){
+					    	files += i.name;
+					    })
+						$("#accounts_label").text(files);
+
 					    //console.log(JSON.stringify($("#activity_accounts").val()));
 					    $.showSuccess(res.msg,function(){
 					    	setTimeout(function (){
@@ -642,6 +701,8 @@
 						    $("#activity_userids").val(res.data.checkedIds);
 						    $("#activity_accounts").val(res.data.checkedAccounts);
 
+						    $("#accounts_label").text(res.data.checkedAccounts);
+
 						    $.showSuccess(res.msg,function(){
 						    	setTimeout(function (){
 						    		box.close();
@@ -660,6 +721,7 @@
 					if(!$bet || $bet == undefined) $bet = $('#bet').val();
 					//console.log(totalBetFormula);
 					var totalBet = eval(totalBetFormula);
+					totalBet = totalBet.toFixed(2);
 					if(!totalBet || totalBet == undefined){
 						$.showError('游戏参数不完整导致totalbet计算错误！');
 						return false;
@@ -807,6 +869,10 @@
 					if(deposit_status == 1){
 						var min_deposit_coins = $("input[name=min_deposit_coins]").val();
 						var max_deposit_coins = $("input[name=max_deposit_coins]").val();
+
+						min_deposit_coins = parseFloat(min_deposit_coins);
+						max_deposit_coins = parseFloat(max_deposit_coins);
+
 						if(!min_deposit_coins || !max_deposit_coins){
 							retValue.status = false;
 							retValue.msg = "请填写转入金币区间！";
@@ -824,6 +890,14 @@
 					if(bet_status == 1){
 						var min_bet_coins = $("input[name=min_bet_coins]").val();
 						var max_bet_coins = $("input[name=max_bet_coins]").val();
+
+						min_bet_coins = parseFloat(min_bet_coins);
+						max_bet_coins = parseFloat(max_bet_coins);
+
+						console.log(min_bet_coins)
+						console.log(max_bet_coins)
+
+
 						if(!min_bet_coins || !max_bet_coins){
 							retValue.status = false;
 							retValue.msg = "请填写投注金币区间！";

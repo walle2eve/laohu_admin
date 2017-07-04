@@ -143,7 +143,7 @@ class SpinLogModel extends MongoModel
 
 		$page = page($count);
 
-		$order_by = $order_by . ',id DESC';
+		$order_by = $order_by . ',_id DESC';
 
 		$list = $this->field("id,log_type,log_time,region_id,server_id,operator_id,theme_id,theme_name,game_sort,account_id,nick_name,user_id,bet,mul,total_bet,win,wheel,is_sactter,reason,param,createTime")->where($where)->order($order_by)->limit($page->firstRow.','.$page->listRows)->select();
 

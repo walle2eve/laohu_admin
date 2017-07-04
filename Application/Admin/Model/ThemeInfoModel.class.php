@@ -7,6 +7,7 @@ class ThemeInfoModel extends Model{
 								'id',
 								'name',
 								'status',
+								'is_activity',
 								'theme_info',
 								'sort',
 								'input_time',
@@ -100,7 +101,7 @@ class ThemeInfoModel extends Model{
 
 	public function get_options(){
 
-		$where = " status = 1 AND id > 0 ";
+		$where = " status = 1 AND is_activity = 1 AND id > 0 ";
 		$list = $this->where($where)
 					->order('sort ASC')
 					->select();

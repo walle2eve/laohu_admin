@@ -1,7 +1,7 @@
 			<layout name="_layout/base" />
             <div class="row">
                 <div class="col-lg-12">
-                    <h3 class="page-header">客户端版本管理(<eq name="version_type" value="beta">测试<else/><eq name="version_type" value="reveal">展示<else/><eq name="version_type" value="cf365">超凡365<else/>7乐</eq></eq></eq>)</h3>
+                    <h3 class="page-header">客户端版本管理(<if condition="$version_type eq 'beta'">测试<elseif condition="$version_type eq 'reveal'" />展示<elseif condition="$version_type eq 'cf365'" />超凡365<elseif condition="$version_type eq 'fafa'">fafa<else />7乐</if>)</h3>
 						<div class="row">
                             <div class="col-md-12">
                             	
@@ -9,6 +9,7 @@
 									<a href = "<eq name="version_type" value="beta">{:U('Admin/Client/version',array('version_type'=>'occifial'))}<else/>{:U('Admin/Client/version',array('version_type'=>'beta'))}</eq>" class="btn btn-primary submit-button">
 									<eq name="version_type" value="beta">正式<else/>测试</eq>版本管理 </a>&nbsp;
 									<a href = "{:U('Admin/Client/version',array('version_type'=>'cf365'))}" class="btn btn-primary submit-button">超凡365版本管理 </a>&nbsp;
+									<a href = "{:U('Admin/Client/version',array('version_type'=>'fafa'))}" class="btn btn-primary submit-button">fafa版本管理 </a>&nbsp;
 									<a href = "{:U('Admin/Client/version',array('version_type'=>'reveal'))}" class="btn btn-primary submit-button">展示版本管理 </a>&nbsp;
 									<button type="button" class="btn btn-outline btn-primary" data-add-trigger><b>+</b> 添加版本 </button>
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

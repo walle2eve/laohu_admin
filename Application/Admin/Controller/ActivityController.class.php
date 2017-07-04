@@ -374,9 +374,11 @@ class ActivityController extends BaseController
 
     	$actiData['theme_param'] = json_encode($gameinfo);
 
-    	$actiData['free_info'] = "恭喜你,获得%s免费旋转次数%d次,TOTAL BET为%s，请立即前往领取";
+    	//$actiData['free_info'] = "恭喜你,获得%s免费旋转次数%d次,TOTAL BET为%s，请立即前往领取";
 
-    	$actiData['free_info'] = sprintf($actiData['free_info'],$gameinfo['theme_name'],$gameinfo['rounds'],$gameinfo['total_bet']);
+    	$actiData['free_info'] = "恭喜你,获得{0}免费旋转次数{1}次,TOTAL BET为{2}，请立即前往领取";
+
+    	//$actiData['free_info'] = sprintf($actiData['free_info'],$gameinfo['theme_name'],$gameinfo['rounds'],$gameinfo['total_bet']);
 
     	$actiData['dispose_user'] = $this->uid;
 
@@ -464,7 +466,7 @@ class ActivityController extends BaseController
 			$this->ajaxReturn($result);
 			exit();
 		}
-		if($activity['status'] == 1){
+		if($activity['begin_time'] > time() && $activity['end_time'] < time()){
 			$result['status'] = false;
 			$result['msg'] = '活动正在进行中，不能删除';
 			$this->ajaxReturn($result);
@@ -591,7 +593,7 @@ class ActivityController extends BaseController
 
 		$id = I('post.id',0);
 
-		$activity_info = D('Activity')->find($id);
+		$activity_info = $this->_get_info($id);
 
 		if(empty($activity_info)){
 			$result = array(
@@ -602,7 +604,7 @@ class ActivityController extends BaseController
     		exit();
 		}
 
-		if($activity_info['status'] == 1){
+		if($activity_info['begin_time'] < time() && $activity_info['end_time'] > time() && $activity_info['status'] == 1){
 			$result = array(
 				'status' => false,
 				'msg' => '活动正在进行中，不允许修改！',
@@ -623,6 +625,24 @@ class ActivityController extends BaseController
 		$result['data'] = $activity_info;
 
 		$this->ajaxReturn($result);
+    }
+    //
+    public function detail(){
+		
+		$id = I('get.id');
+
+		$user_types = array();
+
+		$activity_info = $this->_get_info($id);
+
+		$this->assign('info',$activity_info);
+
+		$this->display();
+    }
+    //
+    private function _get_info($id){
+    	$data = D('Activity')->alias('act')->field('act.*,su.user_name')->join('Left join t_sys_user su ON su.uid = act.operator_id')->where('act.id = %d',array($id))->find();
+    	return $data;
     }
     // 获取玩家信息
     public function get_user_by_name(){

@@ -24,6 +24,9 @@ class ThemeController extends BaseController
 		}elseif(I('version_type') == 'cf365'){
 			$this->versionType = 'cf365';
 			$this->themeModel = D('ThemeInfoCf365');
+		}elseif(I('version_type') == 'fafa'){
+			$this->versionType = 'fafa';
+			$this->themeModel = D('ThemeInfoFafa');
 		}
 		$this->assign('version_type',$this->versionType);
 	}
@@ -69,6 +72,8 @@ class ThemeController extends BaseController
 
 		$id = I('post.key',0);
 		$id = intval($id);
+		$field = I('post.field','');
+		$field = in_array($field,array('status','is_activity')) ? $field : 'status';
 
 		$theme = $this->themeModel->find($id);
 
@@ -78,8 +83,10 @@ class ThemeController extends BaseController
 			$this->ajaxReturn($result);
 			exit();
 		}
-		$data['status'] = $theme['status'] == 1 ? -1 : 1;
+
+		$data[$field] = $theme[$field] == 1 ? -1 : 1;
 		$data['input_time'] = date('Y-m-d H:i:s');
+
 		$return = $this->themeModel->where('id = %d',array($id))->save($data);
 
 		if($return === false){
@@ -233,7 +240,7 @@ class ThemeController extends BaseController
 
 		if($this->versionType == 'beta'){
 			$re = QiNiuPutContent($file_name,$json_data);
-		}elseif($this->versionType == 'reveal' || $this->versionType == 'cf365'){
+		}elseif($this->versionType == 'reveal' || $this->versionType == 'cf365' || $this->versionType == 'fafa'){
 			$re = OssPutContent($file_name,$json_data,$this->versionType);
 		}else{
 			$re = OssPutContent($file_name,$json_data);

@@ -38,6 +38,15 @@ return array(
 
 	/**/
 
+	'activity_user_types' => array(
+
+		'1' => '所有用户',
+		'2' => 'VIP用户',
+		'3' => '个人用户',
+		'4' => '导入用户',
+
+		),
+
 	'activity_status' => array(
 		'0'	=> '未开始',
 		'1' => '进行中',

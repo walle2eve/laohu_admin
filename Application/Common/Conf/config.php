@@ -239,6 +239,12 @@ return array(
         'OSS_ENDPOINT'          => 'http://oss-cn-hongkong.aliyuncs.com',
         'OSS_BUCKET'            => '365cf',
     ),
+    'fafa' => array(
+        'OSS_ACCESS_ID'         => 'LTAIjfeLFDJ4HIVK',
+        'OSS_ACCESS_KEY'        => 'pJRBD2fPztKiNXtQfDlhUZPQWHoAg2',
+        'OSS_ENDPOINT'          => 'http://oss-cn-hongkong.aliyuncs.com',
+        'OSS_BUCKET'            => 'cdfafa',
+    ),
 
     //qiniu 云存储
     'QINIU_BUCKET'          => 'laohures',

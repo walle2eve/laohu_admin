@@ -1,7 +1,7 @@
 			<layout name="_layout/base" />
             <div class="row">
                 <div class="col-lg-12">
-                    <h3 class="page-header">游戏主题管理（<eq name="version_type" value="beta">测试<else/><eq name="version_type" value="reveal">展示<else/><eq name="version_type" value="cf365">超凡365<else/>7乐</eq></eq></eq>）</h3>
+                    <h3 class="page-header">游戏主题管理（<if condition="$version_type eq 'beta'">测试<elseif condition="$version_type eq 'reveal'" />展示<elseif condition="$version_type eq 'cf365'" />超凡365<elseif condition="$version_type eq 'fafa'" />fafa<else />7乐</if>）</h3>
 						<div class="row">
                             <div class="col-md-3"><button type="button" class="btn btn-outline btn-primary" data-add-trigger><b>+</b> 添加新主题 </button></div>
 							<div class="col-md-3"></div>
@@ -39,6 +39,7 @@
                                             <th>主题ID</th>
                                             <th>主题名称</th>
 											<th>状态</th>
+											<th>是否参加活动</th>
 											<th>排序<br />(值越小越靠前)</th>
 											<th>最后操作时间</th>
 											<th>操作</th>
@@ -50,6 +51,8 @@
                                             <td>{$vo.id}</td>
                                             <td>{$vo.name}</td>
                                             <td><if condition="$vo['status'] eq 1"><i class="fa fa-set-status fa-check text-success" status="{$vo.status}" field="status"></i><else/><i class="fa fa-set-status fa-lock" status="{$vo.status}" field="status"></if></td>
+                                            
+                                            <td><if condition="$vo['is_activity'] eq 1"><i class="fa fa-set-status fa-check text-success" status="{$vo.is_activity}" field="is_activity"></i><else/><i class="fa fa-set-status fa-lock" status="{$vo.is_activity}" field="is_activity"></if></td>
                                             <td><input type="text" value="{$vo.sort}" class="form-control set-sort" style="width:100px"></td>
                                             <td>{$vo.input_time}</td>
                                             <td>
