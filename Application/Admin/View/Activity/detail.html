@@ -1,0 +1,202 @@
+			<layout name="_layout/base" />
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header">活动详情</h3>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            活动详情
+                        </div>
+
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+							<div class="form-group row">
+							  <label class="col-sm-6 control-label"><h4>一般信息</h4></label>
+							  <div class="col-sm-6"></div>
+							</div>
+                        	<div class="form-group row">
+                        		<label class="col-sm-3 control-label">平台：</label>
+                        		<div class="col-lg-6">{$info.user_name}</div>
+                        	</div>
+							<div class="form-group row">
+							  <label class="col-sm-3 control-label">信息发送给：</label>
+							  <div class="col-sm-6">{:L('activity_user_types')[$info['user_type']]}</div>
+							</div>
+
+							<gt name="$info['user_type']" value="2">
+							<div class="form-group row">
+							  <label class="col-sm-3 control-label"></label>
+							  <div class="col-sm-6">{$info['accounts']}</div>
+							</div>
+							</gt>
+							<div class="form-group row">
+							  <label class="col-sm-3 control-label">有效时间：</label>
+							  <div class="col-sm-6">
+							  {$info.begin_time|date='Y-m-d H:i:s',###} - {$info.end_time|date='Y-m-d H:i:s',###}
+							  </div>
+							</div>
+
+							<div class="form-group row">
+							  <label class="col-sm-3 control-label">描述：</label>
+							  <div class="col-sm-6">{$info.remark}</div>
+							</div>
+							<div class="form-group row">
+							  <label class="col-sm-3 control-label">是否启用：</label>
+							  <div class="col-sm-6">
+							  <eq name="info['status']" value="1">立即启用<else/>稍后启用</eq>
+							  </div>
+							</div>
+
+							<div class="form-group row">
+							  <label class="col-sm-6 control-label"><h4>用户限制</h4></label>
+							  <div class="col-sm-6"></div>
+							</div>
+
+							<div class="form-group row">
+							  <label class="col-sm-3 control-label">年龄：</label>
+							  <div class="col-sm-3">
+							  <eq name="$info['age_status']" value="1">
+							  	启用
+							  <else/>
+							  	关闭
+							  </eq>
+							  </div>
+							  <eq name="info['age_status']" value="1"><div class="col-sm-6">{$info.min_age} - {$info.max_age}</div></eq>
+							</div>
+
+							<div class="form-group row">
+							  <label class="col-sm-3 control-label">VIP等级：</label>
+							  <div class="col-sm-3">
+							  <eq name="info['vip_status']" value="1">
+							  	启用
+							  <else/>
+							  	关闭
+							  </eq>
+							  </div>
+							  <eq name="info['vip_status']" value="1"><div class="col-sm-6">{$info.min_vip_level} - {$info.max_vip_level}</div></eq>
+							</div>
+							<!--
+							<div class="form-group row">
+							  <label class="col-sm-3 control-label">累计转入金币：</label>
+							  <div class="col-sm-3">
+							  <eq name="info['deposit_status']" value="1">
+							  	启用
+							  <else/>
+							  	关闭
+							  </eq>
+							  </div>
+							  <eq name="info['deposit_status']" value="1"><div class="col-sm-6">{$info.min_deposit_coins} - {$info.max_deposit_coins}</div></eq>
+							</div>
+
+							<eq name="info['deposit_status']" value="1">
+							<div class="form-group row">
+							  <label class="col-sm-3 control-label"></label>
+							  <div class="col-sm-3">时间限制</div>
+							  <div class="col-sm-3">
+							  <eq name="info['deposit_time_status']" value="1">
+							  	启用
+							  <else/>
+							  	关闭
+							  </eq>
+							  </div>
+							  <eq name="info['deposit_time_status']" value="1">
+							  <div class="col-sm-3">{$info.min_deposit_time|date='Y-m-d H:i:s',###} - {$info.max_deposit_time|date='Y-m-d H:i:s',###}</div>
+							  </eq>
+							</div>
+							</eq>
+							-->
+							<div class="form-group row">
+							  <label class="col-sm-3 control-label">累计投注金币：</label>
+							  <div class="col-sm-3">
+							  <eq name="info['bet_status']" value="1">
+							  	启用
+							  <else/>
+							  	关闭
+							  </eq>
+							  </div>
+							  <eq name="info['bet_status']" value="1"><div class="col-sm-6">{$info.min_bet_coins} - {$info.max_bet_coins}</div></eq>
+							</div>
+
+							<eq name="info['bet_status']" value="1">
+							<div class="form-group row">
+							  <label class="col-sm-3 control-label"></label>
+							  <div class="col-sm-3">时间限制</div>
+							  <div class="col-sm-3">
+							  <eq name="info['bet_time_status']" value="1">
+							  	启用
+							  <else/>
+							  	关闭
+							  </eq>
+							  </div>
+							  <eq name="info['bet_time_status']" value="1">
+							  <div class="col-sm-3">{$info.min_bet_time|date='Y-m-d H:i:s',###} - {$info.max_bet_time|date='Y-m-d H:i:s',###}</div>
+							  </eq>
+							</div>
+							</eq>
+
+							<div class="form-group row">
+							  <label class="col-sm-6 control-label"><h4>赠送规则</h4></label>
+							  <div class="col-sm-6"></div>
+							</div>
+							<php>
+								$themeinfo = json_decode($info['theme_param']);
+							</php>
+							<div class="form-group row">
+							  <label class="col-sm-3 control-label">游戏主题：</label>
+							  <div class="col-sm-3">
+							  {$themeinfo->theme_name}
+							  </div>
+							</div>
+							<div class="form-group row">
+							  <label class="col-sm-3 control-label"></label>
+							  <div class="col-sm-2">
+							  Lines
+							  </div>
+							  <div class="col-sm-2">
+							  {$themeinfo->lines}
+							  </div>
+							  <div class="col-sm-2">
+							  Rounds
+							  </div>
+							  <div class="col-sm-2">
+							  {$themeinfo->rounds}
+							  </div>
+							</div>
+
+							<div class="form-group row">
+							  <label class="col-sm-3 control-label"></label>
+							  <div class="col-sm-2">
+							  Mul
+							  </div>
+							  <div class="col-sm-2">
+							  {$themeinfo->mul}
+							  </div>
+							  <div class="col-sm-2">
+							  Total Bet
+							  </div>
+							  <div class="col-sm-2">
+							  {$themeinfo->total_bet}
+							  </div>
+							</div>
+
+							<div class="form-group row">
+							  <label class="col-sm-3 control-label"></label>
+							  <div class="col-sm-2">
+							  Bet
+							  </div>
+							  <div class="col-sm-2">
+							  {$themeinfo->bet}
+							  </div>
+							</div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-6 -->
+            </div>

@@ -1,0 +1,50 @@
+			<layout name="_layout/base" />
+					<script type="text/javascript">
+					$(document).ready(function (){
+						$('#mytable').DataTable( {
+							bJQueryUI : true,
+							bFilter : false,
+							bInfo : false,
+							bPaginate : false,
+							bLengthChange : false,
+							bSort : false,
+							bSortClasses : false,
+							//iDisplayLength : 20,
+						    fixedHeader: true,
+						});
+					});
+					</script>
+            <div class="container" style="color:#5160a3">
+				<!--<h3>游戏记录</h3>-->
+                  <table id="mytable" class="table table-bordered table-striped table-fixed-header">
+                    <thead class="header" style="background-color:#a7c5f7">
+                      <tr>
+                        <th width="25%">时间</th>
+                        <th width="25%">游戏</th>
+						<th width="25%">下注</th>
+						<th width="25%">盈利</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+					<volist name="list" id="vo">
+                    <tr>
+                      <td>
+                      <php>
+                      $createtime = ceil($vo['createTime']/1000);
+                      </php>
+                      {$createtime|date='Y-m-d H:i:s',###}
+                      </td>
+                      <td>{$vo.theme_name}</td>
+					<td>{$vo.total_bet}</td>
+					<td>{$vo.win}</td>
+                    </tr>
+					</volist>
+                  </tbody>
+                 </table>
+                  								 <div class="row">
+					                 <div class="col-lg-12" style="float:right">
+					 										{$page}
+					 									</div>
+					 			</div>
+
+            </div>
