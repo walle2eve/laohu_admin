@@ -364,14 +364,19 @@
 			        $(gamelist).on('change',function(){
 
 			        	var id = $(this).val();
+			        	var oid = $('#activity-operator-id').val();
 			        	if(id == null || id == "") return;
+			        	if(oid == null || oid == ""){
+						  	$.showError('请选择平台！');
+						  	return false;
+			        	}
 			        	//console.log($(this).val());
 			        	$(".game-change").empty();
 			        	$("#totalbet").val('');
 			        	$("#game_totalbet_formula").val('');
 			        	$("#game_lines_bet").val('');
 
-						$.post('{:U('Admin/Activity/get_theme_param')}', {id:id}, function(res){
+						$.post('{:U('Admin/Activity/get_theme_param')}', {id:id,oid:oid}, function(res){
 						  if(res.status){
 						  	$("#game_totalbet_formula").val(res.data.totalBetFormula);
 						  	$("#game_lines_bet").val(res.data.linesBet);

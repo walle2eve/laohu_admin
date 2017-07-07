@@ -30,6 +30,8 @@ class NoticeController extends BaseController
 			$this->versionType = 'reveal';
 		}elseif($operator == '10025'){
 			$this->versionType = 'cf365';
+		}elseif($operator == '10027'){
+			$this->versionType = 'fafa';
 		}
 	}
 	public function index(){
@@ -177,7 +179,7 @@ class NoticeController extends BaseController
 
 		if($this->versionType == 'beta'){
 			$re = QiNiuPutContent($file_name,$json_data);
-		}elseif($this->versionType == 'reveal' || $this->versionType == 'cf365'){
+		}elseif($this->versionType == 'reveal' || $this->versionType == 'cf365' || $this->versionType == 'fafa'){
 			$re = OssPutContent($file_name,$json_data,$this->versionType);
 		}else{
 			$re = OssPutContent($file_name,$json_data);

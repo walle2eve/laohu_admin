@@ -23,11 +23,12 @@ class ActivityController extends BaseController
 		$param = I('get.');
 
 		$gamelist = D('ThemeInfo')->get_options();
-		$this->assign('gamelist',$gamelist);
-
+		
 		if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
 			$param['operator'] = $this->uid;
+			$gamelist = D('ThemeInfo')->get_options();
 		}
+		$this->assign('gamelist',$gamelist);
 
 		$list = D('Activity')->alist($param);
 		$this->assign('list',$list['list']);
@@ -530,6 +531,8 @@ class ActivityController extends BaseController
     	}
 
 		$theme_id = I('post.id',0);
+
+		$operator_id = I('post.oid',0);
 
 		$theme_info = D('ThemeInfo')->get_info($theme_id);
 

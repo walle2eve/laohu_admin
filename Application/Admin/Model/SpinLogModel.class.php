@@ -179,9 +179,21 @@ class SpinLogModel extends MongoModel
 				}
 			}
 
+			$createTime = is_object($row['createTime']) ? (array)$row['createTime'] : $row['createTime'];
+			$row['createTime'] = isset($createTime['value']) ? $createTime['value'] : $createTime;
+
+			$operator_id = is_object($row['operator_id']) ? (array)$row['operator_id'] : $row['operator_id'];
+			
+			$row['user_name'] = isset($operator_id['value']) ? $operator_id['value'] : $operator_id;
+			$row['user_name'] = $operators[$row['user_name']];
+
 			// 格式化附加参数
 			$json_data = (array)json_decode($row['param']);
 			$row['line'] = count($json_data);
+			// 
+			if(!in_array($row['reason'],array(3,4,6))){
+				continue;
+			}
 
 			// 矩阵 图标
 			$wheel = $row['wheel'];
@@ -233,9 +245,14 @@ class SpinLogModel extends MongoModel
 		       $line = 1;
 			}elseif(in_array($row['theme_id'],array('1003','1010'))){
 		       $line = 50;
+		    }elseif(in_array($row['theme_id'],array('1012'))){
+		       $line = 25;
 		    }else{
 		       $line = 20;
 		    }
+
+		    //大闹天宫不显示中奖线
+		    if($row['theme_id'] == 1011) $row['line'] = 0;
 
 			// 中奖线图标
 			if($row['line'] > 0){
@@ -248,14 +265,6 @@ class SpinLogModel extends MongoModel
 			}
 
 			$row['win_line_icons'] = $line_icons;
-			///print_r($row);exit();
-			$createTime = is_object($row['createTime']) ? (array)$row['createTime'] : $row['createTime'];
-			$row['createTime'] = isset($createTime['value']) ? $createTime['value'] : $createTime;
-
-			$operator_id = is_object($row['operator_id']) ? (array)$row['operator_id'] : $row['operator_id'];
-			
-			$row['user_name'] = isset($operator_id['value']) ? $operator_id['value'] : $operator_id;
-			$row['user_name'] = $operators[$row['user_name']];
 
 		}
 		return array('list'=>$list,'page'=>$page->show(),'total_bet' => $total_bet, 'total_win' => $total_win);

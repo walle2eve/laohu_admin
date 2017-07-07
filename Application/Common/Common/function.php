@@ -192,12 +192,12 @@
 		return $menu_list;
 	}
 	// 获取游戏图标文件
-	function get_game_icon($themd_id,$icon_id){
-		if($icon_id == 0){
+	function get_game_icon($theme_id,$icon_id){
+		if($icon_id == 0 && $theme_id != 1012){
 			return '/Icon_' . $icon_id . '.png';
 		}else{
-			//return '/' . $themd_id . '/' . $themd_id . '_' . $icon_id . '.png';
-			return '/' . $themd_id . '/Icon_' . $icon_id . '.png';
+			//return '/' . $theme_id . '/' . $theme_id . '_' . $icon_id . '.png';
+			return '/' . $theme_id . '/Icon_' . $icon_id . '.png';
 		}
 
 	}
