@@ -28,6 +28,7 @@ class ActivityController extends BaseController
 			$param['operator'] = $this->uid;
 			$gamelist = D('ThemeInfo')->get_options();
 		}
+		
 		$this->assign('gamelist',$gamelist);
 
 		$list = D('Activity')->alist($param);

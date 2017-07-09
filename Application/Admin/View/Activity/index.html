@@ -261,6 +261,11 @@
 						backdrop: 'static',
 						submitUrl:'{:u("Admin/Activity/save")}',
 					});
+
+					wizard.cards["user"].el.find('input[type=text]').attr('disabled','disabled');
+					wizard.cards["user"].el.find('select').attr('disabled','disabled');
+					$('input[name=bet_time_status]').attr('disabled','disabled');
+					$('input[name=deposit_time_status]').attr('disabled','disabled');
 					
 					//$(".chzn-select").chosen();
 					$("#activity-operator-id").on('change',function(e){
@@ -292,7 +297,11 @@
 							}
 						}else{
 							//wizard.cards["user"].el.find(':input[type=text]').val('').removeAttr('disabled');
-							wizard.cards["user"].el.find(':input').removeAttr('disabled');
+							//wizard.cards["user"].el.find(':input').removeAttr('disabled');
+							wizard.cards["user"].el.find('input[type=text]').attr('disabled','disabled');
+							wizard.cards["user"].el.find('select').attr('disabled','disabled');
+							$('input[name=bet_time_status]').attr('disabled','disabled');
+							$('input[name=deposit_time_status]').attr('disabled','disabled');
 						}
 					});
 	
@@ -617,6 +626,95 @@
 								$.ShowAlert(result.msg);
 							}
 						},'json');
+					});
+					//age
+					$("input:radio[name='age_status']").on('change',function(){
+						var val = $(this).val();
+
+						var min_age_obj = $('input[name=min_age]');
+						var max_age_obj = $('input[name=max_age]');
+
+						if(val == 1){
+							min_age_obj.removeAttr('disabled');
+							max_age_obj.removeAttr('disabled');
+						}else{
+							min_age_obj.attr('disabled','disabled');
+							max_age_obj.attr('disabled','disabled');
+						}
+					});
+					//vip_level
+					$("input:radio[name='vip_status']").on('change',function(){
+						var val = $(this).val();
+
+						var min_vip_obj = $('select[name=min_vip_level]');
+						var max_vip_obj = $('select[name=max_vip_level]');
+
+						if(val == 1){
+							min_vip_obj.removeAttr('disabled');
+							max_vip_obj.removeAttr('disabled');
+						}else{
+							min_vip_obj.attr('disabled','disabled');
+							max_vip_obj.attr('disabled','disabled');
+						}
+					});
+					// deposit
+					$("input:radio[name='deposit_status']").on('change',function(){
+						var val = $(this).val();
+
+						var min_deposit_obj = $('input[name=min_deposit_coins]');
+						var max_deposit_obj = $('input[name=max_deposit_coins]');
+
+						if(val == 1){
+							min_deposit_obj.removeAttr('disabled');
+							max_deposit_obj.removeAttr('disabled');
+							$('input[name=deposit_time_status]').removeAttr('disabled');
+						}else{
+							min_deposit_obj.attr('disabled','disabled');
+							max_deposit_obj.attr('disabled','disabled');
+							$('input[name=deposit_time_status]').attr('disabled','disabled');
+						}
+					});
+					// deposit_time_status
+					$("input:radio[name='deposit_time_status']").on('change',function(){
+						var val = $(this).val();
+
+						var deposit_picker_obj = $('input[name=deposit_date_picker]');
+
+						if(val == 1){
+							deposit_picker_obj.removeAttr('disabled');
+						}else{
+							deposit_picker_obj.attr('disabled','disabled');
+						}
+					});
+
+					// bet
+					$("input:radio[name='bet_status']").on('change',function(){
+						var val = $(this).val();
+
+						var min_bet_obj = $('input[name=min_bet_coins]');
+						var max_bet_obj = $('input[name=max_bet_coins]');
+
+						if(val == 1){
+							min_bet_obj.removeAttr('disabled');
+							max_bet_obj.removeAttr('disabled');
+							$('input[name=bet_time_status]').removeAttr('disabled');
+						}else{
+							min_bet_obj.attr('disabled','disabled');
+							max_bet_obj.attr('disabled','disabled');
+							$('input[name=bet_time_status]').attr('disabled','disabled');
+						}
+					});
+					// bet_time_status
+					$("input:radio[name='bet_time_status']").on('change',function(){
+						var val = $(this).val();
+
+						var bet_picker_obj = $('input[name=bet_date_picker]');
+
+						if(val == 1){
+							bet_picker_obj.removeAttr('disabled');
+						}else{
+							bet_picker_obj.attr('disabled','disabled');
+						}
 					});
 				});
 
