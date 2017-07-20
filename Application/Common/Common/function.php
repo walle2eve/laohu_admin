@@ -115,7 +115,7 @@
 	 * @param $level		菜单层级 1,2,3
 	 * @return array
 	 */
-	function page($count,$row=0,$rollPage=0){
+	function page($count,$row=0,$rollPage=5){
 		if(!$row)$row = C('LIST_ROWS');
 		$Page = new \Think\Page($count,$row,array(),$rollPage);
 		$Page->setConfig('theme',"<ul class='pagination'><li><a> %HEADER%  %NOW_PAGE%/%TOTAL_PAGE% 页</a></li><li>%FIRST%</li><li>%UP_PAGE%</li>%LINK_PAGE%<li>%DOWN_PAGE%</li><li>%END%</li></ul>");
