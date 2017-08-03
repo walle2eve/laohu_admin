@@ -11,6 +11,20 @@ class PublicController extends BaseController
     public function login(){
         $this->display();
     }
+    public function verifyCode(){
+        $Verify =     new \Think\Verify();
+        $Verify->useImgBg   = true;
+        $Verify->fontttf = '5.ttf';
+        $Verify->fontSize = 30;
+        $Verify->length   = 6;
+        $Verify->useNoise = false;
+        $Verify->codeSet = '0123456789';
+        $Verify->entry();
+    }
+    private function checkVerify($code, $id = ''){
+        $verify = new \Think\Verify();
+        return $verify->check($code, $id);
+    }
 	// 登录action
 	public function dologin(){
 		
@@ -22,14 +36,30 @@ class PublicController extends BaseController
 		if(IS_POST && IS_AJAX){
 			$login_name 	= 	I('account','','htmlspecialchars');
 			$login_pwd 		=	I('pwd','');
-			
+			$verify_code    =   I('verifycode','','htmlspecialchars');
+
 			if(trim($login_name) == '' || trim($login_pwd) == ''){
 				$result['status'] 	= false;
 				$result['msg']		= '登录名和密码不能为空！';
 				
 				return $this->ajaxReturn($result);
 			}
-			
+
+            if(trim($verify_code) == ''){
+                $result['status'] 	= false;
+                $result['msg']		= '验证码不能为空！';
+
+                return $this->ajaxReturn($result);
+            }
+            $checkVerifyStatus = $this->checkVerify(trim($verify_code));
+
+            if($checkVerifyStatus == false){
+                $result['status'] 	= false;
+                $result['msg']		= '验证码错误！';
+
+                return $this->ajaxReturn($result);
+            }
+
 			$islogin = D('SysUser')->get_login($login_name);
 
 			if(empty($islogin) || $islogin['status'] != 1){

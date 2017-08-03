@@ -111,7 +111,8 @@ class UserController extends BaseController
 				exit();
 			}
 
-			$return = D('UserInfo')->where('user_id = %d',array($user_id))->setField('vip_level',intval($vip_level));
+			//$return = D('UserInfo')->where('user_id = %d',array($user_id))->setField('vip_level',intval($vip_level));
+            $return  = D('UserInfo')->set_vip_level($user_info,$user_id,$vip_level);
 
 			if($return === false){
 			}else{

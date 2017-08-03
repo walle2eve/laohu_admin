@@ -17,7 +17,11 @@ class IndexController extends BaseController
         $this->display();
     }
 	// 运营商充值统计
-	public function stat(){
+
+    /**
+     *
+     */
+    public function stat(){
 		
 		$year = I('year','');
 		

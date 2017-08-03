@@ -1,7 +1,7 @@
 <?php
 namespace Admin\Controller;
 
-use Think\Controller;
+// use Think\Controller;
 
 // use Admin\Model\SysUserModel;
 

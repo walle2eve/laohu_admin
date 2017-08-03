@@ -3,7 +3,16 @@ namespace Admin\Model;
 use Think\Model;
 
 class UserInfoModel extends Model{
+    protected $dbName =	'laohu';
 
+    public function set_vip_level($user_info,$user_id,$vip_level){
+        $operator_id = $user_info['operator_id'];
+        $operator_info = D('Operator')->find($operator_id);
+        if($operator_info['is_diy'] == 1){
+            $this->dbName = $operator_info['diy_db_name'];
+        }
+        $this->where('user_id = %d',array($user_id))->setField('vip_level',intval($vip_level));
+    }
 	// 平台用户数,取状态有效的用户
 	public function get_player_nums($operator_id){
 		return $this->where('status = 1 AND operator_id = %d',array($operator_id))->count();
@@ -37,12 +46,12 @@ class UserInfoModel extends Model{
 			SUM(case uoi.order_type WHEN 210200 THEN uoi.amount ELSE 0  END) withdraw')
 			->join('LEFT JOIN t_sys_user su ON su.uid = ui.operator_id')
 			->join('LEFT JOIN t_user_order_info uoi ON uoi.player_id = ui.user_id And uoi.`status` = 1')
-			//->join('LEFT JOIN laohu_log.spin_stat ss ON ss.user_id = ui.user_id')
 			->where($where)
 			->group('ui.user_id')
 			->order($orderby . ', create_time DESC')
 			->limit($page->firstRow.','.$page->listRows)
 			->select();
+
 		return array(
 			'list' => $list,
 			'page' => $page->show(),

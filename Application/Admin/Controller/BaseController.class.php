@@ -12,6 +12,7 @@ class BaseController extends Controller
 
 	protected $not_login_action = array(
 			'login',
+			'verifyCode',
 			'dologin',
 			'theme_json',
 			'version_json',
@@ -52,7 +53,6 @@ class BaseController extends Controller
 		$user_roles = S('user_roles');
 
 		if(!$user_roles){
-
 			$where = 'user_role IN (' . SysDictModel::USER_ROLE_AGENT . ',' . SysDictModel::USER_ROLE_OPERATOR . ')';
 			$user_roles = D('SysUser')->field('uid,user_name')->where($where)->select();
 

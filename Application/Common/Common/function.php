@@ -7,11 +7,14 @@
 		}
 		return $func($object,$content);
 	}
-	/**
-	 * oss
-	 * $object oss端文件名称
-	 * $content 要上传的字符串
-	 */
+
+/**
+ * oss
+ * @param $object    oss端文件名称
+ * @param $content   要上传的字符串
+ * @param string $version
+ * @return bool
+ */
 	function OssPutContent($object,$content,$version="occifial"){
 		$oss_conf = C($version);
 		$OSS_ACCESS_ID = $oss_conf['OSS_ACCESS_ID'];
@@ -34,10 +37,14 @@
 
 	   	return true;
 	}
-	/***
-	 * qiniu 云存储
-	 * 
-	 */
+
+/***
+ * qiniu 云存储
+ * @param $targetFilePath
+ * @param $content
+ * @param string $bucket
+ * @return bool
+ */
 	function QiNiuPutContent($targetFilePath,$content,$bucket=""){
 	  Vendor('QiNiu.autoload');
 
@@ -108,13 +115,14 @@
 	    $decData = mcrypt_decrypt('tripledes', $key, $fromBase64Str, 'ecb');
 	    return $decData;
 	 }
-	/**
-	 * @function bootstrap 风格分页
-	 * @param $count		总记录数
-	 * @param $up_id 		上级菜单ID
-	 * @param $level		菜单层级 1,2,3
-	 * @return array
-	 */
+
+/**
+ * @function bootstrap 风格分页
+ * @param $count        总记录数
+ * @param int $row
+ * @param int $rollPage
+ * @return array
+ */
 	function page($count,$row=0,$rollPage=5){
 		if(!$row)$row = C('LIST_ROWS');
 		$Page = new \Think\Page($count,$row,array(),$rollPage);
