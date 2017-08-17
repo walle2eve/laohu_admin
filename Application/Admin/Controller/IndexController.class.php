@@ -8,19 +8,16 @@ class IndexController extends BaseController
 	public function _initialize(){
 		parent::_initialize();
 	}
+
     public function index(){
 		//运营商信息
-		$operator_info = D('SysUser')->get_user_bet_stat();
-		
+		$operator_info = D('Operator')->get_user_bet_stat($this->operator_options);
 		$this->assign('operator_info',$operator_info);
 		
         $this->display();
     }
-	// 运营商充值统计
 
-    /**
-     *
-     */
+	// 运营商充值统计
     public function stat(){
 		
 		$year = I('year','');
@@ -42,7 +39,7 @@ class IndexController extends BaseController
 			break;
 		}
 
-		$result = D('OperatorOrderInfo')->deposit_stat($stat_type,$year,$month);
+		$result = D('OperatorOrderInfo')->deposit_stat($this->operator_options,$stat_type,$year,$month);
 		
 		if(I('submitbtn') == '导出excel'){
 
@@ -61,7 +58,7 @@ class IndexController extends BaseController
 				
 				$excel_title[] = array('width'=> 20, 'val' => '年份'); 
 				foreach($result['title'] as $row){
-					$excel_title[] =  array('width'=> 20, 'val' => $row['user_name'] . '(' . $row['discount'] . '% off)');
+					$excel_title[] =  array('width'=> 20, 'val' => $row['name'] . '(' . $row['discount'] . '% off)');
 				}
 				$excel_title[] =  array('width'=> 20, 'val' => '总计');
 				
@@ -90,7 +87,7 @@ class IndexController extends BaseController
 			/*表头 begin*/
 			$excel_title[] = array('width'=> 20, 'val' => $title_first); 
 			foreach($result['title'] as $row){
-				$excel_title[] =  array('width'=> 20, 'val' => $row['user_name'] . '(' . $row['discount'] . '% off)');
+				$excel_title[] =  array('width'=> 20, 'val' => $row['name'] . '(' . $row['discount'] . '% off)');
 			}
 			$excel_title[] =  array('width'=> 20, 'val' => '总计');
 			/*表头 end*/

@@ -34,7 +34,7 @@
                       $total_gold = $total_gold + $vo['gold'];
 										</php>
                                         <tr>
-                                            <td>{$vo.user_name}</td>
+                                            <td>{$vo.name}</td>
                                             <td>{$vo.deposit_money}</td>
 											                      <td>{$vo.discount}%</td>
                                             <td>{$vo.deposit_gold}</td>
@@ -93,7 +93,7 @@
 										$player_balance = $player_balance + $vo['player_balance'];
 									</php>
                                         <tr>
-                                            <td>{$vo.user_name}</td>
+                                            <td>{$vo.name}</td>
                                             <td>{$vo.player_count|default='0'}</td>
 											<td>{$vo.player_deposit|default='0.00'}</td>
                                             <td>{$vo.player_bet|default='0.00'}</td>

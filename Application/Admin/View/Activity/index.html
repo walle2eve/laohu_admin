@@ -13,12 +13,13 @@
 								</div>
                             </div>
 							<div class="col-md-4"></div>
-							<if condition="$login_user['user_role'] eq 100110 ">
+
                             <div class="col-md-4"><form method="get" action="">
 								<div class="form-group input-group">
-									<select name="operator"  data-placeholder="请选择平台" class="form-control">
-										<volist name="user_roles" id="vo">
-										<option value="{$key}" <if condition="$param['operator'] eq $key">selected</if>>{$vo}</option>
+									<select name="operator_id"  data-placeholder="" class="form-control">
+										<option value="0">请选择平台</option>
+										<volist name="operator_options" id="vo">
+										<option value="{$vo.operator_id}" <if condition="$param['operator_id'] eq $vo['operator_id']">selected</if>>{$vo.name}</option>
 										</volist>
 									</select>
 									<span class="input-group-btn">
@@ -26,7 +27,7 @@
 									</span>
 								</div></form>
 							</div>
-							</if>
+
                         </div>
                 </div>
                 <!-- /.col-lg-12 -->
@@ -59,7 +60,7 @@
                                     $time = time();
                                     </php>
 									<volist name="list" id="vo">
-                                        <tr role="row" key="{$vo.id}" primary="id">
+                                        <tr role="row" key="{$vo.id}" operator="{$vo.operator_id}" primary="id">
                                             <td>{$vo.operator_name}</td>
                                             <td>
                                             <p>{$vo.begin_time|date="Y-m-d H:i:s",###}</p>
@@ -87,7 +88,7 @@
 													<i class="fa fa-edit fa-fw"></i>
 													编辑
 												</a>
-												<a href="javascript:void(0)" class="btn btn-danger no-radius delete_activity"  data-id="{$vo.id}">
+												<a href="javascript:void(0)" class="btn btn-danger no-radius delete_activity"  data-id="{$vo.id}" data-operator="{$vo.operator_id}">
 													<i class="fa fa-trash fa-fw"></i>
 													删除
 												</a>
@@ -246,13 +247,10 @@
 					    } 
 					});
 
-					<if condition="substr($login_user['user_role'],0,4) eq '1002'">
-					$("select[name=operator_id]").attr('disabled','disabled');
-					</if>
-
 					//https://github.com/amoffat/bootstrap-application-wizard
 
 					$.fn.wizard.logging = false;
+
 					var wizard = $('#satellite-wizard').wizard({
 						keyboard : false,
 						progressBarCurrent : true,
@@ -352,70 +350,85 @@
 						$(this).next().focus();
 					});
 
+                    wizard.cards["roles"].on("selected", function(card) {
 
-					//http://www.jq22.com/demo/bootstrap-duallistbox-master/
+						var gamedata = null;
+						var operator_id = $("#activity-operator-id").val();
 
-			        gamelist = $('.gamelist').bootstrapDualListbox({
+						$.post("{:U('Admin/Activity/get_theme_list_by_operator')}",{operator_id:operator_id},function(res){
+						    if(res.status == false){
+                                $.showError(res.msg);
+                                return false;
+							}
 
-			          nonSelectedListLabel: '可选',
+							$(".gamelist").empty();
 
-			          selectedListLabel: '已选',
+							$.each(res.data,function(index,item){
+							    var option_str = "<option value='" + item.theme_id + "'>" + item.theme_name + "</option>";
+							    $('.gamelist').append(option_str);
+							});
 
-			          preserveSelectionOnMove: false,//'moved',
+                            //http://www.jq22.com/demo/bootstrap-duallistbox-master/
 
-			          selectorMinimalHeight: 180,
+                            gamelist = $('.gamelist').bootstrapDualListbox({
 
-			          moveOnSelect: false,
+                                nonSelectedListLabel: '可选',
 
-			          //nonSelectedFilter: 'ion ([7-9]|[1][0-2])'
-			        });
+                                selectedListLabel: '已选',
 
-			        $(gamelist).on('change',function(){
+                                preserveSelectionOnMove: false,//'moved',
 
-			        	var id = $(this).val();
-			        	var oid = $('#activity-operator-id').val();
-			        	if(id == null || id == "") return;
-			        	if(oid == null || oid == ""){
-						  	$.showError('请选择平台！');
-						  	return false;
-			        	}
-			        	//console.log($(this).val());
-			        	$(".game-change").empty();
-			        	$("#totalbet").val('');
-			        	$("#game_totalbet_formula").val('');
-			        	$("#game_lines_bet").val('');
+                                selectorMinimalHeight: 180,
 
-						$.post('{:U('Admin/Activity/get_theme_param')}', {id:id,oid:oid}, function(res){
-						  if(res.status){
-						  	$("#game_totalbet_formula").val(res.data.totalBetFormula);
-						  	$("#game_lines_bet").val(res.data.linesBet);
-						  	$.each(res.data.lineNum,function(i,n){
-						  		$("#lines").append("<option value=" + n + "> " + n + " </option>");
-						  	});
-						  	$.each(res.data.mul,function(i,n){
-						  		$("#mul").append("<option value=" + n + "> " + n + " </option>");
-						  	});
-						  	$.each(res.data.bet,function(i,n){
-						  		$("#bet").append("<option value=" + n + "> " + n + " </option>");
-						  	});
-						  	
-						  	changeTotalBetVal();
-						  }else{
-						  	$.showError(res.msg);
-						  	return false;
-						  }
-						}, 'json');
-			        });
+                                moveOnSelect: false,
 
-			        $('.game-change').on('change',changeTotalBetVal);
+                                //nonSelectedFilter: 'ion ([7-9]|[1][0-2])'
+                            });
+                            $(gamelist).on('change',function(){
+
+                                var id = $(this).val();
+
+                                if(id == null || id == "") return;
+                                if(operator_id == null || operator_id == ""){
+                                    $.showError('请选择平台！');
+                                    return false;
+                                }
+                                //console.log($(this).val());
+                                $(".game-change").empty();
+                                $("#totalbet").val('');
+                                $("#game_totalbet_formula").val('');
+                                $("#game_lines_bet").val('');
+
+                                $.post("{:U('Admin/Activity/get_theme_param')}", {id:id,operator_id:operator_id}, function(res){
+                                    if(res.status){
+                                        $("#game_totalbet_formula").val(res.data.totalBetFormula);
+                                        $("#game_lines_bet").val(res.data.linesBet);
+                                        $.each(res.data.lineNum,function(i,n){
+                                            $("#lines").append("<option value=" + n + "> " + n + " </option>");
+                                        });
+                                        $.each(res.data.mul,function(i,n){
+                                            $("#mul").append("<option value=" + n + "> " + n + " </option>");
+                                        });
+                                        $.each(res.data.bet,function(i,n){
+                                            $("#bet").append("<option value=" + n + "> " + n + " </option>");
+                                        });
+
+                                        changeTotalBetVal();
+                                    }else{
+                                        $.showError(res.msg);
+                                        return false;
+                                    }
+                                }, 'json');
+                            });
+
+                            $('.game-change').on('change',changeTotalBetVal);
+						});
+
+                    });
 
 					wizard.cards["done"].on("selected", function(card) {
-						<if condition="substr($login_user['user_role'],0,4) eq '1002' ">
-						$('#operator').text($('#operator-name').val());
-						<else/>
-						$('#operator').text($('select[name=operator_id]').find("option:selected").text());
-						</if>
-						// /
+						$('#operator').text($('#activity-operator-id').find("option:selected").text());
+
 						$('#usertype').text($('select[name=user_type]').find("option:selected").text());
 						$('#activitytime').text($('input[name=activity_date_picker]').val());
 						$('#remarktext').text($('#remark').val());
@@ -497,7 +510,7 @@
 
 						var $activityid = $(this).data('id');
 
-						$.post('{:U('Admin/Activity/get_info')}', {id:$activityid}, function(res){
+						$.post("{:U('Admin/Activity/get_info')}", {id:$activityid}, function(res){
 
 							if(!res.status){
 							  	$.showError(res.msg);
@@ -508,12 +521,11 @@
 							e.preventDefault();
 							wizard.show();
 							//--------------------------------------------------
-							console.log(activityInfo);
+
 							// step 1
-							<if condition="substr($login_user['user_role'],0,4) eq '1001' ">
+
 							$("#activity-operator-id").val(activityInfo.operator_id);
-							</if>
-							// /
+
 
 							$("#activity-user-type").val(activityInfo.user_type);
 
@@ -523,6 +535,7 @@
 
 							activity_time_0 = $.myTime.UnixToDate(activityInfo.begin_time,true,8);
 							activity_time_1 = $.myTime.UnixToDate(activityInfo.end_time,true,8);
+
 							$('#id-date-range-picker-0').val(activity_time_0 + ' - ' + activity_time_1);
 
 							$('#remark').val(activityInfo.remark);
@@ -585,8 +598,9 @@
 					});
 					$('.delete_activity').click(function(){
 						var $activityid = $(this).data('id');
+						var $operatorid = $(this).data('operator');
 						$.ShowConfirm('<span class="text-danger"><i class="fa fa-warning fa-fw"></i>本操作不可逆！您确定删除当前记录？</span>', function(){
-							$.post("{:U('Admin/Activity/del')}",{"activityid":$activityid},function(res){
+							$.post("{:U('Admin/Activity/del')}",{"activityid":$activityid,operator_id:$operatorid},function(res){
 								if(res.status){
 									window.location.reload();
 									return false;
@@ -605,9 +619,11 @@
 						query.field = $(this).attr('field');
 						query.val = $(this).attr('status');
 						query.key = tr.attr('key');
+						query.operator_id = tr.attr('operator');
+
 						obj.removeClass('fa-check fa-lock text-success').addClass('fa-spinner fa-spin');
 
-						$.post('{:U('Admin/Activity/set_status')}', query, function(result){
+						$.post("{:U('Admin/Activity/set_status')}", query, function(result){
 							if(result.status){
 								if(query.val == 1){
 									obj.removeClass('text-success fa-spinner fa-spin').addClass('fa-lock').attr('status',-1);
@@ -724,7 +740,7 @@
 					//http://blog.csdn.net/jbgtwang/article/details/50998075
 					$("#uploadfile").fileinput({
 					    language: 'zh', //设置语言
-					    uploadUrl: "{:U('Admin/Activity/uploadcsv')}?operator=" + $operator, //上传的地址
+					    uploadUrl: "{:U('Admin/Activity/uploadcsv')}?operator_id=" + $operator, //上传的地址
 					    allowedFileExtensions: ['csv','xls','xlsx'],//接收的文件后缀
 					    uploadAsync: true, //默认异步上传
 					    showUpload: true, //是否显示上传按钮
@@ -785,8 +801,7 @@
 
 				function openChooseWindow(){
 					box =  $.ShowBox('请输入用户名',$("#chooseWindowTpl").html(), 500);
-					var $operator = $("select[name=operator_id]").val();
-
+					var $operator = $('#activity-operator-id').val();
 					$(".btn-search").on('click',function(){
 
 						var $keyword = $("#choose-account").val();
@@ -795,7 +810,7 @@
 							return;
 						}
 
-						$.post('{:U('Admin/Activity/get_user_by_name')}', {operator:$operator,account:$keyword}, function(res){
+						$.post("{:U('Admin/Activity/get_user_by_name')}", {operator_id:$operator,account:$keyword}, function(res){
 
 						    if(!res.status){
 						    	$.showError(res.msg);

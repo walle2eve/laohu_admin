@@ -5,16 +5,16 @@
                     <h3 class="page-header">玩家资金情况</h3>
 						<div class="row">
 							<form action="{:U('Admin/User/money')}">
-								<if condition="$login_user['user_role'] eq 100110 ">
+
 								<div class="col-md-3">
 									<select name="operator_id"  class="form-control">
 									<option value="">请选择平台</option>
-									<volist name="user_roles" id="vo">
-									<option value="{$key}" <eq name="param['operator_id']" value="$key">selected="selected"</eq>>{$vo}</option>
+									<volist name="operator_options" id="vo">
+									<option value="{$vo.operator_id}" <eq name="param['operator_id']" value="$vo.operator_id">selected="selected"</eq>>{$vo.name}</option>
 									</volist>
 									</select>
 								</div>
-								</if>
+
 								<div class="col-md-3">
 									<select name="order_by"  class="form-control">
 										<option value="diposit" <eq name="param['order_by']" value="diposit">selected="selected"</eq>>转入最多</option>
@@ -66,7 +66,7 @@
                                     <tbody>
 									<volist name="list" id="vo">
                                         <tr><php>
-                                        	$profit = $vo['gold'] - $vo['deposit'] + $vo['withdraw'];
+                                        	$profit = round($vo['gold'] - $vo['deposit'] + $vo['withdraw'],2);
                                         	</php>
                                             <if condition="$login_user['user_role'] eq 100110 "><td>{$vo.user_name}</td></if>
                                             <td>{$vo.account_id}</td>

@@ -3,14 +3,19 @@ namespace Admin\Model;
 use Think\Model;
 
 class UserInfoModel extends Model{
+
     protected $dbName =	'laohu';
 
     public function set_vip_level($user_info,$user_id,$vip_level){
         $operator_id = $user_info['operator_id'];
         $operator_info = D('Operator')->find($operator_id);
+
         if($operator_info['is_diy'] == 1){
             $this->dbName = $operator_info['diy_db_name'];
+        }else{
+            $this->dbName = 'public_laohu';
         }
+
         $this->where('user_id = %d',array($user_id))->setField('vip_level',intval($vip_level));
     }
 	// 平台用户数,取状态有效的用户
@@ -22,7 +27,7 @@ class UserInfoModel extends Model{
 		return $this->where('operator_id = %d',array($operator_id))->sum('gold');
 	}
 	// 用户信息列表
-	public function get_userinfo_list($operator_id = 0,$account_id = '',$orderby = 'deposit'){
+	public function get_userinfo_list($user_role,$operator_id = 0,$account_id = '',$orderby = 'deposit'){
 
 		$where['ui.status'] = 1;
 
@@ -39,13 +44,14 @@ class UserInfoModel extends Model{
 		$today_table = 'spin_log_' . date('Y_m_d');
 
 		$list = $this->alias('ui')
-			->field('su.user_name,ui.account_id,ui.gold,ui.vip_level,ui.user_id,ui.create_time,
+			->field('op.name as user_name,ui.account_id,ui.gold,ui.vip_level,ui.user_id,ui.create_time,
 			SUM(CASE uoi.order_type WHEN 210100 THEN uoi.amount ELSE 0  END) deposit,
 			((SELECT IFNULL(SUM(total_bet),0) FROM laohu_log.spin_stat WHERE user_id = ui.user_id) + (SELECT IFNULL(SUM(total_bet),0) FROM laohu_log.`' . $today_table . '` WHERE user_id = ui.user_id)) bet,
 			((SELECT IFNULL(SUM(total_win),0) FROM laohu_log.spin_stat WHERE user_id = ui.user_id) + (SELECT IFNULL(SUM(win),0) FROM laohu_log.`' . $today_table . '` WHERE user_id = ui.user_id)) win,
 			SUM(case uoi.order_type WHEN 210200 THEN uoi.amount ELSE 0  END) withdraw')
-			->join('LEFT JOIN t_sys_user su ON su.uid = ui.operator_id')
-			->join('LEFT JOIN t_user_order_info uoi ON uoi.player_id = ui.user_id And uoi.`status` = 1')
+			->join('LEFT JOIN __OPERATOR__ op ON op.id = ui.operator_id')
+            ->join('LEFT JOIN __SYS_ROLE_OPERATOR__ sro ON sro.operator_id = ui.operator_id AND sro.role_id = ' . $user_role)
+			->join('LEFT JOIN __USER_ORDER_INFO__ uoi ON uoi.player_id = ui.user_id And uoi.`status` = 1')
 			->where($where)
 			->group('ui.user_id')
 			->order($orderby . ', create_time DESC')
@@ -58,7 +64,7 @@ class UserInfoModel extends Model{
 		);
 	}
 
-	// 
+	//
 	public function get_user_id($account_id){
 		return $this->where('account_id = "%s"',array($account_id))->getField('user_id');
 	}

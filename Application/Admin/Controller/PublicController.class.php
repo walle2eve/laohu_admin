@@ -11,6 +11,7 @@ class PublicController extends BaseController
     public function login(){
         $this->display();
     }
+
     public function verifyCode(){
         $Verify =     new \Think\Verify();
         $Verify->useImgBg   = true;
@@ -21,10 +22,12 @@ class PublicController extends BaseController
         $Verify->codeSet = '0123456789';
         $Verify->entry();
     }
+
     private function checkVerify($code, $id = ''){
         $verify = new \Think\Verify();
         return $verify->check($code, $id);
     }
+
 	// 登录action
 	public function dologin(){
 		
@@ -114,6 +117,7 @@ class PublicController extends BaseController
 	// 保存用户登录信息到session
 	private function save_login_info($islogin){
 		$this->logout();
+
 		session('uid',$islogin['uid']);
 		session('login_user',$islogin);
 		
@@ -129,33 +133,16 @@ class PublicController extends BaseController
 	//清除缓存
 	public function clear_cache(){
 		// 菜单缓存
-		$user_roles = D('SysDict')->get_dict(100);
+		$user_roles = D('SysRole')->get_all();
+
 		foreach($user_roles as $row){
-			$param_name = 'sys_menu_' . $row['dict_id'];
+			$param_name = 'sys_menu_' . $row['id'];
 			S($param_name,null);
 		}
-		// 平台用户缓存
-		S('user_roles',null);
-	}
 
-	// download
-	public function download_test(){
-
-		$this->display('download2');
-	}
-
-	// download
-	public function download(){
-		if(I('operator') == 'cf365'){
-			$version = D('ClientVersionCf365')->get_last_version();
-		}else{
-			$version = D('ClientVersion')->get_last_version();
-		}
-		
-		$iosDownloadUrl = $version['conf']['IosDownloadUrl'];
-		$androidDownloadUrl = $version['conf']['AndroidDownloadUrl'];
-		$this->assign('iosDownloadUrl',$iosDownloadUrl);
-		$this->assign('androidDownloadUrl',$androidDownloadUrl);
-		$this->display('download4');
+        // 运营商信息缓存
+        S('operators',null);
+        //
+        S('functions',null);
 	}
 }

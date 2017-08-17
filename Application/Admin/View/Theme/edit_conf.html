@@ -16,6 +16,7 @@
 					<div class="modal-body">
 					  <div class="form-horizontal">
 						<div class="form-group">
+							<input type="hidden" name="id" value="{$result.id}">
 						  <div class="col-sm-offset-3 col-sm-6">
 							<button class="btn btn-primary submit-button" data-loading-text="创建中，请稍等...">确认</button>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -24,19 +25,23 @@
 						</div>
 
 						<div class="tree well">
-						    <ul><volist name="theme_conf_field" id="val">
+						    <ul>
+								<volist name="theme_conf_field" id="val">
+
 						    <if condition="$val.field_type eq 'string'">
+
 						        <li><div class="col-sm-12">
 						            	<label class="col-sm-6 control-label"><span><i class="icon-folder-open"></i> {$key} </span></label>
-						            	<div class="col-sm-6"><input type="text" name="{$key}"  <if condition="$key eq 'themeid'">readonly</if> value="<if condition="$key eq 'themeid'">{$result.id}<else/><if condition="$key eq 'themeName'">{$result.name}<else/>{$result['theme_info'].$key}</if></if>" class="form-control"/></div>
+						            	<div class="col-sm-6"><input type="text" name="{$key}"  <if condition="$key eq 'themeid'">readonly</if> value="<if condition="$key eq 'themeid'">{$result.theme_id}<else/><if condition="$key eq 'themeName'"><if condition="$result['theme_info'][$key] eq ''">{$result.theme_name}<else/>{$result['theme_info'][$key]}</if><else/>{$result['theme_info'].$key}</if></if>" class="form-control"/></div>
 						            </div>
 						        </li>
+
 						    <else/>
 						        <li>
 						        	<php>
 						            	$field_key = $key;
 						            </php>
-						            <span><i class="icon-folder-open"></i> {$key} </span> <a href="javascript:void(0);" class="add_field" data="{$key}" count="{$result['theme_info'].$field_key|array_keys|max}">添加</a>
+						            <span><i class="icon-folder-open"></i> {$key} </span> <a href="javascript:void(0);" class="add_field" data="{$key}" count="{$result['info'].$field_key|array_keys|max}">添加</a>
 						            <ul>
 						            <if condition="!empty($result['theme_info'][$key])">
 

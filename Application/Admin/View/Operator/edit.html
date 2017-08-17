@@ -1,0 +1,134 @@
+					<if condition="$page_error neq ''">
+					<script>	
+						$.showError('{$page_error}',300,function(){
+							$('#edit-operator').modal('hide');
+						});
+					</script>
+					</if>
+
+					<div class="modal-header">
+					  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					  <h4 class="modal-title">
+						<span class="fa fa-gamepad fa-fw"></span>
+						<span>编辑配置</span>
+					  </h4>
+					</div>
+					<div class="modal-body">
+					  <div class="form-horizontal">
+						<input type="hidden" name="id" value="{$result.id}">
+						<div class="form-group">
+						  <label class="col-sm-3 control-label">平台名称：</label>
+						  <div class="col-sm-6">
+							<input type="text" name="name" value="{$result.name}" class="form-control" />
+						  </div>
+						</div>
+						<div class="form-group">
+						  <label class="col-sm-3 control-label">充值折扣(%)：</label>
+						  <div class="col-sm-6">
+							<div class="input-group spinner" data-trigger="spinner" id="customize-spinner">
+							  <input type="text" name="discount" class="form-control text-center" data-max="100" data-min="0" data-step="1" readonly value="{$result.discount}">
+							  <div class="input-group-addon">
+								<a href="javascript:;" class="spin-up" data-spin="up"><i class="fa fa-caret-up"></i></a>
+								<a href="javascript:;" class="spin-down" data-spin="down"><i class="fa fa-caret-down"></i></a>
+							  </div>
+							</div>
+						  </div>
+						</div>
+						  <div class="form-group">
+							  <div class="col-sm-12"><hr/></div>
+						  </div>
+						  <div class="form-group">
+							  <label class="col-sm-3  control-label">资源存储类型：</label>
+							  <div class="col-sm-6">
+								  <input type="radio" name="storage_type" value="oss"> 阿里云
+								  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								  <input type="radio" name="storage_type" value="qiniu"> 七牛云
+							  </div>
+						  </div>
+						  <div class="form-group">
+							  <label class="col-sm-3  control-label">Bucket</label>
+							  <div class="col-sm-6">
+								  <input type="text" name="storage_bucket" class="form-control" value="{$result.storage_bucket}"/>
+							  </div>
+						  </div>
+						  <div class="form-group">
+							  <label class="col-sm-3 control-label access_id">Access_ID</label>
+							  <div class="col-sm-6">
+								  <input type="text" name="storage_access_id" class="form-control" value="{$result.storage_access_id}"/>
+							  </div>
+						  </div>
+						  <div class="form-group">
+							  <label class="col-sm-3 control-label access_key">Access_KEY</label>
+							  <div class="col-sm-6">
+								  <input type="text" name="storage_access_key" class="form-control" value="{$result.storage_access_key}"/>
+							  </div>
+						  </div>
+						  <div class="form-group endpoint">
+							  <label class="col-sm-3  control-label">endpoint</label>
+							  <div class="col-sm-6">
+								  <input type="text" name="storage_endpoint" class="form-control" value="{$result.storage_endpoint}"/>
+							  </div>
+						  </div>
+						  <div class="form-group"></div>
+						  <div class="form-group">
+							  <div class="col-sm-offset-4 col-sm-9">
+								  <button class="btn btn-primary submit-button" data-loading-text="正在修改，请稍等...">确认</button>
+								  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-warning">取消</button>
+							  </div>
+						  </div>
+						  <!-- 错误提示 -->
+						  <div class="form-group">
+							  <div class="col-sm-offset-3 col-sm-6" data-error-box>{$error}</div>
+						  </div>
+					  </div>
+					</div>
+					<script src="__PUBLIC__/plugins/spinner/dist/jquery.spinner.js"></script>
+
+                    <script type="text/javascript">
+                        $(function(){
+                            var $storage_type = '{$result.storage_type}';
+                            if($storage_type == 'qiniu')
+                                $("input:radio[name='storage_type']").eq(1).attr("checked",true);
+                            else
+                                $("input:radio[name='storage_type']").eq(0).attr("checked",true);
+
+                            $('input[name=storage_type]').on('change',function(){
+                                var $obj = $(this).val();
+                                storageChange($obj);
+                            });
+                            storageChange($storage_type);
+                        });
+
+                        function storageChange(name){
+                            var access_id,access_key,endpoint;
+                            endpoint = 'hide';
+                            //console.log(name);
+                            switch(name){
+                                case 'oss':
+                                    access_id = 'Access_ID';
+                                    access_key = 'Access_KEY';
+                                    endpoint = 'show';
+                                    break;
+                                case 'qiniu':
+                                    access_id = 'Access_KEY';
+                                    access_key = 'Secret_KEY';
+                                    break;
+                                default:
+                                    access_id = 'Access_ID';
+                                    access_key = 'Access_KEY';
+                                    endpoint = 'show';
+                                    break;
+                            }
+
+                            $('.access_id').text(access_id);
+                            $('.access_key').text(access_key);
+
+                            if(endpoint == 'show')
+                                $('.endpoint').show();
+                            else
+                                $('.endpoint').hide();
+                        }
+                    </script>
+
+				  	

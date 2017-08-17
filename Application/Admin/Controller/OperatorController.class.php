@@ -12,24 +12,26 @@ class OperatorController extends BaseController
 	}
   	public function manage(){
 		$param = I('get.');
-		$list = D('SysUser')->get_list($param);
+		$list = D('Operator')->get_list($param);
+
 		$this->assign('list',$list['list']);
 		$this->assign('page',$list['page']);
 
-		//用户类别 , 字典值100
-		$user_roles = D('SysDict')->get_dict(100);
-		//echo D('SysDict')->getlastsql();
+		//运营商类别 , 字典值130
+		$user_roles = D('SysDict')->get_dict(130);
+
 		$this->assign('user_roles',$user_roles);
 		$this->display();
     }
-    public function edit_manager(){
-    	$page_error = '';
-    	$uid = I('id');
-    	$user = D('SysUser')->find($uid);
 
-		if(empty($user)){
-			$page_error = '用户参数错误';
+    public function edit(){
+    	$page_error = '';
+    	$id = I('id');
+    	$operator = D('Operator')->find($id);
+		if(empty($operator)){
+			$page_error = '提交的参数错误';
 		}
+
 		if(IS_AJAX && IS_POST){
 			$return = array(
 				'status' => true,
@@ -47,58 +49,64 @@ class OperatorController extends BaseController
 			// 处理参数
 			$args = I('post.');
 
-			$re = D('SysUser')->where('uid = %d',array($uid))->save($args);
+			$re = D('Operator')->where('id = %d',array($id))->save($args);
 
 			if($re === false){
+
 				$return['status'] = false;
 				$return['msg'] = '编辑配置信息失败，请重试！';
 				$this->ajaxReturn($return);
+
 			}else{
+
+                A('Public')->clear_cache();
 				$this->ajaxReturn($return);
 			}
-			
+
+
 			exit();
 		}
-		$this->assign('result',$user);
+		$this->assign('result',$operator);
 		$this->display();
     }
-	public function add_user(){
+
+	public function add(){
 		$result = array(
 			'status' => true,
-			'msg' => '创建用户成功',
+			'msg' => '添加成功',
 			'url' => U('Admin/Operator/manage'),
 		);
 		///
 		if(IS_AJAX && IS_POST){
 			$args = I('post.');
-			D('SysUser')->startTrans();
-			if(!D('SysUser')->create()){
+			D('Operator')->startTrans();
+			if(!D('Operator')->create()){
 				$result['status'] = false;
-				$result['msg'] = D('SysUser')->getError();
+				$result['msg'] = D('Operator')->getError();
 				$this->ajaxReturn($result);
 				exit();
 			}
-			// 添加用户
-			$args['salt'] = get_rand_char();
-			$args['login_pwd'] = get_pwd($pwd,$salt);
+
 			$args['input_time'] = time();
 
-			$uid = D('SysUser')->add($args);
-			if(!$uid){
-				D('SysUser')->rollback();
+			$id = D('Operator')->add($args);
+			if(!$id){
+				D('Operator')->rollback();
 
 				$result['status'] = false;
-				$result['msg'] = '添加用户失败';
+				$result['msg'] = '添加运营商失败';
 				$this->ajaxReturn($result);
 				exit();
 			}
 
 			// 生成access_key
-			$access_key = to_guid_string($uid);
-			$access_key = implode('#',array($uid,$access_key));
-			$save_status = D('SysUser')->where('uid = %d',array($uid))->setField('access_key',$access_key);
+			$access_key = to_guid_string($id);
+			$access_key = implode('#',array($id,$access_key));
+
+			$save_status = D('Operator')->where('id = %d',array($id))->setField('access_key',$access_key);
+
 			if(!$save_status){
-				D('SysUser')->rollback();
+				D('Operator')->rollback();
 
 				$result['status'] = false;
 				$result['msg'] = '生成key失败，请重试！';
@@ -106,43 +114,17 @@ class OperatorController extends BaseController
 				exit();
 			}
 
-			A('Public')->clear_cache();
-			D('SysUser')->commit();
+
+			D('Operator')->commit();
+
+            A('Public')->clear_cache();
 			$this->ajaxReturn($result);
 			exit();
 		}
 		die('error page');
 	}
-	//重置用户密码
-	public function reset_user_pwd(){
-		$result = array(
-			'status' => true,
-			'msg' => '重置密码成功'
-		);
-		$uid = I('post.id');
-		$uid = intval($uid);
-		$repwd = I('post.pwd');
 
-		if(!IS_AJAX || !IS_POST)die('error page');
-		$user = D('SysUser')->find($uid);
-		if(!$user){
-			$result['status'] = false;
-			$result['msg'] = '用户参数错误，找不到该用户，请刷新后重试';
-			$this->ajaxReturn($result);
-			exit();
-		}
-		$pwd = get_pwd($repwd,$user['salt']);
-		$return = D('SysUser')->where('uid = %d',array($uid))->setField('login_pwd',$pwd);
-
-		if($return === false){
-			$result['status'] = false;
-			$result['msg'] = '重置用户密码失败，请重试';
-			$this->ajaxReturn($result);
-			exit();
-		}
-		$this->ajaxReturn($result);
-	}
-	//设置用户状态
+	//设置运营商状态
 	public function set_status(){
 		$result = array(
 			'status' => true,
@@ -150,24 +132,20 @@ class OperatorController extends BaseController
 
 		if(!IS_AJAX || !IS_POST)die('error page');
 
-		$uid = I('post.key',0);
-		$uid = intval($uid);
-		if($uid == 10001){
-			// 系统管理员，不允许修改\
+		$id = I('post.key',0);
+		$uid = intval($id);
+
+		$operator = D('Operator')->find($id);
+
+		if(empty($operator)){
 			$result['status'] = false;
-			$result['msg'] = '不允许修改系统内置用户的状态';
+			$result['msg'] = '运营商参数错误，无法修改状态，请刷新后重试';
 			$this->ajaxReturn($result);
 			exit();
 		}
-		$user = D('SysUser')->find($uid);
-		if(empty($user)){
-			$result['status'] = false;
-			$result['msg'] = '用户参数错误，无法修改状态，请刷新后重试';
-			$this->ajaxReturn($result);
-			exit();
-		}
-		$status = $user['status'] == 1 ? -1 : 1;
-		$return = D('SysUser')->where('uid = %d',array($uid))->setField('status',$status);
+
+		$status = $operator['status'] == 1 ? -1 : 1;
+		$return = D('Operator')->where('id = %d',array($id))->setField('status',$status);
 
 		if($return === false){
 			$result['status'] = false;
@@ -175,43 +153,9 @@ class OperatorController extends BaseController
 			$this->ajaxReturn($result);
 			exit();
 		}
+
 		A('Public')->clear_cache();
 		$this->ajaxReturn($result);
 	}
-	//删除用户
-	public function del_user(){
-		$result = array(
-			'status' => true,
-		);
 
-		if(!IS_AJAX || !IS_POST)die('error page');
-
-		$uid = I('post.id',0);
-		$uid = intval($uid);
-		if($uid == 10001){
-			// 系统管理员，不允许删除
-			$result['status'] = false;
-			$result['msg'] = '不允许删除系统内置用户';
-			$this->ajaxReturn($result);
-			exit();
-		}
-		$user = D('SysUser')->find($uid);
-		if(empty($user)){
-			$result['status'] = false;
-			$result['msg'] = '用户参数错误，无法修改状态，请刷新后重试';
-			$this->ajaxReturn($result);
-			exit();
-		}
-
-		$return = D('SysUser')->delete($uid);
-
-		if($return === false){
-			$result['status'] = false;
-			$result['msg'] = '删除失败';
-			$this->ajaxReturn($result);
-			exit();
-		}
-		A('Public')->clear_cache();
-		$this->ajaxReturn($result);
-	}
 }

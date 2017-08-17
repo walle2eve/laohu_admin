@@ -10,7 +10,7 @@ class OperatorOrderInfoModel extends Model{
 	const WITHDRAWAL_ORDER_TYPE = 210200;
 
 	// 获取运营商充值记录
-	public function get_deposit_list($operator_id = '',$begin_time = '',$end_time = '',$sn = '',$order_by='',$export = false){
+	public function get_deposit_list($role_id,$operator_id = '',$begin_time = '',$end_time = '',$sn = '',$order_by='',$export = false){
 
 		$where = array();
 
@@ -18,7 +18,7 @@ class OperatorOrderInfoModel extends Model{
 
 		if($operator_id != ''){
 
-			$where['operator_id'] = $operator_id;
+			$where['t.operator_id'] = $operator_id;
 
 		}
 
@@ -33,8 +33,9 @@ class OperatorOrderInfoModel extends Model{
 			$where['sn'] = $sn;
 		}
 
+		$where['sro.role_id'] = $role_id;
 
-		$order_by = in_array($order_by,array('create_time','amount')) ? $order_by . ' DESC ' : 'id DESC';
+		$order_by = in_array($order_by,array('create_time','amount')) ? $order_by . ' DESC ' : 't.id DESC';
 
 		if($export === true){
 
@@ -55,11 +56,12 @@ class OperatorOrderInfoModel extends Model{
 
 		$list = $this
 				->alias('t')
-				->field('t.sn,t.create_time,suser.user_name,t.amount,t.discount,t.gold,t.status,t.total_gold')
-				->join('LEFT JOIN t_sys_user suser ON suser.uid = t.operator_id')
+				->field('op.name AS operator_name,t.sn,t.create_time,t.amount,t.discount,t.gold,t.status,t.total_gold')
+				->join('LEFT JOIN __OPERATOR__ op ON op.id = t.operator_id')
+                ->join('LEFT JOIN __SYS_ROLE_OPERATOR__ sro ON sro.operator_id = op.id')
 				->where($where)
 				->order($order_by)
-				->limit()
+				->limit($limit)
 				->select();
 
 		return array('list'=>$list,'page'=> $page_show);
@@ -68,7 +70,9 @@ class OperatorOrderInfoModel extends Model{
 
 	// add_deposit, 添加运营商充值记录
 	public function add_deposit($operator_id,$amount,$discount,$deposit_gold,$discount_money,$remark=''){
-		$operator_info = D('SysUser')->where('uid = %d',array($operator_id))->find();
+
+		$operator_info = D('Operator')->find($operator_id);
+
 		if(!$operator_info)return array('status'=>false,'msg'=>'运营商信息错误');
 		if($operator_info['discount'] != $discount) return array('status'=>false,'msg'=>'运营商折扣信息错误');
 
@@ -92,9 +96,9 @@ class OperatorOrderInfoModel extends Model{
 		$id = $this->add($param);
 
 		if($id > 0){
-			$gold_status = M('SysUser')->where('uid = %d',array($operator_id))->setInc('gold',$deposit_gold);
-			$deposit_money_status = M('SysUser')->where('uid = %d',array($operator_id))->setInc('deposit_money',$amount);
-			$deposit_gold_status = M('SysUser')->where('uid = %d',array($operator_id))->setInc('deposit_gold',$deposit_gold);
+			$gold_status = D('Operator')->where('id = %d',array($operator_id))->setInc('gold',$deposit_gold);
+			$deposit_money_status = D('Operator')->where('id = %d',array($operator_id))->setInc('deposit_money',$amount);
+			$deposit_gold_status = D('Operator')->where('id = %d',array($operator_id))->setInc('deposit_gold',$deposit_gold);
 
 			if($gold_status && $deposit_money_status && $deposit_gold_status){
 				$this->commit();
@@ -109,21 +113,10 @@ class OperatorOrderInfoModel extends Model{
 	}
 
 	// 获取运营商充值统计信息
-	public function deposit_stat($stat_type,$year,$month=''){
+	public function deposit_stat($operator_info = array(),$stat_type,$year,$month=''){
 
-		$operator_info = array();
 		$operator_stat = array();
 		$year_stat = array();
-
-		$t_arr = D('SysUser')
-					->alias('suser')
-					->field('suser.user_name,suser.discount,suser.uid')
-					//->join('LEFT JOIN t_operator_order_info ooi ON ooi.operator_id = suser.uid AND ooi.order_type = ' . self::DEPOSIT_ORDER_TYPE .' AND ooi.status = 1')
-					->where('suser.status = 1 AND user_role IN (' . SysDictModel::USER_ROLE_OPERATOR .',' . SysDictModel::USER_ROLE_AGENT . ')')
-					->select();
-		foreach($t_arr as $row){
-			$operator_info[$row['uid']] = $row;
-		}
 
 		if($stat_type == 'month'){
 
@@ -138,7 +131,6 @@ class OperatorOrderInfoModel extends Model{
 				$operator_stat[$i]['date'] = date('Y-m-d',$i);
 				foreach($operator_info as $operator_id=>$row){
 					$operator_stat[$i]['stat'][$operator_id] = $this->where("operator_id = %d AND create_year = %d AND create_month = '%s' AND create_day = '%s' AND order_type = %d AND status = 1",array($operator_id,date('Y'),date('m'),date('d',$i),self::DEPOSIT_ORDER_TYPE))->sum('amount');
-					//echo M()->getlastsql();
 				}
 
 			}

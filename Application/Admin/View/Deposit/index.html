@@ -6,8 +6,6 @@
 
 					<form action="{:U('Admin/Deposit/index')}">
 						<div class="row">
-
-							<if condition="$login_user['user_role'] eq 100110 ">
 								<div class="col-md-2">
 									<div class="form-group input-group">
 										<a href="javascript:void(0);" class="btn btn-outline btn-primary" data-add-trigger><b>+</b> 添加</a>
@@ -16,12 +14,12 @@
 								<div class="col-md-2">
 									<select name="operator_id"  class="form-control">
 									<option value="">请选择平台</option>
-									<volist name="user_roles" id="vo">
-									<option value="{$key}" <eq name="param['operator_id']" value="$key">selected="selected"</eq>>{$vo}</option>
+									<volist name="operator_options" id="vo">
+									<option value="{$vo.operator_id}" <eq name="param['operator_id']" value="$vo['operator_id']">selected="selected"</eq>>{$vo.name}</option>
 									</volist>
 									</select>
 								</div>
-							</if>
+
 								<div class="col-md-3">
 									<div class="form-group input-group">
 										<span class="add-on input-group-addon">
@@ -76,7 +74,7 @@
 											                                        <tr>
 											                                            <td>{$vo.sn}</td>
 											                                            <td>{$vo.create_time}</td>
-																						<td>{$vo.user_name}</td>
+																						<td>{$vo.operator_name}</td>
 											                                            <td>{$vo.amount}</td>
 											                                            <td>{$vo.discount}%</td>
 																						<td>{$vo.gold}</td>
@@ -101,7 +99,7 @@
 									{$page}
 								</div>
 				</div>
-			<if condition="$login_user['user_role'] eq 100110 ">
+
 			<!--{// 添加充值记录}-->
 			<div id="add-order-modal" class="modal fade" tabindex="-1" role="dialog">
 			  <form class="add-form">
@@ -121,8 +119,8 @@
 							<div class="col-sm-6">
 								<select name="operator_id" id="operator_id" class="form-control">
 									<option value="">请选择平台</option>
-									<volist name="user_roles" id="vo">
-									<option value="{$key}" <eq name="param['operator_id']" value="$key">selected="selected"</eq>>{$vo}</option>
+									<volist name="operator_options" id="vo">
+									<option value="{$vo.operator_id}" <eq name="param['operator_id']" value="$vo['operator_id']">selected="selected"</eq>>{$vo.name}</option>
 									</volist>
 								</select>
 							</div>
@@ -167,7 +165,7 @@
 				</div><!-- /.modal-dialog -->
 			  </form>
 			</div><!-- /.modal -->
-			</if>
+
 			<!-- Metis Menu Plugin JavaScript -->
 			<script src="__PUBLIC__/bower_components/metisMenu/dist/metisMenu.min.js"></script>
 
@@ -177,7 +175,7 @@
 			<!-- Page-Level Demo Scripts - Tables - Use for reference -->
 			<script>
 				$(document).ready(function() {
-						<if condition="$login_user['user_role'] eq 100110 ">
+
 						$('[data-add-trigger]').on('click', function(e){
 							e.preventDefault();
 							$('#add-order-modal').modal('show');
@@ -195,7 +193,7 @@
 								return false;
 							}
 
-							$.post('{:U('Admin/Deposit/get_operator_discount')}', {operator_id:op_id}, function(res){
+							$.post("{:U('Admin/Deposit/get_operator_discount')}", {operator_id:op_id}, function(res){
 
 								if(res.status){
 
@@ -229,7 +227,7 @@
 								$('#gold').val(gold);
 							}
 						});
-						</if>
+
 						$('input[name=date_range_picker]').daterangepicker({
 							format: 'YYYY-MM-DD',
 							startDate: '{$param.begin_time}',
@@ -238,7 +236,7 @@
 							$(this).next().focus();
 						});
 
-					<if condition="$login_user['user_role'] eq 100110 ">
+
 					  // 表单提交
 					  $('.add-form').on('submit', function(e){
 						e.preventDefault();
@@ -275,7 +273,7 @@
 						}
 						var data = $(this).serialize();
 						$button.button('loading');
-						$.post('{:U('Admin/Deposit/add')}', data, function(res){
+						$.post("{:U('Admin/Deposit/add')}", data, function(res){
 						  if(res.status){
 							$.ShowAlert(res.msg);
 							setTimeout(function(){
@@ -287,7 +285,7 @@
 						  $button.button('reset');
 						}, 'json');
 					  });
-					</if>
+
 
 				});
 				var showMessage = function($target, msg){

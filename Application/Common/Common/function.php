@@ -1,11 +1,11 @@
 <?php
-	function StoragePutContent($object,$content){
-		$type = C('STORAGE_TYPE');
+	function storagePutContent($conf,$content,$object){
+		$type = $conf['storage_type'];
 		$func = $type . 'PutContent';
 		if(!function_exists($func)){
-			$func = 'OssPutContent';
+			return false;
 		}
-		return $func($object,$content);
+		return $func($object,$content,$conf);
 	}
 
 /**
@@ -15,13 +15,12 @@
  * @param string $version
  * @return bool
  */
-	function OssPutContent($object,$content,$version="occifial"){
-		$oss_conf = C($version);
-		$OSS_ACCESS_ID = $oss_conf['OSS_ACCESS_ID'];
-		$OSS_ACCESS_KEY = $oss_conf['OSS_ACCESS_KEY'];
-		$OSS_ENDPOINT = $oss_conf['OSS_ENDPOINT'];
-		$OSS_BUCKET	=	$oss_conf['OSS_BUCKET'];
-		//print_r($bucket);exit();
+	function ossPutContent($object,$content,$oss_conf){
+		$OSS_ACCESS_ID = $oss_conf['storage_access_id'];
+		$OSS_ACCESS_KEY = $oss_conf['storage_access_key'];
+		$OSS_ENDPOINT = $oss_conf['storage_endpoint'];
+		$OSS_BUCKET	=	$oss_conf['storage_bucket'];
+
 	    Vendor('OSS.autoload');
 
 	    $ossClient = new \OSS\OssClient(
@@ -30,8 +29,6 @@
 	        $result = $ossClient->putObject($OSS_BUCKET, $object, $content);
 	        
 	    } catch(OssException $e) {
-	        //printf(__FUNCTION__ . ": FAILED\n");
-	        //printf($e->getMessage() . "\n");
 	        return false;
 	    }
 
@@ -45,22 +42,16 @@
  * @param string $bucket
  * @return bool
  */
-	function QiNiuPutContent($targetFilePath,$content,$bucket=""){
+	function qiniuPutContent($targetFilePath,$content,$qiniu_conf){
 	  Vendor('QiNiu.autoload');
 
-	  $accessKey = C('QINIU_ACCESS_KEY');
-	  $secretKey = C('QINIU_SECRET_KEY');
+	  $accessKey = $qiniu_conf['storage_access_id'];
+	  $secretKey = $qiniu_conf['storage_access_key'];
 	  $auth = new \Qiniu\Auth($accessKey, $secretKey);
 
-	  $bucket = C('QINIU_BUCKET');
-	  /**
-	  $policy = array(
-	      'callbackUrl' => 'http://your.domain.com/callback.php',
-	      'callbackBody' => 'filename=$(fname)&filesize=$(fsize)'
-	  );
-	  **/
-	  //$uptoken = $auth->uploadToken($bucket, null, 3600, $policy);
-	  $uptoken = $auth->uploadToken($bucket, $targetFilePath, 3600, array('insertOnly' => 1));
+	  $bucket = $qiniu_conf['storage_bucket'];
+
+	  $up_token = $auth->uploadToken($bucket, $targetFilePath, 3600, array('insertOnly' => 1));
 
 	  $bukMgr = new \Qiniu\Storage\BucketManager($auth);
 
@@ -68,7 +59,7 @@
 
 	  $uploadMgr = new \Qiniu\Storage\UploadManager();
 
-	  list($ret, $err) = $uploadMgr->put($uptoken, $targetFilePath, $content, null, 'application/json');
+	  list($ret, $err) = $uploadMgr->put($up_token, $targetFilePath, $content, null, 'application/json');
 	  //echo "\n====> putFile result: \n";
 	  //var_dump($ret);exit();
 
@@ -188,8 +179,8 @@
     function get_user_func($user_role,$up_id=0,$level=0){
 
 		$level = $level + 1;
-
 		$menu_list = D('SysFunc')->get_user_func($user_role,$up_id);
+
 		foreach($menu_list as $key=>$row){
 			$menu_list[$key]['level'] = get_en_nums($level);
 			if($data = get_user_func($user_role,$row['func_id'],$level)){
@@ -199,6 +190,7 @@
 		}
 		return $menu_list;
 	}
+
 	// 获取游戏图标文件
 	function get_game_icon($theme_id,$icon_id){
 		if($icon_id == 0 && $theme_id != 1012){

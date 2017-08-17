@@ -13,25 +13,34 @@ class OperatorNoticeModel extends Model{
 	     //array('repassword','password','确认密码不正确',0,'confirm'), // 验证确认密码是否和密码一致
 	     //array('password','checkPwd','密码格式不正确',0,'function'), // 自定义函数验证密码格式
     );
-	public function nlist($param){
+	public function nlist($user_role,$param){
 		$where = ' 1=1 ';
 
-		if(isset($param['operator']) && intval($param['operator']) > 0){
-			$where .= " AND no.operator_id = " . intval($param['operator']);
+		if(isset($param['operator_id']) && abs($param['operator_id']) > 0){
+			$where .= " AND no.operator_id = " . intval($param['operator_id']);
 		}
 
-		$count = $this->alias('no')->join('LEFT JOIN t_sys_user su ON su.uid = no.operator_id')->where($where)->count();
+		if($param['operator_id'] < 0){
+        }else{
+            $where .= " AND sro.role_id = " . $user_role;
+        }
+
+		$count = $this->alias('no')
+            ->join('LEFT JOIN __OPERATOR__ op ON op.id = no.operator_id')
+            ->join('LEFT JOIN __SYS_ROLE_OPERATOR__ sro ON sro.operator_id = op.id')
+            ->where($where)->count();
 
 		$page = page($count);
 
 		$list = $this->alias('no')
-					->field('no.*,su.user_name As operator_name,(SELECT user_name FROM t_sys_user WHERE uid = no.dispose_user) AS dispose_name')
-					->join('LEFT JOIN t_sys_user su ON su.uid = no.operator_id')
+					->field('no.*,op.name As operator_name,(SELECT user_name FROM t_sys_user WHERE uid = no.dispose_user) AS dispose_name')
+					->join('LEFT JOIN __OPERATOR__ op ON op.id = no.operator_id')
+                    ->join('LEFT JOIN __SYS_ROLE_OPERATOR__ sro ON sro.operator_id = op.id')
 					->where($where)
 					->order('create_time DESC')
 					->limit($page->firstRow.','.$page->listRows)
 					->select();
-		
+
 		return array('list'=>$list,'page'=>$page->show());
 	}
 }

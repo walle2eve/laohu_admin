@@ -5,58 +5,61 @@ namespace Admin\Controller;
 
 class ClientController extends BaseController{
 
-	public $versionType = 'occifial';
+    protected $versionType = 'occifial';
+    protected $operator_id;
+    protected $resultUrl;
 
-	public $clientModel = null;
+    public function _initialize(){
+        parent::_initialize();
 
-	public function _initialize(){
-		parent::_initialize();
-		$this->clientModel = D('ClientVersion');
+        $this->operator_id = I('operator_id',0);
 
-		if(I('version_type') == 'beta'){
-			$this->versionType = 'beta';
-			$this->clientModel = D('ClientVersionBeta');
-		}elseif(I('version_type') == 'reveal'){
-			$this->versionType = 'reveal';
-			$this->clientModel = D('ClientVersionReveal');
-		}elseif(I('version_type') == 'cf365'){
-			$this->versionType = 'cf365';
-			$this->clientModel = D('ClientVersionCf365');
-		}elseif(I('version_type') == 'fafa'){
-			$this->versionType = 'fafa';
-			$this->clientModel = D('ClientVersionFafa');
-		}
-		$this->assign('version_type',$this->versionType);
-	}
+        if(I('version_type') == 'beta'){
+            $this->versionType = 'beta';
+            $this->operator_id = '-1';
+        }elseif(I('version_type') == 'reveal'){
+            $this->versionType = 'reveal';
+            $this->operator_id = '-2';
+        }
+
+        $this->resultUrl = U('Admin/Client/version',array('version_type'=>$this->versionType));
+
+        $this->assign('version_type',$this->versionType);
+    }
 	// app版本管理
 	public function version(){
-		$result = $this->clientModel->get_list();
+        $param['operator_id'] = $this->operator_id;
+		$result = D('ClientOperator')->get_list($this->login_user['user_role'],$param);;
 
 		$this->assign('page',$result['page']);
 		$this->assign('list',$result['list']);
+
+		$this->assign('param',$param);
 		$this->display();
 	}
 	// 添加版本信息
 	public function add_version(){
+
 		$result = array(
 			'status' => true,
 			'msg' => '创建版本成功',
 			'url' => U('Admin/Client/version',array('version_type'=>$this->versionType)),
 		);
+
 		if(IS_AJAX && IS_POST){
 			$args = I('post.');
-			$this->clientModel->startTrans();
-			if(!$this->clientModel->create()){
+			M()->startTrans();
+			if(!D('ClientOperator')->create()){
 				$result['status'] = false;
-				$result['msg'] = $this->clientModel->getError();
+				$result['msg'] = D('ClientOperator')->getError();
 				$this->ajaxReturn($result);
 				exit();
 			}
 
 			$args['input_time'] = date('Y-m-d H:i:s');
-			$id = $this->clientModel->add($args);
+			$id = D('ClientOperator')->add($args);
 			if(!$id){
-				$this->clientModel->rollback();
+				M()->rollback();
 
 				$result['status'] = false;
 				$result['msg'] = '添加版本失败';
@@ -64,7 +67,7 @@ class ClientController extends BaseController{
 				exit();
 			}
 
-			$this->clientModel->commit();
+			M()->commit();
 			$this->ajaxReturn($result);
 			exit();
 		}
@@ -76,7 +79,8 @@ class ClientController extends BaseController{
 		$page_error = '';
 		$version_id = I('version_id');
 		$version_id = intval($version_id);
-		$ClientVersionModel = $this->clientModel;
+
+		$ClientVersionModel = D('ClientOperator');
 
 		$result = $ClientVersionModel->find($version_id);
 		if(!$result){
@@ -126,73 +130,36 @@ class ClientController extends BaseController{
 		$this->assign('client_conf_field',$client_conf_field);
 		$this->display();
 	}
-	// 清除version_json缓存
-	public function make_version_data(){
-		$return = array(
-			'status' => true,
-			'msg' => '更新json成功',
-			'url' => U('Admin/Client/version',array('version_type'=>$versionType)),
-		);
-		
-		$json_data = $this->get_version_json_data();
-		S('client_version_data_' . $this->versionType,$json_data);
+    // 生成json推送至oss或七牛
+    public function make_json(){
 
-		$file_name = 'client_version.json';
-		$json_data = json_encode($json_data);
+        $file_name = 'client_version_test.json';
 
-		if($this->versionType == 'beta'){
-			$re = QiNiuPutContent($file_name,$json_data);
-		}elseif($this->versionType == 'reveal' || $this->versionType == 'cf365' || $this->versionType == 'fafa'){
-			$re = OssPutContent($file_name,$json_data,$this->versionType);
-		}else{
-			$re = OssPutContent($file_name,$json_data);
-		}
+        $json_data = $this->get_client_json_data();
+        parent::make_json($file_name,$json_data);
+    }
+    // 输出到页面
+    public function show_json(){
 
-		if($re){
-			$this->ajaxReturn($return);
-		}else{
-			$return['status'] = false;
-			$return['msg'] = '编辑配置信息失败，请重试！';
-			$this->ajaxReturn($return);
-		}
-	}
-	// 导出app所需json格式
-	public function version_json(){
-
-		$ac = I('ac');
-
-		$json_data = array();
-
-		if($ac == 'test'){
-			$json_data = $this->get_version_json_data();
-		}else{
-			$json_data = S('client_version_data_' . $this->versionType);
-			if(!$json_data){
-				$json_data = $this->get_version_json_data();
-				S('client_version_data_' . $this->versionType,$json_data);
-			}
-		}
+        $json_data = $this->get_client_json_data();
+        parent::show_json($json_data);
+    }
 
 
-		header('Content-type:text/json');
-		return $this->ajaxReturn($json_data);
-	}
+	private function get_client_json_data(){
 
+        $param['operator_id'] = $this->operator_id;
+		$result = D('ClientOperator')->get_last_version($this->login_user['user_role'],$param);
 
-	private function get_version_json_data(){
-
-		$ClientVersionModel = $this->clientModel;
-		$result = $ClientVersionModel->order('id DESC')->find();
-
-		//if(empty($result))$this->error('没有可以导出的版本配置信息');
-
-		$client_conf_field = $ClientVersionModel->client_conf_field;
+		$client_conf_field = D('ClientOperator')->client_conf_field;
 		
 		$version_conf = unserialize($result['conf']);
+
 		foreach($client_conf_field as $key=>$val){
 			$version_conf_field_arr[$key] = $val['field_type'] == 'string' ? '' : array();
 			if(!isset($version_conf[$key]))$version_conf[$key] = $val['field_type'] == 'string' ? '' : array();
 		}
+
 		if(!empty($version_conf['ip'])){
 			$version_conf['ip'] = DesEncrypt($version_conf['ip']);
 		}

@@ -1,3 +1,5 @@
 .idea
 /.svn
 /Application/Runtime/
+/Application/Common/Conf/config.php
+/Application/Common/Conf/db.php

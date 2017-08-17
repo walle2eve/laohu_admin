@@ -1,28 +1,48 @@
                     <ul class="nav" id="side-menu">
 						<volist name="menu_list" id="vo">
+							<php>
+
+								$voUrl = $vo['action'] == '' ? '#' : U($vo['module'] . '/' . $vo['controller'] . '/' . $vo['action']);
+
+								$voActive = strtoupper(CONTROLLER_NAME) == strtoupper($vo['controller']) && strtoupper(ACTION_NAME) == strtoupper($vo['action']) ? 'active' : '';
+							</php>
                         <li>
 							<if condition="$vo['son']">
-							<a href="<eq name="vo['func_url']" value="">#<else/>{:U($vo['func_url'])}</eq>" <if condition="strpos($vo['func_url'],CONTROLLER_NAME) AND strpos($vo['func_url'],ACTION_NAME)">class="active"</if>><i class="{$vo.icon}"></i> {$vo.func_name}<span class="fa arrow"></span></a>
+							<a href="{$voUrl}" class="{$voActivite}"><i class="{$vo.icon}"></i> {$vo.func_name}<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
 								  <volist name="vo['son']" id="voSecond">
+									  <php>
+
+										  $voSecondUrl = $voSecond['action'] == '' ? '#' : U($voSecond['module'] . '/' . $voSecond['controller'] . '/' . $voSecond['action']);
+
+										  $voSecondActive = strtoupper(CONTROLLER_NAME) == strtoupper($voSecond['controller']) && strtoupper(ACTION_NAME) == strtoupper($voSecond['action']) ? 'active' : '';
+									  </php>
 									<if condition="$voSecond['son']">
-										<a href="<eq name="voSecond['func_url']" value="">#<else/>{:U($voSecond['func_url'])}</eq>"  <if condition="strpos($voSecond['func_url'],CONTROLLER_NAME) AND strpos($voSecond['func_url'],ACTION_NAME)">class="active"</if>>{$voSecond.func_name} <span class="fa arrow"></span></a>
+										<a href="{$voSecondUrl}"  class="{$voSecondActive}">{$voSecond.func_name} <span class="fa arrow"></span></a>
 										<ul class="nav nav-third-level">
 											<volist name="voSecond['son']" id="voThird">
+												<php>
+
+													$voThirdUrl = $voThird['action'] == '' ? '#' : U($voThird['module'] . '/' . $voThird['controller'] . '/' . $voThird['action']);
+
+													$voThirdActive = strtoupper(CONTROLLER_NAME) == strtoupper($voThird['controller']) && strtoupper(ACTION_NAME) == strtoupper($voThird['action']) ? 'active' : '';
+												</php>
 											<li>
-												<a href="<eq name="voThird['func_url']" value="">#<else/>{:U($voThird['func_url'])}</eq>"  <if condition="strpos($voThird['func_url'],CONTROLLER_NAME) AND strpos($voThird['func_url'],ACTION_NAME)">class="active"</if>> {$voThird.func_name}</a>
+												<a href="{$voThirdUrl}"  class="{$voThirdActive}"> {$voThird.func_name}</a>
 											</li>
 											</volist>
 										</ul>
 									<else/>
-										<a href="<eq name="voSecond['func_url']" value="">#<else/>{:U($voSecond['func_url'])}</eq>"  <if condition="strpos($voSecond['func_url'],CONTROLLER_NAME) AND strpos($voSecond['func_url'],ACTION_NAME)">class="active"</if>> {$voSecond.func_name}</a>
+										<a href="{$voSecondUrl}"  class="{$voSecondActive}"> {$voSecond.func_name}</a>
 									</if>
 								  </volist>
                                 </li>
                             </ul>
 							<else/>
-							<a href="<eq name="vo['func_url']" value="">#<else/>{:U($vo['func_url'])}</eq>"  <if condition="strpos($vo['func_url'],CONTROLLER_NAME) AND strpos($vo['func_url'],ACTION_NAME)">class="active"</if>><i class="{$vo.icon}"></i> {$vo.func_name}</a>
+								<if condition="$vo['last'] neq 0">
+							<a href="{$voUrl}" class="{$voActive}"><i class="{$vo.icon}"></i> {$vo.func_name}</a>
+								</if>
 							</if>
                         </li>
 						</volist>

@@ -1,48 +1,38 @@
 <?php
 namespace Admin\Controller;
 
-use Think\Controller;
-
-use Admin\Model\SysDictModel;
-
 use Admin\Model\SysLogModel;
 
 class NoticeController extends BaseController
 {
-	public $versionType = 'occifial';
+    protected $versionType = 'occifial';
+    protected $operator_id;
+    protected $resultUrl;
 
-	//public $clientModel = null;
+    public function _initialize(){
+        parent::_initialize();
 
-	public function _initialize(){
-		parent::_initialize();
+        $this->operator_id = I('operator_id',0);
 
-		$operator = 0;
+        if(I('version_type') == 'beta' || $this->operator_id == '-1'){
+            $this->versionType = 'beta';
+            $this->operator_id = '-1';
+        }elseif(I('version_type') == 'reveal' || $this->operator_id == '-2'){
+            $this->versionType = 'reveal';
+            $this->operator_id = '-2';
+        }
 
-		if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
-			$operator = $this->uid;
-		}else{
-			$operator = I('operator');
-		}
 
-		if($operator == -1){
-			$this->versionType = 'beta';
-		}elseif($operator == -2){
-			$this->versionType = 'reveal';
-		}elseif($operator == '10025'){
-			$this->versionType = 'cf365';
-		}elseif($operator == '10027'){
-			$this->versionType = 'fafa';
-		}
-	}
+        $this->assign('version_type',$this->versionType);
+    }
+
 	public function index(){
 
-		$param = I('get.');
+		$param = I();
+		$param['operator_id'] = $this->operator_id;
 
-		if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
-			$param['operator'] = $this->uid;
-		}
+		$list = D('OperatorNotice')->nlist($this->login_user['user_role'],$param);
 
-		$list = D('OperatorNotice')->nlist($param);
 		$this->assign('list',$list['list']);
 		$this->assign('page',$list['page']);
 
@@ -67,10 +57,6 @@ class NoticeController extends BaseController
 
 		$data = I('post.');
 
-		if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
-			//$data['operator_id'] = $this->uid;
-		}
-
 		$notice->startTrans();
 
 		if (!$notice->create()){
@@ -87,7 +73,6 @@ class NoticeController extends BaseController
 
 		$notice->dispose_user = $this->uid;
 
-		//print_r($notice->create_time);exit();
 
 		if($notice->id){
 			$res = $notice->save();
@@ -112,6 +97,7 @@ class NoticeController extends BaseController
 		$id = intval($id);
 
 		$notice = D('OperatorNotice')->find($id);
+
 		if(empty($notice)){
 			$result['status'] = false;
 			$result['msg'] = '参数错误，无该信息';
@@ -160,61 +146,24 @@ class NoticeController extends BaseController
 		$this->ajaxReturn($result);
 	}
 
-	
-	// 清除version_json缓存
-	public function make_notice_data(){
+    // 生成json推送至oss或七牛
+    public function make_json(){
 
-		$operator = I('post.operator');
-		$return = array(
-			'status' => true,
-			'msg' => '更新json成功',
-			'url' => U('Admin/Notice/index',array('operator'=> $operator)),
-		);
-		
-		$json_data = $this->get_notice_json_data($operator);
-		S('notice_data_' . $this->versionType,$json_data);
-
-		$file_name = 'notice.json';
-		$json_data = json_encode($json_data);
-
-		if($this->versionType == 'beta'){
-			$re = QiNiuPutContent($file_name,$json_data);
-		}elseif($this->versionType == 'reveal' || $this->versionType == 'cf365' || $this->versionType == 'fafa'){
-			$re = OssPutContent($file_name,$json_data,$this->versionType);
-		}else{
-			$re = OssPutContent($file_name,$json_data);
-		}
-
-		if($re){
-			$this->ajaxReturn($return);
-		}else{
-			$return['status'] = false;
-			$return['msg'] = '编辑配置信息失败，请重试！';
-			$this->ajaxReturn($return);
-		}
-	}
-
-	// 导出app所需json格式
-	public function notice_json(){
-
-		$operator = I('get.operator');
-
-		$json_data = array();
-
-		$json_data = S('notice_data_' . $this->versionType);
-		if(!$json_data){
-			$json_data = $this->get_notice_json_data($operator);
-			S('notice_data_' . $this->versionType,$json_data);
-		}
-
-		header('Content-type:text/json');
-		return $this->ajaxReturn($json_data);
-	}
+        $file_name = 'notice_test.json';
 
 
-	private function get_notice_json_data($operator = 0){
-		$result = D('OperatorNotice')->field('id,title,content,writer,create_time')->where('operator_id = %d AND status = 1',array($operator))->order('create_time DESC')->select();
+        $json_data = $this->get_notice_json_data();
+        parent::make_json($file_name,$json_data);
+    }
+    // 输出到页面
+    public function show_json(){
 
+        $json_data = $this->get_notice_json_data();
+        parent::show_json($json_data);
+    }
+
+	private function get_notice_json_data(){
+		$result = D('OperatorNotice')->field('id,title,content,writer,create_time')->where('operator_id = %d AND status = 1',array($this->operator_id))->order('create_time DESC')->select();
 		return $result;
 	}
 }

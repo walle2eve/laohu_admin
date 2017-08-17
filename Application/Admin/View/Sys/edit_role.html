@@ -1,0 +1,192 @@
+<style>
+	.admin-nav-box{
+		border:1px solid #d2d6de;
+		border-top:3px solid #d2d6de;
+		box-shadow:none;
+	}
+	.admin-nav-box .box-header{padding:7px 10px; border-bottom:1px solid #d2d6de;}
+	.admin-nav-box .box-body{padding:15px 10px 0 10px;}
+	.admin-nav-box div.checker{margin-right:2px;}
+	.admin-nav-box .box-title{font-size:14px; padding-left:5px; line-height: 14px;}
+	.admin-nav-box .box-title div.checker{margin-right:0;}
+	.admin-nav-box .box-title label span{vertical-align:middle; font-weight:normal;}
+	.admin-nav-box fieldset {
+		border:solid 1px #d2d6de;
+		border-radius: 0 0 3px 3px;
+		font-size:14px;
+	}
+	.admin-nav-box fieldset legend {
+		padding:0 10px 0 5px;
+		width:auto;
+		border:none;
+		margin:0;
+		font-size:14px;
+		display: inline-block;
+		line-height: 16px;
+	}
+	.admin-nav-box fieldset legend label{font-weight:normal;}
+	.admin-nav-box fieldset legend label span{vertical-align:middle;}
+	.admin-nav-box fieldset div.admin-actions {
+		padding: 5px 5px;
+		line-height: 16px;
+	}
+	.admin-nav-box fieldset div label{display:inline-block; margin-right:15px; font-weight:normal; line-height: 16px;}
+	.admin-nav-box fieldset div label span{vertical-align:middle;}
+	.blank15 {
+		height: 15px;
+		line-height: 10px;
+		clear: both;
+		visibility: hidden;
+	}
+	.admin-actions label{margin-right:10px!important;}
+</style>
+					<if condition="$page_error neq ''">
+					<script>	
+						$.showError('{$page_error}',300,function(){
+							$('#edit-role').modal('hide');
+						});
+					</script>
+					</if>
+
+					<div class="modal-header">
+					  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					  <h4 class="modal-title">
+						<span class="fa fa-gamepad fa-fw"></span>
+						<span>权限组</span>
+					  </h4>
+					</div>
+					<div class="modal-body">
+					  <div class="form-horizontal">
+						<input type="hidden" name="id" value="{$result.id}">
+						  <div class="box">
+							  <div class="box-body">
+								  <div  class="form-group ">
+									  <label class="col-sm-3 control-label">名称：</label>
+									  <div class="col-sm-6">
+										  <input type="role_name" name="role_name" class="form-control" placeholder="请输入权限组名称" value="{$result.role_name}">
+									  </div>
+								  </div>
+								  <div  class="form-group ">
+									  <label class="col-sm-3 control-label">节点：</label>
+									  <div class="col-sm-9">
+										  <div class="box box-default admin-nav-box">
+											  <div class="box-body">
+												  <foreach name="func_list" item="func">
+												  <fieldset>
+													  <legend>
+														  <label>
+															  <input type="checkbox" class="uniform" />
+															  <span>{$func.func_name}</span>
+														  </label>
+													  </legend>
+													  <div class="admin-actions">
+														  <foreach name="func['son_list']" item="son_func">
+														  <label>
+															  <input class="uniform" type="checkbox" name="extends[funcs][]" value="{$son_func.func_id}" <if condition="in_array($son_func['func_id'],$role_funcs)"> checked="true"</if>/>
+															  <span>{$son_func.func_name}</span>
+														  </label>
+														  </foreach>
+													  </div>
+												  </fieldset>
+												  </foreach>
+											  </div>
+										  </div>
+									  </div>
+								  </div>
+								  <div  class="form-group ">
+									  <label class="col-sm-3 control-label">运营商：</label>
+									  <div class="col-sm-9">
+										  <div class="box box-default admin-nav-box">
+											  <div class="box-body">
+													  <fieldset>
+														  <legend>
+															  <label>
+																  <input type="checkbox" class="uniform" />
+																  <span>全部</span>
+															  </label>
+														  </legend>
+														  <div class="admin-actions">
+															  <foreach name="operator_list" item="oper">
+																  <label>
+																	  <input class="uniform" type="checkbox" name="extends[operators][]" value="{$oper.id}" <if condition="in_array($oper['id'],$role_operators)"> checked="true"</if>/>
+																	  <span>{$oper.name}</span>
+																  </label>
+															  </foreach>
+														  </div>
+													  </fieldset>
+											  </div>
+										  </div>
+									  </div>
+								  </div>
+								  <div class="form-group">
+									  <div class="col-sm-offset-3 col-sm-9">
+										  <button class="btn btn-primary submit-button" data-loading-text="正在修改，请稍等...">确认</button>
+										  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										  <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-warning">取消</button>
+									  </div>
+								  </div>
+							  </div>
+
+							  <input type="hidden" value="{$result.id}" name="id" />
+						  </div>
+						<!-- 错误提示 -->
+						<div class="form-group">
+						  <div class="col-sm-offset-3 col-sm-6" data-error-box>{$error}</div>
+						</div>
+					  </div>
+					</div>
+					<script type="text/javascript">
+                        jQuery(function($){
+                            $('.box-title input').change(function(){
+                                var parent = $(this).parents('.admin-nav-box');
+                                parent.find('input').prop('checked',this.checked);
+                                if (this.checked) {
+                                    parent.find('.checker > span').addClass("checked");
+                                } else {
+                                    parent.find('.checker > span').removeClass("checked");
+                                }
+                            });
+
+                            $('fieldset legend input').change(function(){
+                                var parent = $(this).parents('fieldset');
+                                parent.find('input').prop('checked',this.checked);
+                                if (this.checked) {
+                                    parent.find('.checker > span').addClass("checked");
+                                } else {
+                                    parent.find('.checker > span').removeClass("checked");
+                                }
+                                $.checkInputsChecked(this);
+                            });
+
+                            $('.admin-actions input').change(function(){
+                                $.checkInputsChecked(this);
+                            });
+
+                            $.checkInputsChecked = function(input) {
+                                var parent = $(input).parents('.admin-nav-box');
+                                var checked;
+
+                                parent.find('fieldset').each(function(){
+                                    checked = $(this).find('.admin-actions input').length == $(this).find('.admin-actions input:checked').length;
+                                    $(this).find('legend input').prop('checked',checked);
+                                    if (checked) {
+                                        $(this).find('legend .checker > span').addClass("checked");
+                                    } else {
+                                        $(this).find('legend .checker > span').removeClass("checked");
+                                    }
+                                });
+
+                                checked = parent.find('fieldset input').length == parent.find('fieldset input:checked').length;
+                                parent.find('.box-title input').prop('checked',checked);
+                                if (checked) {
+                                    parent.find('.box-title .checker > span').addClass("checked");
+                                } else {
+                                    parent.find('.box-title .checker > span').removeClass("checked");
+                                }
+                            }
+
+                            $('.admin-nav-box fieldset').each(function(){
+                                $.checkInputsChecked(this);
+                            });
+                        });
+					</script>

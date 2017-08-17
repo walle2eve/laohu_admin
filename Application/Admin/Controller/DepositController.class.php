@@ -15,10 +15,6 @@ class DepositController extends BaseController
 
 		$param = I('get.');
 
-		if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
-			$param['operator_id'] = $this->uid;
-		}
-
 		// 开始时间
 		if(!$param['date_range_picker']){
 			$param['begin_time'] = date('Y-m-d',strtotime('-1 month'));
@@ -33,7 +29,7 @@ class DepositController extends BaseController
 
 		$this->assign('param',$param);
 
-		$result = D('OperatorOrderInfo')->get_deposit_list($param['operator_id'],$param['begin_time'],$param['end_time'],$param['deposit_sn']);
+		$result = D('OperatorOrderInfo')->get_deposit_list($this->login_user['user_role'],$param['operator_id'],$param['begin_time'],$param['end_time'],$param['deposit_sn']);
 
 		if(I('submitbtn') == '导出excel'){
 			$file_name = '充值记录信息导出';
@@ -70,16 +66,10 @@ class DepositController extends BaseController
 			'url' => U('Admin/Deposit/index'),
 		);
 
-		if($this->login_user['user_role'] != SysDictModel::USER_ROLE_ADMIN){
-			$result['status'] = false;
-			$result['msg'] = '您没有权限';
-			$this->ajaxReturn($result);
-			exit();
-		}
-
 		$param = I('post.');
 
-		$operator_id = $param['operator_id'];
+        $operator_id = $param['operator_id'];
+
 		$amount = floatval($param['amount']);
 		$discount = intval($param['discount']);
 		$gold = floatval($param['gold']);
@@ -118,6 +108,7 @@ class DepositController extends BaseController
 		$return = D('OperatorOrderInfo')->add_deposit($operator_id,$amount,$discount,$gold,$discount_money);
 
 		if($return['status'] === true){
+		    A('Public')->clear_cache();
 			$this->ajaxReturn($result);
 			exit();
 		}else{
@@ -137,9 +128,11 @@ class DepositController extends BaseController
 			'discount' => 0,
 		);
 
+        $_sys_role_operators = $this->_sys_role_operators();
+        $operators = $_sys_role_operators['operators'];
 		$operator_id = I('operator_id',0);
 
-		$discount = D('SysUser')->where('user_role IN (' . SysDictModel::USER_ROLE_OPERATOR .',' . SysDictModel::USER_ROLE_AGENT . ') AND uid = %d',array($operator_id))->getField('discount');
+        $discount = $operators[$operator_id]['discount'];
 
 		if($discount === false){
 			return array(
@@ -148,6 +141,7 @@ class DepositController extends BaseController
 				'discount' => 0,
 			);
 		}
+
 		$result['discount'] = $discount;
 
 		$this->ajaxReturn($result);
@@ -156,10 +150,6 @@ class DepositController extends BaseController
 	// 玩家转入记录
 	public function player_list(){
 		$param = I('get.');
-
-		if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
-			$param['operator_id'] = $this->uid;
-		}
 
 		// 开始时间
 		if(!$param['date_range_picker']){
@@ -177,7 +167,7 @@ class DepositController extends BaseController
 
 
 		if(I('submitbtn') == '导出excel'){
-			$result = D('UserOrderInfo')->get_deposit_list($param['operator_id'],$param['begin_time'],$param['end_time'],$param['deposit_sn'],'',true);
+			$result = D('UserOrderInfo')->get_deposit_list($this->login_user['user_role'],$param['operator_id'],$param['begin_time'],$param['end_time'],$param['deposit_sn'],'',true);
 			$file_name = '充值记录信息导出';
 			$excel_title = array(
 				array('width' => 20,'val' => '流水号'),
@@ -196,7 +186,7 @@ class DepositController extends BaseController
 			if(!empty($result['list'])) export_excel($excel_title,$result['list'],$file_name,$begin_row);
 		}
 
-		$result = D('UserOrderInfo')->get_deposit_list($param['operator_id'],$param['begin_time'],$param['end_time'],$param['deposit_sn']);
+		$result = D('UserOrderInfo')->get_deposit_list($this->login_user['user_role'],$param['operator_id'],$param['begin_time'],$param['end_time'],$param['deposit_sn']);
 		$this->assign('list',$result['list']);
 
 		$this->assign('page',$result['page']);

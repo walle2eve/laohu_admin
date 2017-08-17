@@ -1,11 +1,9 @@
 <?php
 namespace Admin\Controller;
 
-use Think\Controller;
-
-use Admin\Model\SysDictModel;
-
 use Admin\Model\SysLogModel;
+
+use Admin\Model\ActivityModel;
 
 class ActivityController extends BaseController
 {
@@ -15,23 +13,17 @@ class ActivityController extends BaseController
 
 	private $uperror	= '';
 
+	protected $activityModel;
+
 	public function _initialize(){
-		parent::_initialize();
-	}
+	    parent::_initialize();
+	    $this->activityModel = new ActivityModel();
+    }
 
   	public function index(){
 		$param = I('get.');
 
-		$gamelist = D('ThemeInfo')->get_options();
-		
-		if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
-			$param['operator'] = $this->uid;
-			$gamelist = D('ThemeInfo')->get_options();
-		}
-		
-		$this->assign('gamelist',$gamelist);
-
-		$list = D('Activity')->alist($param);
+		$list = $this->activityModel->alist($this->login_user['user_role'],$param);
 		$this->assign('list',$list['list']);
 		$this->assign('page',$list['page']);
 
@@ -40,6 +32,10 @@ class ActivityController extends BaseController
 		$this->display();
     }
     // 上传并解析csv文件
+
+    /**
+     *
+     */
     public function uploadcsv(){
     	$result = array(
     			'status' 	=> true,
@@ -54,11 +50,7 @@ class ActivityController extends BaseController
     		exit();
     	}
 
-    	$operator = I('get.operator');
-
-		if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
-			$operator = $this->uid;
-		}
+    	$operator = I('get.operator_id');
 
     	if(!$operator){
     		$result['status'] = false;
@@ -148,7 +140,7 @@ class ActivityController extends BaseController
 			}
 
 			$checkedArr['userids'][] = $userid;
-			$checkedArr['accounts'][] = $cellVal;
+			$checkedArr['accounts'][] = strtoupper($cellVal);
 		}
 
 		if(!$checkedArr){
@@ -174,13 +166,7 @@ class ActivityController extends BaseController
 
     	$actiData = array();
 
-    	$id = 0;
-
     	$postdata = I('post.');  		
-
-		if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
-			$postdata['operator_id'] = $this->uid;
-		}
 
     	if(!isset($postdata['operator_id']) || $postdata['operator_id'] == false){
     		$result['status'] 	= false;
@@ -390,13 +376,12 @@ class ActivityController extends BaseController
     	}
 
 
-    	$activityModel = D('Activity');
     	// add 
-		$activityModel->startTrans();
+		M()->startTrans();
 
 		if($id) {
-    	
-			$activity = $activityModel->find($id);
+
+			$activity = $this->activityModel->find($id);
 			if(empty($activity)){
 				$result['status'] = false;
 				$result['msg'] = '参数错误，无该信息';
@@ -410,19 +395,34 @@ class ActivityController extends BaseController
 				exit();
 			}
 
-			$activity_id = $activityModel->where('id = %d',array($id))->save($actiData);
+			$activity_id = $this->activityModel->where('id = %d',array($id))->save($actiData);
 			D('ActivityUser')->where('activity_id = %d',array($id))->delete();
 			$result['msg'] = '修改活动成功';
 		}
-		else $activity_id = $activityModel->add($actiData);
+		else {
+		    $activity_id = $this->activityModel->add($actiData);
+        }
 
 		if(!$activity_id){
-			$activityModel->rollback();
+			M()->rollback();
     		$result['status'] 	= false;
     		$result['msg']		= '记录存储失败，请稍后重试！';
     		$this->ajaxReturn($result);
 			exit();
 		}
+
+        if($this->operatorDB != ''){
+            $this->activityModel = new ActivityModel($this->operatorDB);
+
+            if($id) {
+                $this->activityModel->delete($id);
+                $actiData['id'] = $id;
+            }else{
+                $actiData['id'] = $activity_id;
+            }
+
+            $this->activityModel->add($actiData);
+        }
 
 		// activity user
 		if($actiData['user_type'] > 2 && !empty($postdata['userids'])){
@@ -437,8 +437,9 @@ class ActivityController extends BaseController
 			}
 
 			$actiUserRes = D('ActivityUser')->addAll($actiUser);
+
 			if(!$actiUserRes){
-				D('Activity')->rollback();
+				M()->rollback();
 	    		$result['status'] 	= false;
 	    		$result['msg']		= '用户信息添加失败，请稍后重试！';
 	    		$this->ajaxReturn($result);
@@ -446,7 +447,7 @@ class ActivityController extends BaseController
 			}	
 		}
 
-		$activityModel->commit();
+		M()->commit();
 
     	$this->ajaxReturn($result);
     }
@@ -461,7 +462,7 @@ class ActivityController extends BaseController
 		$id = I('post.activityid',0);
 		$id = intval($id);
 
-		$activity = D('Activity')->find($id);
+		$activity = $this->activityModel->find($id);
 		if(empty($activity)){
 			$result['status'] = false;
 			$result['msg'] = '参数错误，无该信息';
@@ -475,7 +476,7 @@ class ActivityController extends BaseController
 			exit();
 		}
 		D('ActivityUser')->where('activity_id = %d',array($id))->delete();
-		$return = D('Activity')->delete($id);
+		$return = $this->activityModel->delete($id);
 
 		if($return === false){
 			$result['status'] = false;
@@ -483,6 +484,11 @@ class ActivityController extends BaseController
 			$this->ajaxReturn($result);
 			exit();
 		}
+
+		if($this->operatorDB != ''){
+		    $this->activityModel = new ActivityModel($this->operatorDB);
+            $return = $this->activityModel->delete($id);
+        }
 
 		$this->ajaxReturn($result);
 	}
@@ -497,7 +503,7 @@ class ActivityController extends BaseController
 		$id = I('post.key',0);
 		$id = intval($id);
 
-		$activity = D('Activity')->find($id);
+		$activity = $this->activityModel->find($id);
 		if(empty($activity)){
 			$result['status'] = false;
 			$result['msg'] = '参数错误，无该信息';
@@ -505,7 +511,7 @@ class ActivityController extends BaseController
 			exit();
 		}
 		$status = $activity['status'] == 1 ? 0 : 1;
-		$return = D('Activity')->where('id = %d',array($id))->setField('status',$status);
+		$return = $this->activityModel->where('id = %d',array($id))->setField('status',$status);
 
 		if($return === false){
 			$result['status'] = false;
@@ -513,8 +519,47 @@ class ActivityController extends BaseController
 			$this->ajaxReturn($result);
 			exit();
 		}
+
+        if($this->operatorDB != ''){
+            $activity = $this->activityModel->find($id);
+
+            $this->activityModel = new ActivityModel($this->operatorDB);
+            $this->activityModel->delete($id);
+            $this->activityModel->add($activity);
+        }
+
 		$this->ajaxReturn($result);
 	}
+	// 根据选择的平台获取对应的主题列表
+    public function get_theme_list_by_operator(){
+        $result = array(
+            'status' => true,
+            'msg' => '',
+            'data' => 0,
+            'url' => U('Admin/Activity/index'),
+        );
+
+        if(!IS_AJAX || !IS_POST){
+            $result['status'] = false;
+            $result['msg']	= '页面来源错误！';
+            $this->ajaxReturn($result);
+            exit();
+        }
+
+        $operator_id = I('post.operator_id',0);
+
+        if(!$operator_id){
+            $result['status'] = false;
+            $result['msg']	= '请选择平台！';
+            $this->ajaxReturn($result);
+            exit();
+        }
+
+        $game_list = D('ThemeOperator')->get_list_by_operator($operator_id,1);
+
+        $result['data'] = $game_list;
+        $this->ajaxReturn($result);
+    }
     // 异步获取主题信息
     public function get_theme_param(){
 		$result = array(
@@ -533,9 +578,7 @@ class ActivityController extends BaseController
 
 		$theme_id = I('post.id',0);
 
-		$operator_id = I('post.oid',0);
-
-		$theme_info = D('ThemeInfo')->get_info($theme_id);
+		$theme_info = D('ThemeOperator')->get_theme($this->operator_id,$theme_id);
 
 		if(empty($theme_info)){
 			$result = array(
@@ -546,30 +589,30 @@ class ActivityController extends BaseController
     		exit();
 		}
 
-		$themeinfo = unserialize($theme_info['theme_info']);
+		$theme_info = unserialize($theme_info['info']);
 
 		$returnArr = array();
 
-		$returnArr['themeid'] = $themeinfo['themeid'];
+		$returnArr['themeid'] = $theme_info['themeid'];
 
-		$returnArr['themeName'] = $themeinfo['themeName'];
+		$returnArr['themeName'] = $theme_info['themeName'];
 
-		$returnArr['linesBet'] = $themeinfo['linesBet'];
+		$returnArr['linesBet'] = $theme_info['linesBet'];
 
-		$returnArr['totalBetFormula'] = $themeinfo['totalBet'];
+		$returnArr['totalBetFormula'] = $theme_info['totalBet'];
 
 		//-------------------------------------------------------------------------
-		$returnArr['mul'] = explode(',',$themeinfo['mul']);
+		$returnArr['mul'] = explode(',',$theme_info['mul']);
 
-		$returnArr['bet'] = explode(',',$themeinfo['bet']);
+		$returnArr['bet'] = explode(',',$theme_info['bet']);
 
-		if($themeinfo['lineNumChange'] == "true"){
+		if($theme_info['lineNumChange'] == "true"){
 
-			$returnArr['lineNum'] = range($themeinfo['lineNum'],1,1);
+			$returnArr['lineNum'] = range($theme_info['lineNum'],1,1);
 
 		}else{
 
-			$returnArr['lineNum'] = array($themeinfo['lineNum']);
+			$returnArr['lineNum'] = array($theme_info['lineNum']);
 
 		}
 
@@ -635,8 +678,6 @@ class ActivityController extends BaseController
 		
 		$id = I('get.id');
 
-		$user_types = array();
-
 		$activity_info = $this->_get_info($id);
 
 		$this->assign('info',$activity_info);
@@ -645,7 +686,7 @@ class ActivityController extends BaseController
     }
     //
     private function _get_info($id){
-    	$data = D('Activity')->alias('act')->field('act.*,su.user_name')->join('Left join t_sys_user su ON su.uid = act.operator_id')->where('act.id = %d',array($id))->find();
+        $data = $this->activityModel->get_one($id);
     	return $data;
     }
     // 获取玩家信息
@@ -663,13 +704,8 @@ class ActivityController extends BaseController
     		exit();
     	}
     	
-		$operator_id = I('post.operator',0);
+		$operator_id = I('post.operator_id',0);
 		$account_id = I('post.account','');
-
-
-		if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
-			$operator_id = $this->uid;
-		}
 
     	if(!$operator_id){
     		$result['status'] = false;
@@ -688,12 +724,13 @@ class ActivityController extends BaseController
 			$this->ajaxReturn($result);
 			exit();
 		}
-		$result['data'] = array('checkedIds' => $user_id, 'checkedAccounts' => $account_id);
+		$result['data'] = array('checkedIds' => $user_id, 'checkedAccounts' => strtoupper($account_id));
 
 		$result['msg'] = '用户' . $account_id . '查找成功！';
 
 		$this->ajaxReturn($result);
     }
+
     // 处理上传文件
     private function _uploadcsv($file){
 	    $upload = new \Think\Upload();

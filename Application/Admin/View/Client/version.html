@@ -1,26 +1,37 @@
 			<layout name="_layout/base" />
-            <div class="row">
-                <div class="col-lg-12">
-                    <h3 class="page-header">客户端版本管理(<if condition="$version_type eq 'beta'">测试<elseif condition="$version_type eq 'reveal'" />展示<elseif condition="$version_type eq 'cf365'" />超凡365<elseif condition="$version_type eq 'fafa'" />fafa<else />7乐</if>)</h3>
+			<div class="row">
+				<div class="col-lg-12">
+					<h3 class="page-header">客户端版本管理<if condition="$version_type eq 'beta'">（测试版本）<else/><eq name="version_type" value="reveal">（展示版本）</eq></if></h3>
+					<form method="get" action="{:U('Admin/Client/version')}">
 						<div class="row">
-                            <div class="col-md-12">
-                            	
+							<div class="col-md-3">
 								<div class="form-group input-group">
-									<a href = "<eq name="version_type" value="beta">{:U('Admin/Client/version',array('version_type'=>'occifial'))}<else/>{:U('Admin/Client/version',array('version_type'=>'beta'))}</eq>" class="btn btn-primary submit-button">
-									<eq name="version_type" value="beta">正式<else/>测试</eq>版本管理 </a>&nbsp;
-									<a href = "{:U('Admin/Client/version',array('version_type'=>'cf365'))}" class="btn btn-primary submit-button">超凡365版本管理 </a>&nbsp;
-									<a href = "{:U('Admin/Client/version',array('version_type'=>'fafa'))}" class="btn btn-primary submit-button">fafa版本管理 </a>&nbsp;
-									<a href = "{:U('Admin/Client/version',array('version_type'=>'reveal'))}" class="btn btn-primary submit-button">展示版本管理 </a>&nbsp;
-									<button type="button" class="btn btn-outline btn-primary" data-add-trigger><b>+</b> 添加版本 </button>
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									<button type="button" class="btn btn-primary submit-button" id="make_json">更新json</button>&nbsp;
-									<a href = "{:U('Admin/Client/version_json',array('ac'=>'test','version_type'=>$version_type))}" class="btn btn-primary submit-button" target='_blank'>查看json</a>
+									<select name="operator_id"  data-placeholder="" class="form-control">
+										<option value="0">全部</option>
+										<volist name="operator_options" id="vo">
+											<option value="{$vo.operator_id}" <if condition="$param['operator_id'] eq $vo['operator_id']">selected</if>>{$vo.name}</option>
+										</volist>
+									</select>
+									<span class="input-group-btn">
+										<button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                                </span>
 								</div>
-                            </div>
-                        </div>
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
+							</div>
+							<div class="col-md-7">
+								<if condition="in_array($version_type,array('beta','reveal')) || $operator_id gt 0">
+									<a href="javascript:void(0)" class="btn btn-default" id="show-json">查看json</a>
+									<a href="javascript:void(0)" class="btn btn-success" id="make-json">更新json</a>&nbsp;
+								</if>
+								<a href = "{:U('Admin/Client/version',array('version_type'=>'beta'))}" class="btn btn-primary submit-button">版本管理（测试）</a>
+								<a href = "{:U('Admin/Client/version',array('version_type'=>'reveal'))}" class="btn btn-primary submit-button">版本管理（展示）</a>
+							</div>
+
+							<div class="col-md-2" style="text-align:right">
+								<button type="button" class="btn btn-outline btn-primary" data-add-trigger><b>+</b> 添加版本 </button>
+							</div>
+					</form>
+				</div>
+			</div>
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12">
@@ -35,6 +46,7 @@
                                 <table class="table table-striped table-bordered table-hover">
                                     <thead>
                                         <tr>
+											<th>平台</th>
                                             <th>版本ID</th>
                                             <th>版本号</th>
 											<th>最后操作时间</th>
@@ -44,6 +56,7 @@
                                     <tbody>
 									<volist name="list" id="vo">
                                         <tr role="row" key="{$vo.id}" primary="id">
+											<td>{$operator_options[$vo['operator_id']]['name']}</td>
                                             <td>{$vo.id}</td>
                                             <td>{$vo.version_no}</td>
                                             <td>{$vo.input_time}</td>
@@ -95,6 +108,23 @@
 					</div>
 					<div class="modal-body">
 					  <div class="form-horizontal">
+						  <div class="form-group">
+							  <label class="col-sm-3 control-label">选择平台：</label>
+							  <div class="col-sm-6">
+								  <select name="operator_id" class="form-control" placeholder="请输入主题ID">
+									  <option value="">请选择平台</option>
+									  <optgroup label="occifial">
+										  <volist name="operator_options" id="vo">
+											  <option value="{$vo.operator_id}">{$vo.name}</option>
+										  </volist>
+									  </optgroup>
+									  <optgroup label="beta">
+										  <option value="-1">测试版本</option>
+										  <option value="-2">展示版本</option>
+									  </optgroup>
+								  </select>
+							  </div>
+						  </div>
 						<div class="form-group">
 						  <label class="col-sm-3 control-label">版本号：</label>
 						  <div class="col-sm-6">
@@ -133,19 +163,25 @@
 				e.preventDefault();
 				var $form = $(this);
 
+				var $operator_id = $('select[name="operator_id"]',$form).val();
 				var $version_no = $('input[name="version_no"]', $form).val();
 
 				var $message = $('[data-error-box]', $form);
 				var $button = $('.submit-button', $form);
 
+                if( !$operator_id ){
+                    showMessage($message, '请选择平台！');
+                    return false;
+                }
+
 				if( !$version_no ){
-				  showMessage($message, '请输入版本号');
+				  showMessage($message, '请输入版本号！');
 				  return false;
 				}
 
 				var data = $(this).serialize();
 				$button.button('loading');
-				$.post('{:U('Admin/Client/add_version')}', data, function(res){
+				$.post("{:U('Admin/Client/add_version')}", data, function(res){
 				  if(res.status){
 					$.ShowAlert(res.msg);
 					setTimeout(function(){
@@ -167,7 +203,7 @@
 
 				var data = $(this).serialize();
 				$button.button('loading');
-				$.post('{:U('Admin/Client/edit_version_conf',array('action'=>'edit_version_conf'))}', data, function(res){
+				$.post("{:U('Admin/Client/edit_version_conf',array('action'=>'edit_version_conf'))}", data, function(res){
 				  if(res.status){
 					$.ShowAlert(res.msg);
 					setTimeout(function(){
@@ -179,11 +215,31 @@
 				  $button.button('reset');
 				}, 'json');
 			});
-			$('#make_json').click(function(){
-				 $.get('{:U('Admin/Client/make_version_data',array('version_type'=>$version_type))}',function(){
-					$.ShowAlert('更新json完毕');
-				 });
-			});
+
+            $('#show-json').click(function(){
+                var operator = "{$operator_id}";
+                var version_type = "{$version_type}";
+
+                if(version_type == 'occifial' && operator <= 0){
+                    $.showError('请选择平台');
+                    return;
+                }
+                var url = "{:U('Admin/Client/show_json')}?version_type="+version_type+"&operator_id="+operator;
+                window.open(url);
+
+            });
+            $('#make-json').click(function(){
+
+                $.ShowConfirm('<span class="text-danger"><i class="fa fa-warning fa-fw"></i>本次更新会覆盖之前的数据，确定更新？</span>', function(){
+                    $.get("{:U('Admin/Client/make_json',array('version_type'=>$version_type,'operator_id'=>$operator_id))}",function(res){
+                        if(res.status){
+                            $.ShowAlert(res.msg);
+                        }else{
+                            $.showError(res.msg);
+                        }
+                    });
+                },function(){},500,'确认？');
+            });
 		})(jQuery);
 
 		var showMessage = function($target, msg){

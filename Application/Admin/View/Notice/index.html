@@ -13,33 +13,32 @@
 							<div class="col-md-2"></div>
                             <div class="col-md-6"><form method="get" action="">
 								<div class="form-group input-group">
+									<if condition="in_array($version_type,array('beta','reveal')) || $operator_id gt 0">
 									<span class="input-group-btn">
-	                            		<a href="#" class="btn btn-primary show-json">查看json</a>
+										<a href="javascript:void(0)" class="btn btn-default show-json" id="show-json">查看json</a>
 	                            	</span>
 	                            	<span class="input-group-btn" style="padding: 0 10px 0 10px">
-	                            		<a href="#" class="btn btn-primary make-json">更新json</a>
+										<a href="javascript:void(0)" class="btn btn-success make-json" id="make-json">更新json</a>&nbsp;
                             		</span>
+									</if>
 
-                            		<if condition="substr($login_user['user_role'],0,4) eq '1001' ">
-									<select name="operator" id="search-operator" data-placeholder="请选择平台" class="form-control">
+									<select name="operator_id" id="search-operator" data-placeholder="请选择平台" class="form-control">
 										<option value="">全部</option>
 										<optgroup label="occifial">
-											<volist name="user_roles" id="vo">
-											<option value="{$key}" <if condition="$param['operator'] eq $key">selected</if>>{$vo}</option>
+											<volist name="operator_options" id="vo">
+											<option value="{$vo.operator_id}" <if condition="$param['operator_id'] eq $vo['operator_id']">selected</if>>{$vo.name}</option>
 										</volist>
 										</optgroup>
   										<optgroup label="beta">
-											<option value="-1" <if condition="$param['operator'] eq -1">selected</if>>测试版本</option>
-											<option value="-2" <if condition="$param['operator'] eq -2">selected</if>>展示版本</option>
+											<option value="-1" <if condition="$param['operator_id'] eq '-1'">selected</if>>测试版本</option>
+											<option value="-2" <if condition="$param['operator_id'] eq '-2'">selected</if>>展示版本</option>
   										</optgroup>
 									</select>
 
 									<span class="input-group-btn">
 										<button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
 									</span>
-									<else/>
-									<input type="hidden" name="" id="search-operator" value="{$login_user['uid']}">
-									</if>
+
 								</div></form>
 							</div>
                         </div>
@@ -72,9 +71,6 @@
                                     </thead>
                                     <tbody>
 									<volist name="list" id="vo">
-									<php>
-									//print_r($vo);
-									</php>
                                         <tr role="row" key="{$vo.id}" primary="id">
                                             <td>
                                             <eq name="vo['operator_id']" value="-1">
@@ -157,23 +153,18 @@
 						<div class="form-group">
                             <label class="col-sm-3 control-label">平台：</label>
 							<div class="col-sm-6">
-								<if condition="substr($login_user['user_role'],0,4) eq '1002' ">
-								<input type="hidden" name="operator_id" value="{$login_user['uid']}" />
-								<input type="text" name="" value="{$login_user['user_name']}" class="form-control" readonly="readonly" id="notice-operator"/>
-								<else/>
 								<select name="operator_id" id="notice-operator"  data-placeholder="请选择平台" class="form-control">
-										<option value="">请选择</option>
-										<optgroup label="occifial">
-										<volist name="user_roles" id="vo">
-										<option value="{$key}" <if condition="$param['operator'] eq $key">selected</if>>{$vo}</option>
+									<option value="">请选择平台</option>
+									<optgroup label="occifial">
+										<volist name="operator_options" id="vo">
+											<option value="{$vo.operator_id}" <if condition="$param['operator_id'] eq $vo['operator_id']">selected</if>>{$vo.name}</option>
 										</volist>
-										</optgroup>
-  										<optgroup label="beta">
-										<option value="-1">测试版本</option>
-										<option value="-2">展示版本</option>
-  										</optgroup>
+									</optgroup>
+									<optgroup label="beta">
+										<option value="-1" <if condition="$param['operator_id'] eq -1">selected</if>>测试版本</option>
+										<option value="-2" <if condition="$param['operator_id'] eq -2">selected</if>>展示版本</option>
+									</optgroup>
 								</select>
-								</if>
 							</div>
                         </div>
 						<div class="form-group">
@@ -258,25 +249,29 @@
 				},'json')
 			},function(){},500,'确认？');
 		});
+
 		$('.make-json').click(function(){
-			var operator = $('#search-operator').val();
-			if(operator == '' || operator == null){
-				$.showError('请选择平台');
-				return false;
-			}
-			$.post('{:U('Admin/Notice/make_notice_data')}',{operator:operator},function(){
-				$.ShowAlert('更新json完毕');
-			});
+            $.ShowConfirm('<span class="text-danger"><i class="fa fa-warning fa-fw"></i>本次更新会覆盖之前的数据，确定更新？</span>', function(){
+                $.get("{:U('Admin/Notice/make_json',array('version_type'=>$version_type,'operator_id'=>$operator_id))}",function(res){
+                    if(res.status){
+                        $.ShowAlert(res.msg);
+                    }else{
+                        $.showError(res.msg);
+                    }
+                });
+            },function(){},500,'确认？');
 		});
 
 		$('.show-json').click(function(){
-			var operator = $('#search-operator').val();
-			if(operator == '' || operator == null){
-				$.showError('请选择平台');
-				return false;
-			}
-			var url = "{:U('Admin/Notice/notice_json')}" + "?operator=" + operator;
-			window.open(url);  
+            var operator = "{$operator_id}";
+            var version_type = "{$version_type}";
+
+            if(version_type == 'occifial' && operator <= 0){
+                $.showError('请选择平台');
+                return;
+            }
+            var url = "{:U('Admin/Notice/show_json')}?version_type="+version_type+"&operator_id="+operator;
+            window.open(url);
 		});
 
 		$(document).on('click','.fa-set-status',function(){
@@ -291,7 +286,7 @@
 			query.key = tr.attr('key');
 			obj.removeClass('fa-check fa-lock text-success').addClass('fa-spinner fa-spin');
 
-			$.post('{:U('Admin/Notice/set_status')}', query, function(result){
+			$.post("{:U('Admin/Notice/set_status')}", query, function(result){
 				if(result.status){
 					if(query.val == 1){
 						obj.removeClass('text-success fa-spinner fa-spin').addClass('fa-lock').attr('status',-1);
@@ -349,7 +344,7 @@
 
 			var data = $form.serialize();
 			$button.button('loading');
-			$.post('{:U('Admin/Notice/save')}', data, function(res){
+			$.post("{:U('Admin/Notice/save')}", data, function(res){
 			  if(res.status){
 				//$.ShowAlert(res.msg);
 				showMessage($message, res.msg);

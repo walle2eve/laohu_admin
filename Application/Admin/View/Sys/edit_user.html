@@ -1,0 +1,80 @@
+					<if condition="$page_error neq ''">
+					<script>	
+						$.showError('{$page_error}',300,function(){
+							$('#edit-user').modal('hide');
+						});
+					</script>
+					</if>
+
+					<div class="modal-header">
+					  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					  <h4 class="modal-title">
+						<span class="fa fa-gamepad fa-fw"></span>
+						<span>编辑管理员</span>
+					  </h4>
+					</div>
+					<div class="modal-body">
+					  <div class="form-horizontal">
+						<input type="hidden" name="id" value="{$result.uid}">
+						  <div class="form-group">
+							  <label class="col-sm-3 control-label">权限组：</label>
+							  <div class="col-sm-6">
+								  <select name="user_role" class="form-control">
+									  <foreach name="admin_roles" item="vo">
+										  <option value="{$vo.id}" <eq name="result['user_role']" value="$vo.id">selected</eq>>{$vo.role_name}</option>
+									  </foreach>
+								  </select>
+							  </div>
+						  </div>
+						<div class="form-group">
+						  <label class="col-sm-3 control-label">登录名：</label>
+						  <div class="col-sm-6">
+							  <input type="text" name="login_name" value="{$result.login_name}" class="form-control" <if condition="$result['uid']"> readonly="true"</if>>
+						  </div>
+						</div>
+						  <if condition="!$result['uid']">
+						  <div class="form-group">
+							  <label class="col-sm-3 control-label">登录密码：</label>
+							  <div class="col-sm-6">
+								  <input type="text" name="login_pwd"  class="form-control">
+							  </div>
+						  </div>
+						  </if>
+						<div class="form-group">
+						  <label class="col-sm-3 control-label">昵称：</label>
+						  <div class="col-sm-6">
+							<input type="text" name="user_name" value="{$result.user_name}" class="form-control" />
+						  </div>
+						</div>
+						  <div class="form-group">
+							  <label class="col-sm-3 control-label">联系人：</label>
+							  <div class="col-sm-6">
+								  <input type="text" name="input_name" value="{$result.input_name}" class="form-control" />
+							  </div>
+						  </div>
+						  <div class="form-group">
+							  <label class="col-sm-3 control-label">联系方式（手机）：</label>
+							  <div class="col-sm-6">
+								  <input type="text" name="input_phone" value="{$result.input_phone}" class="form-control" />
+							  </div>
+						  </div>
+						  <div class="form-group">
+							  <label class="col-sm-3 control-label">联系方式（email）：</label>
+							  <div class="col-sm-6">
+								  <input type="text" name="input_email" value="{$result.input_email}" class="form-control" />
+							  </div>
+						  </div>
+						  <input type="hidden" name="uid" value="{$result.uid}">
+						<div class="form-group">
+						  <div class="col-sm-offset-3 col-sm-6">
+							<button class="btn btn-primary submit-button" data-loading-text="正在修改，请稍等...">确认</button>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-warning">取消</button>
+						  </div>
+						</div>
+						<!-- 错误提示 -->
+						<div class="form-group">
+						  <div class="col-sm-offset-3 col-sm-6" data-error-box>{$error}</div>
+						</div>
+					  </div>
+					</div>

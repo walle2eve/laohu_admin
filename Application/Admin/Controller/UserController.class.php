@@ -17,10 +17,6 @@ class UserController extends BaseController
     {
 		$param = I('get.');
 
-		if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
-			$param['operator_id'] = $this->uid;
-		}
-
 		// 测试开始时间
 		$param['min_date'] = date('Y-m-d',strtotime('-30 day'));
 		$param['max_date'] = date('Y-m-d');
@@ -70,11 +66,7 @@ class UserController extends BaseController
 	public function money(){
 		$param = I('get.');
 
-		if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
-			$param['operator_id'] = $this->uid;
-		}
-
-		$result = D('UserInfo')->get_userinfo_list($param['operator_id'],$param['account_id'],$param['order_by']);
+		$result = D('UserInfo')->get_userinfo_list($this->login_user['user_role'],$param['operator_id'],$param['account_id'],$param['order_by']);
 
 		$this->assign('param',$param);
 		$this->assign('list',$result['list']);
@@ -91,7 +83,7 @@ class UserController extends BaseController
 			$user_id = I('post.id',0);
 			$vip_level = I('post.vip_level',0);
 
-			if(!in_array($vip_level,array(1,2,3,4))){
+			if(!in_array($vip_level,array(1,2,3,4,5))){
 				$result['msg'] = '您选择的vip等级错误!!';
 				$this->ajaxReturn($result);
 				exit();
@@ -111,7 +103,6 @@ class UserController extends BaseController
 				exit();
 			}
 
-			//$return = D('UserInfo')->where('user_id = %d',array($user_id))->setField('vip_level',intval($vip_level));
             $return  = D('UserInfo')->set_vip_level($user_info,$user_id,$vip_level);
 
 			if($return === false){
@@ -123,7 +114,7 @@ class UserController extends BaseController
 				);
 
 				$content = get_log_content(SysLogModel::SET_VIP_LEVEL,array('vip_level'=>$vip_level));
-				$log_result = D('SysLog')->add_log(SysLogModel::ADMIN_DO_LOG,$content,SysLogModel::SET_VIP_LEVEL,$user_info['operator_id'],$user_info['user_id'],$reason);
+				$log_result = D('SysLog')->add_log(SysLogModel::ADMIN_DO_LOG,$content,SysLogModel::SET_VIP_LEVEL,$user_info['operator_id'],$user_info['user_id'],'');
 
 			}
 		}
@@ -133,11 +124,7 @@ class UserController extends BaseController
 	public function login_log(){
 		$param = I('get.');
 
-		if(in_array($this->login_user['user_role'],array(SysDictModel::USER_ROLE_AGENT,SysDictModel::USER_ROLE_OPERATOR))){
-			$param['operator_id'] = $this->uid;
-		}
-
-		$result = D('SysUser')->get_user_login_stat($param['start_date'],$param['start_date']);
+		$result = D('Operator')->get_user_login_stat($this->operator_options,$param['start_date'],$param['start_date']);
 
 		if(I('submitbtn') == '导出excel'){
 			$file_name = '玩家登入记录导出';
