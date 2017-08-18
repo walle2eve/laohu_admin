@@ -384,6 +384,7 @@
 
                                 //nonSelectedFilter: 'ion ([7-9]|[1][0-2])'
                             });
+
                             $(gamelist).on('change',function(){
 
                                 var id = $(this).val();
@@ -403,12 +404,16 @@
                                     if(res.status){
                                         $("#game_totalbet_formula").val(res.data.totalBetFormula);
                                         $("#game_lines_bet").val(res.data.linesBet);
+
+                                        $("#lines").empty();
                                         $.each(res.data.lineNum,function(i,n){
                                             $("#lines").append("<option value=" + n + "> " + n + " </option>");
                                         });
+                                        $("#mul").empty();
                                         $.each(res.data.mul,function(i,n){
                                             $("#mul").append("<option value=" + n + "> " + n + " </option>");
                                         });
+                                        $("#bet").empty();
                                         $.each(res.data.bet,function(i,n){
                                             $("#bet").append("<option value=" + n + "> " + n + " </option>");
                                         });

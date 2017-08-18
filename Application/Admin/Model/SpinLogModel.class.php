@@ -80,7 +80,7 @@ class SpinLogModel extends MongoModel
 		//echo $this->getlastsql();
 		//print_r($total_bet_win);
 		
-		$operators = S('user_roles');
+		$operators = S('operators');
 
 		foreach($list as &$row){
 			foreach($row as $key=>$val){
@@ -95,7 +95,7 @@ class SpinLogModel extends MongoModel
 			$operator_id = is_object($row['operator_id']) ? (array)$row['operator_id'] : $row['operator_id'];
 			
 			$row['user_name'] = isset($operator_id['value']) ? $operator_id['value'] : $operator_id;
-			$row['user_name'] = $operators[$row['user_name']];
+			$row['user_name'] = $operators['operators'][$row['operator_id']]['name'];
 
 			// 格式化附加参数
 			$json_data = (array)json_decode($row['param']);
@@ -149,7 +149,7 @@ class SpinLogModel extends MongoModel
 			//print_r($row['icons']);exit();
 			$line_icons = array();
 
-		    if(in_array($row['theme_id'],array('1004'))){
+		    if(in_array($row['theme_id'],array('1004','1014'))){
 		       $line = 9;
 		    }elseif(in_array($row['theme_id'],array('1005'))){
 		       $line = 1;
@@ -157,7 +157,9 @@ class SpinLogModel extends MongoModel
 		       $line = 50;
 		    }elseif(in_array($row['theme_id'],array('1012'))){
 		       $line = 25;
-		    }else{
+		    }elseif(in_array($row['theme_id'],array('1013'))){
+                $line = 30;
+            }else{
 		       $line = 20;
 		    }
 
