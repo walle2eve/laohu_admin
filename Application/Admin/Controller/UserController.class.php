@@ -18,26 +18,19 @@ class UserController extends BaseController
 		$param = I('get.');
 
 		// 测试开始时间
-		$param['min_date'] = date('Y-m-d',strtotime('-30 day'));
-		$param['max_date'] = date('Y-m-d');
+		$param['min_date'] = date('Y-m-d H:i:s',strtotime('-30 day'));
+		$param['max_date'] = date('Y-m-d 23:59:59');
 
-		if(!$param['date_range_picker']){
-			$param['begin_time'] = $param['min_date'];
+		if(!$param['date_range_picker'] && !$param['begin_time']){
+			$param['begin_time'] = date('Y-m-d H:i:s',strtotime('-1 day'));
 			$param['end_time'] = $param['max_date'];
-		}else{
-
-			list($param['begin_time'],$param['end_time']) = explode(' - ',$param['date_range_picker']);
-
-			if(!strtotime($param['end_time']))list($param['begin_time'],$param['end_time']) = explode('+-+',$param['date_range_picker']);
-
 		}
 
-		if(!$param['begin_time'] || strtotime($param['begin_time']) < strtotime("-30 day")){
-			$param['begin_time'] = strtotime(date('Y-m-d 00:00:00',strtotime("-30 day")));
+		if(!$param['begin_time'] || $param['begin_time'] < strtotime("-30 day")){
+			$param['begin_time'] = strtotime(date('Y-m-d 00:00:00',strtotime("-1 day")));
 			$param['end_time'] = time();
 		}else{
-			$param['begin_time'] = strtotime(date('Y-m-d 00:00:00',strtotime($param['begin_time'])));
-			$param['end_time'] = strtotime($param['end_time']) ? (strtotime(date('Y-m-d 23:59:59',strtotime($param['end_time'])))) : strtotime(date('Y-m-d 23:59:59'));
+			$param['end_time'] = $param['end_time'] ? $param['end_time'] : strtotime(date('Y-m-d 23:59:59'));
 		}
 
 		// 排序

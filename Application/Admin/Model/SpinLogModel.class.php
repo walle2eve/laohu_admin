@@ -32,17 +32,18 @@ class SpinLogModel extends MongoModel
 			$where['operator_id'] = intval($operator_id);
 		}
 		if($account_id != ''){
-			$where['account_id'] = $account_id;
+			$where['account_id'] = strtoupper($account_id);
 		}else{
 			//$where['account_id'] = array('all','');
 		}
 
-		//$count = $this->where($where)->count();
+		$count = $this->where($where)->count();
+        /**
 		$count = D('SpinStat')->get_count_bet($operator_id,$begin_time,$end_time,$account_id);
 		
 		if(date('Y-m-d',$end_time) == date('Y-m-d')){
 			$stime = strtotime(date('Y-m-d'));
-			$etime = $stime+86399;
+			$etime = $end_time;
 			$today_where = $where;
 			$today_where['createTime'] = array('between', array($stime * 1000, $etime * 1000 + 999));
 			//$today_where['log_time'] = array('between', array($stime * 1000, $etime * 1000 + 999));
@@ -50,7 +51,7 @@ class SpinLogModel extends MongoModel
 			//echo $count_today;
 			$count = $count + $count_today;
 		}
-
+        */
 		$page = page($count);
 
 		$order_by = $order_by . ',_id DESC';

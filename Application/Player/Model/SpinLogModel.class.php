@@ -27,7 +27,7 @@ class SpinLogModel extends MongoModel
             $where['operator_id'] = intval($operator_id);
         }
         if($account_id != ''){
-            $where['account_id'] = $account_id;
+            $where['account_id'] = strtoupper($account_id);
         }else{
             //$where['account_id'] = array('all','');
         }

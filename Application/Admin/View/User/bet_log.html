@@ -17,13 +17,15 @@
 									</volist>
 									</select>
 								</div>
-								<div class="col-md-3">
+								<div class="col-md-4">
 									<div class="form-group input-group">
 										<span class="add-on input-group-addon">
 											<i class="glyphicon glyphicon-calendar fa fa-calendar">
 											</i>
 										</span>
-										<input class="form-control date" type="text" readonly name="date_range_picker" id="id-date-range-picker-1" value="{$param.begin_time|date='Y-m-d',###} - {$param.end_time|date='Y-m-d',###}"/>
+										<input name="begin_time" type="hidden" id="begin-time" value="{$param.begin_time}"/>
+										<input name="end_time" type="hidden" id="end-time" value="{$param.end_time}"/>
+										<input class="form-control date" type="text" readonly name="date_range_picker" id="id-date-range-picker-1" value="{$param.begin_time|date='Y-m-d H:i:s',###} - {$param.end_time|date='Y-m-d H:i:s',###}"/>
 									</div>
 								</div>
 								<div class="col-md-2">
@@ -163,12 +165,25 @@
 				//$('.dropdown-toggle').dropdown('toggle');
 
 				$('.date').daterangepicker({
-					//format: 'YYYY-MM-DD',
-					startDate: '{$param.begin_time|date='Y-m-d',###}',
-					endDate: '{$param.end_time|date='Y-m-d',###}',
+                    timePicker: true,
+                    timePickerIncrement: 5,
+                    format: 'YYYY-MM-DD HH:mm:ss',
+
+                    timePicker12Hour: false,
+					startDate: "{$param.begin_time|date='Y-m-d H:i:s',###}",
+					endDate: "{$param.end_time|date='Y-m-d H:i:s',###}",
 					minDate: '{$param.min_date}',
 					maxDate: '{$param.max_date}',
-				}).prev().on('click', function(){
+				}, function(start, end, label) { // 格式化日期显示框
+					console.log(start);
+
+                    var begin_time = Date.parse(new Date(start));
+                    var end_time = Date.parse(new Date(end));
+                    begin_time = begin_time / 1000;
+                    end_time = end_time / 1000;
+                    $('#begin-time').val(begin_time);
+                    $('#end-time').val(end_time);
+                }).prev().on('click', function(){
 					$(this).next().focus();
 				});
 
